@@ -1,0 +1,51 @@
+// Copyright 2024 Flower Labs GmbH. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ==============================================================================
+
+syntax = "proto3";
+
+package flwr.proto;
+import "flwr/proto/run.proto";
+import "flwr/proto/node.proto";
+import "flwr/proto/federation_config.proto";
+
+message Account {
+  string id = 1;
+  string name = 2;
+}
+
+message Member {
+  Account account = 1;
+  string role = 2;
+}
+
+message Federation {
+  string name = 1;
+  repeated NodeInfo nodes = 2;
+  repeated Run runs = 3;
+  string description = 4;      // Added in v1.26.0
+  repeated Member members = 5; // Added in v1.27.0
+  bool archived = 6;           // Added in v1.27.0
+  bool simulation = 7;         // Added in v1.28.0
+  SimulationConfig config = 8; // Added in v1.28.0
+}
+
+message Invitation {
+  string federation_name = 1;
+  Account inviter = 2;
+  Account invitee = 3;
+  string status = 4;
+  string created_at = 5;
+  string status_changed_at = 6;
+}

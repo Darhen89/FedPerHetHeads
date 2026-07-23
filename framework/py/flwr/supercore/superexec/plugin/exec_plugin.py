@@ -1,0 +1,110 @@
+# Copyright 2025 Flower Labs GmbH. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+"""Abstract base class ExecPlugin."""
+
+
+from abc import ABC, abstractmethod
+from collections.abc import Callable, Sequence
+from typing import Any
+
+from flwr.common.constant import RUNTIME_DEPENDENCY_INSTALL
+from flwr.proto.task_pb2 import Task  # pylint: disable=E0611
+from flwr.supercore.run import Run
+from flwr.supercore.superexec.executor import Executor, LaunchResult
+
+
+class ExecPlugin(ABC):
+    """Abstract base class for SuperExec plugins."""
+
+    def __init__(  # pylint: disable=R0913, R0917
+        self,
+        appio_api_address: str,
+        insecure: bool,
+        root_certificates_path: str | None,
+        get_run: Callable[[int], Run],
+        runtime_dependency_install: bool = RUNTIME_DEPENDENCY_INSTALL,
+        executor: Executor | None = None,
+    ) -> None:
+        self.appio_api_address = appio_api_address
+        self.insecure = insecure
+        self.root_certificates_path = root_certificates_path
+        self.get_run = get_run
+        self.runtime_dependency_install = runtime_dependency_install
+        # Non-ephemeral plugins use the executor to start task processes.
+        self.executor = executor
+
+    @abstractmethod
+    def select_run_id(self, candidate_run_ids: Sequence[int]) -> int | None:
+        """Select a run ID to execute from a sequence of candidates.
+
+        A candidate run ID is one that has at least one pending message and is
+        not currently in progress (i.e., not associated with a token).
+
+        Parameters
+        ----------
+        candidate_run_ids : Sequence[int]
+            A sequence of candidate run IDs to choose from.
+
+        Returns
+        -------
+        Optional[int]
+            The selected run ID, or None if no suitable candidate is found.
+        """
+
+    @abstractmethod
+    def select_task(self, candidate_tasks: Sequence[Task]) -> Task | None:
+        """Select a task to execute from a set of pending tasks.
+
+        Parameters
+        ----------
+        candidate_tasks : Sequence[Task]
+            A set of pending tasks to choose from.
+
+        Returns
+        -------
+        Optional[Task]
+            The selected task, or None if no suitable task is found.
+        """
+
+    @abstractmethod
+    def launch_task(self, token: str, task: Task) -> LaunchResult:
+        """Launch the process to execute the given task using the given token.
+
+        This method starts the TaskExecutor process using the given `token`.
+        The `task` identifies what should be executed and allows plugin
+        implementations to associate the launch with a specific task.
+
+        Parameters
+        ----------
+        token : str
+            The token required to run the TaskExecutor process.
+        task : Task
+            The task to execute.
+
+        Returns
+        -------
+        LaunchResult
+            The immediate launch outcome.
+        """
+
+    # This method is optional to implement
+    def load_config(self, yaml_config: dict[str, Any]) -> None:
+        """Load configuration from a YAML dictionary.
+
+        Parameters
+        ----------
+        yaml_config : dict[str, Any]
+            A dictionary representing the YAML configuration.
+        """

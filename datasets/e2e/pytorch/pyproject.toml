@@ -1,0 +1,14 @@
+[project]
+name = "fds-e2e-pytorch"
+version = "0.1.0"
+description = "Flower Datasets with PyTorch"
+requires-python = ">=3.11"
+dependencies = [
+    "flwr-datasets[vision]",
+    "torch>=2.10.0,<3.0.0",
+    "torchvision>=0.25.0,<1.0.0",
+    "parameterized==0.9.0",
+]
+
+[tool.uv.sources]
+flwr-datasets = { path = "../..", editable = true }

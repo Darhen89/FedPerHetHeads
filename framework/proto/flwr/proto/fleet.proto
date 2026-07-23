@@ -1,0 +1,113 @@
+// Copyright 2022 Flower Labs GmbH. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ==============================================================================
+
+syntax = "proto3";
+
+package flwr.proto;
+
+import "flwr/proto/heartbeat.proto";
+import "flwr/proto/node.proto";
+import "flwr/proto/run.proto";
+import "flwr/proto/fab.proto";
+import "flwr/proto/message.proto";
+
+service Fleet {
+  // Register Node
+  rpc RegisterNode(RegisterNodeFleetRequest)
+      returns (RegisterNodeFleetResponse) {}
+
+  // Activate Node
+  rpc ActivateNode(ActivateNodeRequest) returns (ActivateNodeResponse) {}
+
+  // Deactivate Node
+  rpc DeactivateNode(DeactivateNodeRequest) returns (DeactivateNodeResponse) {}
+
+  // Unregister Node
+  rpc UnregisterNode(UnregisterNodeFleetRequest)
+      returns (UnregisterNodeFleetResponse) {}
+
+  rpc SendNodeHeartbeat(SendNodeHeartbeatRequest)
+      returns (SendNodeHeartbeatResponse) {}
+
+  // Retrieve one or more messages, if possible
+  //
+  // HTTP API path: /api/v1/fleet/pull-messages
+  rpc PullMessages(PullMessagesRequest) returns (PullMessagesResponse) {}
+
+  // Complete one or more messages, if possible
+  //
+  // HTTP API path: /api/v1/fleet/push-messages
+  rpc PushMessages(PushMessagesRequest) returns (PushMessagesResponse) {}
+
+  rpc GetRun(GetRunRequest) returns (GetRunResponse) {}
+
+  // Get FAB
+  rpc GetFab(GetFabRequest) returns (GetFabResponse) {}
+
+  // Push Object
+  rpc PushObject(PushObjectRequest) returns (PushObjectResponse) {}
+
+  // Pull Object
+  rpc PullObject(PullObjectRequest) returns (PullObjectResponse) {}
+
+  // Confirm Message Received
+  rpc ConfirmMessageReceived(ConfirmMessageReceivedRequest)
+      returns (ConfirmMessageReceivedResponse) {}
+}
+
+// RegisterNode messages (add prefix to avoid name clash)
+message RegisterNodeFleetRequest { bytes public_key = 1; }
+message RegisterNodeFleetResponse { uint64 node_id = 1; }
+
+// ActivateNode messages
+message ActivateNodeRequest {
+  bytes public_key = 1;
+  double heartbeat_interval = 2;
+}
+message ActivateNodeResponse { uint64 node_id = 1; }
+
+// DeactivateNode messages
+message DeactivateNodeRequest { uint64 node_id = 1; }
+message DeactivateNodeResponse {}
+
+// UnregisterNode messages (add prefix to avoid name clash)
+message UnregisterNodeFleetRequest { uint64 node_id = 1; }
+message UnregisterNodeFleetResponse {}
+
+// PullMessages messages
+message PullMessagesRequest {
+  Node node = 1;
+  repeated string message_ids = 2;
+}
+message PullMessagesResponse {
+  Reconnect reconnect = 1;
+  repeated Message messages_list = 2;
+  repeated ObjectTree message_object_trees = 3;
+}
+
+// PushMessages messages
+message PushMessagesRequest {
+  Node node = 1;
+  repeated Message messages_list = 2;
+  repeated ObjectTree message_object_trees = 3;
+  repeated double clientapp_runtime_list = 4;
+}
+message PushMessagesResponse {
+  Reconnect reconnect = 1;
+  map<string, uint32> results = 2;
+  repeated string objects_to_push = 3;
+}
+
+message Reconnect { uint64 reconnect = 1; }

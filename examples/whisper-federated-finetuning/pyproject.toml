@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "whisper_example"
+version = "1.0.0"
+description = "On-device Federated Finetuning for Speech Classification"
+license = "Apache-2.0"
+dependencies = [
+    "flwr[simulation]>=1.28.0",
+    "flwr-datasets[audio]>=0.5.0",
+    "transformers>=4.53.0",
+    "torch==2.10.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.flwr.app]
+publisher = "flwrlabs"
+
+[tool.flwr.app.components]
+serverapp = "whisper_example.server_app:app"
+clientapp = "whisper_example.client_app:app"
+
+[tool.flwr.app.config]
+num-server-rounds = 3
+fraction-train = 0.05 # sample 5% of clients in each round (5% of 422 is 21)
+num-classes = 12
+batch-size = 8
+compile-model = false
+disable-tqdm = true
+central-eval = false
+remove-cols = "file,audio,label,is_unknown,speaker_id,utterance_id"

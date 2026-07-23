@@ -1,0 +1,99 @@
+{% if versions %}
+
+<style>
+input[type='checkbox'] {
+  display: none;
+}
+
+.lbl-toggle {
+  display: block;
+
+  padding: 1rem;
+
+  cursor: pointer;
+
+  border-radius: 7px;
+  transition: all 0.25s ease-out;
+}
+
+.lbl-toggle::before {
+  content: ' ';
+  display: inline-block;
+
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid currentColor;
+
+  vertical-align: middle;
+  margin-right: .7rem;
+  transform: translateY(-2px);
+
+  transition: transform .2s ease-out;
+}
+
+.collapsible-content {
+  max-height: 0px;
+  padding-top: 0px;
+  overflow: hidden;
+
+  transition: max-height .25s ease-in-out;
+}
+
+.toggle:checked + .lbl-toggle + .collapsible-content {
+  max-height: 45vh;
+  overflow-y: auto;
+}
+
+.toggle:checked + .lbl-toggle::before {
+  transform: rotate(90deg) translateX(-3px);
+}
+
+.toggle:checked + .lbl-toggle {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.content-inner {
+  padding-bottom: 1rem;
+}
+
+.content-inner ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.content-inner li a {
+  display: block;
+  padding: 0.5rem 1rem 0.5rem 2.2rem;
+  text-decoration: none;
+  color: inherit;
+}
+</style>
+
+<div class="wrap-collabsible"
+     data-flwr-versioning
+     data-docs-ui-metadata-url="{{ docs_ui_metadata_url }}"
+     data-current-version="{{ current_version.url }}"
+     data-current-version-label="{{ current_version.full_name }}"
+     data-current-language="{{ current_language }}"
+     data-pagename="{{ pagename }}"
+     data-docs-base-url="https://flower.ai/docs/framework">
+  <input id="collapsible" class="toggle" type="checkbox">
+  <label for="collapsible" class="lbl-toggle">Versions</label>
+  <div class="collapsible-content">
+    <div class="content-inner">
+      <ul data-flwr-version-list>
+        {%- for item in versions %}
+        <li>
+          <a href="https://flower.ai/docs/framework/{{ item.url|default(item.name) }}/{{ current_language }}/{{ pagename }}.html"
+             data-version-url="{{ item.url|default(item.name) }}">
+             {{ item.name|default(item.url) }}
+          </a>
+        </li>
+        {%- endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endif %}

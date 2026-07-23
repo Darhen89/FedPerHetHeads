@@ -1,0 +1,13 @@
+[project]
+name = "fds-e2e-sklearn"
+version = "0.1.0"
+description = "Flower Datasets with scikit-learn"
+requires-python = ">=3.11"
+dependencies = [
+    "flwr-datasets[vision]",
+    "scikit-learn>=1.2.0,<2.0.0",
+    "parameterized==0.9.0",
+]
+
+[tool.uv.sources]
+flwr-datasets = { path = "../..", editable = true }
