@@ -86,8 +86,10 @@ class ResNet(nn.Module):
     ) -> None:
         super(ResNet, self).__init__()
 
-        """LOG SEARCHING FOR CLIENT ID"""
+        """@@@@ Here I have to set the heads based on the client id or data classes.@@@@"""
         print("TEST: ",client_id)
+        """@@@@ @@@@"""
+
 
         assert (
             num_head_layers > 0 and num_head_layers <= 17
@@ -221,10 +223,10 @@ class ResNetModelManager(ModelManager):
         loss: torch.Tensor = 0.0
         # self.model.train()
         for _ in range(epochs):
-            for images, labels in self.trainloader:
+            for batch in self.trainloader:
                 optimizer.zero_grad()
-                outputs = self.model(images.to(self.device))
-                labels = labels.to(self.device)
+                outputs = self.model(batch["img"].to(self.device))
+                labels = batch["label"].to(self.device)
                 loss = criterion(outputs, labels)
                 loss.backward()
 
@@ -250,11 +252,11 @@ class ResNetModelManager(ModelManager):
         correct, total, loss = 0, 0, 0.0
         # self.model.eval()
         with torch.no_grad():
-            for images, labels in self.testloader:
-                outputs = self.model(images.to(self.device))
-                labels = labels.to(self.device)
+            for batch in self.testloader:
+                outputs = self.model(batch["img"].to(self.device))
+                labels = batch["label"].to(self.device)
                 loss += criterion(outputs, labels).item()
-                total += labels.size(0)
+                total += batch["label"].size(0)
                 correct += (torch.max(outputs.data, 1)[1] == labels).sum().item()
         print("Test Accuracy: {:.4f}".format(correct / total))
 

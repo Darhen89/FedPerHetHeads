@@ -15,7 +15,7 @@ from torchvision import transforms
 from torchvision.datasets import ImageFolder
 
 from fedper.constants import MEAN, STD
-from fedper.dataset_preparation import call_dataset
+from fedper.dataset_preparation import call_dataset, dataset_class_type_split
 from fedper.implemented_models.mobile_model import MobileNetModelManager
 from fedper.implemented_models.resnet_model import ResNetModelManager
 
@@ -308,24 +308,42 @@ def get_client_fn_simulation(
                 [int(len(dataset) * 0.8), len(dataset) - int(len(dataset) * 0.8)],
             )
         else:
-            dataset = call_dataset(
+            """dataset = call_dataset(
                 dataset_name=config.dataset.name,
                 root=PROJECT_DIR / "datasets" / config.dataset.name,
                 general_data_transform=general_data_transform,
-            )
+            )"""
+            animalstrainloader, animalstestloader, vehiclestrainloader, vehiclestestloader = dataset_class_type_split(config, cid_use)
+
+
             """@@@@ Here I have to make the changes on the datasets to split between vehicles and animals and shrink the classes.@@@@"""
-            #print("Partition ID: ", cid_use)
+            if(cid_use == 0):
+                print("Cliente: ",cid_use)
+                trainloader = animalstrainloader
+                testloader = animalstestloader
+            elif(cid_use == 1):
+                print("Cliente: ",cid_use)
+                trainloader = animalstrainloader
+                testloader = animalstestloader
+            elif(cid_use == 2):
+                print("Cliente: ",cid_use)
+                trainloader = vehiclestrainloader
+                testloader = vehiclestestloader
+            elif(cid_use == 3):
+                print("Cliente: ",cid_use)
+                trainloader = vehiclestrainloader
+                testloader = vehiclestestloader
             """@@@@ @@@@"""
 
-            trainset = Subset(dataset, indices=[])
-            testset = Subset(dataset, indices=[])
-            trainset.indices = data_indices[cid_use]["train"]
-            testset.indices = data_indices[cid_use]["test"]
+            #trainset = Subset(dataset, indices=[])
+            #testset = Subset(dataset, indices=[])
+            #trainset.indices = data_indices[cid_use]["train"]
+            #testset.indices = data_indices[cid_use]["test"]
 
         # Create the train loader
-        trainloader = DataLoader(trainset, config.batch_size, shuffle=False)
+        #trainloader = DataLoader(trainset, config.batch_size, shuffle=False)
         # Create the test loader
-        testloader = DataLoader(testset, config.batch_size)
+        #testloader = DataLoader(testset, config.batch_size)
 
         manager: Union[Type[MobileNetModelManager], Type[ResNetModelManager]] = (
             MobileNetModelManager

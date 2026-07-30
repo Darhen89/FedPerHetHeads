@@ -1,9 +1,9 @@
 ---
-num_clients: 2 # 10 total number of clients
+num_clients: 4 # 10 total number of clients
 num_epochs: 1 # 4 number of local epochs
 batch_size: 128
 num_rounds: 2 # 100
-clients_per_round: 2 # 10
+clients_per_round: 4 # 10
 learning_rate: 0.01
 algorithm: fedper
 model_name: resnet

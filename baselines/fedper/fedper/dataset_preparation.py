@@ -10,8 +10,14 @@ import numpy as np
 import pandas as pd
 import torch
 import torchvision
+from tensorflow.dtensor.python.config import num_clients
 from torch.utils.data import Dataset
 from torchvision import transforms
+
+from flwr_datasets import FederatedDataset
+from flwr_datasets.partitioner import IidPartitioner
+from torch.utils.data import DataLoader
+from torchvision.transforms import Compose, Normalize, ToTensor
 
 
 class BaseDataset(Dataset):
@@ -122,12 +128,70 @@ def call_dataset(dataset_name, root, **kwargs):
         return CIFAR10(root, **kwargs)
     raise ValueError(f"Dataset {dataset_name} not supported.")
 
+pytorch_transforms = Compose([ToTensor(), Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+
+def apply_transforms(batch):
+    """Apply transforms to the partition from FederatedDataset."""
+    batch["img"] = [pytorch_transforms(img) for img in batch["img"]]
+    return batch
+
+fds = None  # Cache FederatedDataset
+
+def dataset_class_type_split(config, cid):
+    """Load partition CIFAR10 data."""
+    # Only initialize `FederatedDataset` once
+    global fds
+    if fds is None:
+        partitioner = IidPartitioner(num_partitions=config["num_clients"])
+        fds = FederatedDataset(
+            dataset="uoft-cs/cifar10",
+            partitioners={"train": partitioner},
+        )
+    partition = fds.load_partition(cid)
+    # Divide data on each node: 80% train, 20% test
+    partition_train_test = partition.train_test_split(test_size=0.2, seed=42)
+    # Construct dataloaders
+    partition_train_test = partition_train_test.with_transform(apply_transforms)
+
+    classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+    labels_list_partition_train = [item['label'] for item in partition_train_test['train']]
+    labels_list_partition_test = [item['label'] for item in partition_train_test['test']]
+
+    animals = torch.tensor([2, 3, 4, 5, 6, 7])
+    animalsindicestrain = \
+    (torch.tensor(labels_list_partition_train)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
+    animalsindicestest = \
+    (torch.tensor(labels_list_partition_test)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
+    animalstrainsubset = torch.utils.data.Subset(partition_train_test['train'], animalsindicestrain)
+    animalstestsubset = torch.utils.data.Subset(partition_train_test['test'], animalsindicestest)
+
+    vehicles = torch.tensor([0, 1, 8, 9])
+    vehiclesindicestrain = \
+    (torch.tensor(labels_list_partition_train)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
+    vehiclesindicestest = \
+    (torch.tensor(labels_list_partition_test)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
+    vehiclestrainsubset = torch.utils.data.Subset(partition_train_test['train'], vehiclesindicestrain)
+    vehiclestestsubset = torch.utils.data.Subset(partition_train_test['test'], vehiclesindicestest)
+
+    # trainloader = DataLoader(partition_train_test["train"], batch_size=32, shuffle=True)
+    # testloader = DataLoader(partition_train_test["test"], batch_size=32)
+
+    animalstrainloader = DataLoader(animalstrainsubset, batch_size=64, shuffle=True, num_workers=2)
+    animalstestloader = DataLoader(animalstestsubset, batch_size=64)
+    vehiclestrainloader = DataLoader(vehiclestrainsubset, batch_size=64, shuffle=True, num_workers=2)
+    vehiclestestloader = DataLoader(vehiclestestsubset, batch_size=64)
+
+    return animalstrainloader, animalstestloader, vehiclestrainloader, vehiclestestloader
+
 
 def randomly_assign_classes(
     dataset: Dataset, client_num: int, class_num: int
 ) -> Dict[str, Union[Dict[Any, Any], List[Any]]]:
     # ) -> Dict[str, Any]:
     """Randomly assign number classes to clients."""
+
+    print("Before Dataset classes: ",dataset.classes)
+
     partition: Dict[str, Union[Dict, List]] = {"separation": {}, "data_indices": []}
     data_indices: List[List[int]] = [[] for _ in range(client_num)]
     targets_numpy = np.array(dataset.targets, dtype=np.int32)
