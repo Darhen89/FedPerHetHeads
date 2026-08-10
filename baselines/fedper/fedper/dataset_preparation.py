@@ -153,31 +153,59 @@ def dataset_class_type_split(config, cid):
     # Construct dataloaders
     partition_train_test = partition_train_test.with_transform(apply_transforms)
 
-    classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
     labels_list_partition_train = [item['label'] for item in partition_train_test['train']]
     labels_list_partition_test = [item['label'] for item in partition_train_test['test']]
 
     animals = torch.tensor([2, 3, 4, 5, 6, 7])
-    animalsindicestrain = (torch.tensor(labels_list_partition_train)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
-    animalsindicestest = (torch.tensor(labels_list_partition_test)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
-    animalstrainsubset = torch.utils.data.Subset(partition_train_test['train'], animalsindicestrain)
-    animalstestsubset = torch.utils.data.Subset(partition_train_test['test'], animalsindicestest)
+    animals_indices_train = (torch.tensor(labels_list_partition_train)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
+    animals_indices_test = (torch.tensor(labels_list_partition_test)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
+    animals_train_subset = torch.utils.data.Subset(partition_train_test['train'], animals_indices_train)
+    animals_test_subset = torch.utils.data.Subset(partition_train_test['test'], animals_indices_test)
 
     vehicles = torch.tensor([0, 1, 8, 9])
-    vehiclesindicestrain = (torch.tensor(labels_list_partition_train)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
-    vehiclesindicestest = (torch.tensor(labels_list_partition_test)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
-    vehiclestrainsubset = torch.utils.data.Subset(partition_train_test['train'], vehiclesindicestrain)
-    vehiclestestsubset = torch.utils.data.Subset(partition_train_test['test'], vehiclesindicestest)
+    vehicles_indices_train = (torch.tensor(labels_list_partition_train)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
+    vehicles_indices_test = (torch.tensor(labels_list_partition_test)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
+    vehicles_train_subset = torch.utils.data.Subset(partition_train_test['train'], vehicles_indices_train)
+    vehicles_test_subset = torch.utils.data.Subset(partition_train_test['test'], vehicles_indices_test)
 
-    # trainloader = DataLoader(partition_train_test["train"], batch_size=32, shuffle=True)
-    # testloader = DataLoader(partition_train_test["test"], batch_size=32)
+    class RemappedLabels(torch.utils.data.Dataset):
+        def __init__(self, dataset, label_map):
+            self.dataset = dataset
+            self.label_map = label_map
 
-    animalstrainloader = DataLoader(animalstrainsubset, batch_size=64, shuffle=True, num_workers=2)
-    animalstestloader = DataLoader(animalstestsubset, batch_size=64)
-    vehiclestrainloader = DataLoader(vehiclestrainsubset, batch_size=64, shuffle=True, num_workers=2)
-    vehiclestestloader = DataLoader(vehiclestestsubset, batch_size=64)
+        def __len__(self):
+            return len(self.dataset)
 
-    return animalstrainloader, animalstestloader, vehiclestrainloader, vehiclestestloader
+        def __getitem__(self, idx):
+            # The DataLoader passes an integer idx to RemappedLabels.
+            # If self.dataset is a torch.utils.data.Subset and its indices are tensors,
+            # accessing self.dataset[idx] will cause a TypeError in the underlying dataset
+            # because Subset will pass a 0-d tensor as an index.
+            if isinstance(self.dataset, torch.utils.data.Subset) and isinstance(self.dataset.indices, torch.Tensor):
+                # Extract the actual index from the Subset's tensor indices and convert to a Python int
+                actual_idx = int(self.dataset.indices[idx])
+                # Access the underlying dataset directly with the integer index
+                sample = dict(self.dataset.dataset[actual_idx])
+            else:
+                # For other dataset types, or Subset with list/tuple indices, proceed normally
+                sample = dict(self.dataset[idx])
+
+            sample["label"] = self.label_map[int(sample["label"])]
+            return sample
+
+    animal_map = {2: 0, 3: 1, 4: 2, 5: 3, 6: 4, 7: 5}
+    vehicle_map = {0: 0, 1: 1, 8: 2, 9: 3}
+    animals_train_dataset = RemappedLabels(animals_train_subset, animal_map)
+    animals_test_dataset = RemappedLabels(animals_test_subset, animal_map)
+    vehicles_train_dataset = RemappedLabels(vehicles_train_subset, vehicle_map)
+    vehicles_test_dataset = RemappedLabels(vehicles_test_subset, vehicle_map)
+
+    animals_train_loader = DataLoader(animals_train_dataset, batch_size=64, shuffle=True, num_workers=2)
+    animals_test_loader = DataLoader(animals_test_dataset, batch_size=64)
+    vehicles_train_loader = DataLoader(vehicles_train_dataset, batch_size=64, shuffle=True, num_workers=2)
+    vehicles_test_loader = DataLoader(vehicles_test_dataset, batch_size=64)
+
+    return animals_train_loader, animals_test_loader, vehicles_train_loader, vehicles_test_loader
 
 
 def randomly_assign_classes(

@@ -35,6 +35,8 @@ def set_num_classes(config: DictConfig) -> DictConfig:
     # Set the number of classes
     if config.dataset.name.lower() == "cifar10":
         config.model.num_classes = 10
+        config.model.num_classes_animals = 6
+        config.model.num_classes_vehicles = 4
     elif config.dataset.name.lower() == "flickr":
         config.model.num_classes = 5
         # additionally for flickr
@@ -119,6 +121,8 @@ def get_create_model_fn(
             return ResNet(
                 num_head_layers=config.model.num_head_layers,
                 num_classes=config.model.num_classes,
+                num_classes_animals=config.model.num_classes_animals,
+                num_classes_vehicles=config.model.num_classes_vehicles,
             ).to(device)
 
     else:

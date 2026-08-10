@@ -82,12 +82,13 @@ class ResNet(nn.Module):
         self,
         num_head_layers: int = 1,
         num_classes: int = 10,
+        num_classes_animals: int = 6,
+        num_classes_vehicles: int = 4,
         client_id: int = 0,
     ) -> None:
         super(ResNet, self).__init__()
 
         """@@@@ Here I have to set the heads based on the client id or data classes.@@@@"""
-        print("TEST: ",client_id)
         """@@@@ @@@@"""
 
 
@@ -99,6 +100,11 @@ class ResNet(nn.Module):
         self.body = resnet34()
 
         # if only one head layer
+        if client_id == 0 or client_id == 1:
+            num_classes = num_classes_animals
+        elif client_id == 2 or client_id == 3:
+            num_classes = num_classes_vehicles
+
         if self.num_head_layers == 1:
             self.head = self.body.fc
             self.body.fc = nn.Identity()
@@ -129,6 +135,8 @@ class ResNet(nn.Module):
             self.body.layer4 = nn.Sequential(*list(body_layer4.children())[:-2])
         else:
             raise NotImplementedError("Only 1 or 2 head layers supported")
+
+        print("Num classes: ", num_classes)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward inputs through the model."""

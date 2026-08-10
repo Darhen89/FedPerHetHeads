@@ -26,6 +26,8 @@ model:
   _target_: null
   num_head_layers: 2
   num_classes: 10
+  num_classes_animals: 6
+  num_classes_vehicles: 4
 
 fit_config:
   drop_client: false
