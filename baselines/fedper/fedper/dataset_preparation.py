@@ -158,18 +158,14 @@ def dataset_class_type_split(config, cid):
     labels_list_partition_test = [item['label'] for item in partition_train_test['test']]
 
     animals = torch.tensor([2, 3, 4, 5, 6, 7])
-    animalsindicestrain = \
-    (torch.tensor(labels_list_partition_train)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
-    animalsindicestest = \
-    (torch.tensor(labels_list_partition_test)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
+    animalsindicestrain = (torch.tensor(labels_list_partition_train)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
+    animalsindicestest = (torch.tensor(labels_list_partition_test)[..., None] == animals).any(-1).nonzero(as_tuple=True)[0]
     animalstrainsubset = torch.utils.data.Subset(partition_train_test['train'], animalsindicestrain)
     animalstestsubset = torch.utils.data.Subset(partition_train_test['test'], animalsindicestest)
 
     vehicles = torch.tensor([0, 1, 8, 9])
-    vehiclesindicestrain = \
-    (torch.tensor(labels_list_partition_train)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
-    vehiclesindicestest = \
-    (torch.tensor(labels_list_partition_test)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
+    vehiclesindicestrain = (torch.tensor(labels_list_partition_train)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
+    vehiclesindicestest = (torch.tensor(labels_list_partition_test)[..., None] == vehicles).any(-1).nonzero(as_tuple=True)[0]
     vehiclestrainsubset = torch.utils.data.Subset(partition_train_test['train'], vehiclesindicestrain)
     vehiclestestsubset = torch.utils.data.Subset(partition_train_test['test'], vehiclesindicestest)
 
