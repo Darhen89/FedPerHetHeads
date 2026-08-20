@@ -1,1 +1,0 @@
-"""statavg: A Flower Baseline."""

@@ -1,7 +1,0 @@
----
-name: krum
-
-aggregate_fn:
-  function: flwr.server.strategy.aggregate.aggregate_krum
-  parameters:
-    to_keep: 10

@@ -1,8 +1,0 @@
-algorithm = "FedAvg"
-pers_lamda = 0
-tau = 0
-
-# dataset specs
-dataset = "CIFAR10"
-dataset-split = "Fold"
-dataset-split-arg = 5

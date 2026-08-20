@@ -1,1 +1,0 @@
-"""floco: A Flower Baseline."""

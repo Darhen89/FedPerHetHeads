@@ -1,6 +1,0 @@
----
-name: trimmedmean
-
-strategy:
-  _target_: flwr.server.strategy.FedTrimmedAvg
-  beta: 0.2

@@ -1,1 +1,0 @@
-"""baseline: A Flower Baseline."""

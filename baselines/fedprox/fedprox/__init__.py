@@ -1,1 +1,0 @@
-"""fedprox: A Flower Baseline."""

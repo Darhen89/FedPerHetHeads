@@ -1,6 +1,0 @@
-setup:
-    project: p1
-    mode: online
-watch:
-    log: all
-    log_freq: 100

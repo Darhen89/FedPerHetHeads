@@ -1,5 +1,0 @@
----
-name: fedavg
-
-strategy:
-  _target_: flwr.server.strategy.FedAvg
