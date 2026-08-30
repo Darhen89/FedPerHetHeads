@@ -15,6 +15,7 @@ def conv3x3(
     in_planes: int, out_planes: int, stride: int = 1, groups: int = 1, dilation: int = 1
 ) -> nn.Conv2d:
     """3x3 convolution with padding."""
+
     return nn.Conv2d(
         in_planes,
         out_planes,
@@ -52,7 +53,6 @@ class BasicBlock(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward inputs through the block."""
         identity = x
-
         out = self.conv1(x)
         out = self.bn1(out)
         out = self.relu(out)
@@ -71,7 +71,7 @@ class BasicBlock(nn.Module):
 class ResNet(nn.Module):
     """Model (simple CNN adapted from 'PyTorch: A 60 Minute Blitz')"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super(ResNet, self).__init__()
         self.body = resnet34()
         self.head = nn.Sequential(
@@ -80,27 +80,27 @@ class ResNet(nn.Module):
             nn.Flatten(),
             nn.Linear(512, 6),
         )
+        self.body = nn.Sequential(*list(self.body.children())[:-2])
+        body_layer4 = list(self.body.children())[-1]
+        self.body = nn.Sequential(*list(self.body.children())[:-1])
+        self.body.layer4 = nn.Sequential(*list(body_layer4.children())[:-1])
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward inputs through the model."""
-        print("Forwarding through ResNet model")
         x = self.body(x)
         return self.head(x)
 
 @hydra.main(config_path="conf", config_name="base", version_base=None)
 def main(cfg: DictConfig) -> None:
     cfg = cfg = set_num_classes(cfg)
-    print("Config: ", cfg)
     device = cfg.server_device
 
     animalstrainloader, animalstestloader, vehiclestrainloader, vehiclestestloader = dataset_class_type_split(cfg, 0)
-    print("DATALOADERS")
     trainloader = animalstrainloader
     testloader = animalstestloader
     model = ResNet()
     model.to(device)
-    model.train()
-    print("MODEL")
+    #model.train()
 
     criterion = torch.nn.CrossEntropyLoss().to(device)
     optimizer = torch.optim.SGD(
@@ -108,10 +108,10 @@ def main(cfg: DictConfig) -> None:
     )
     correct, total = 0, 0
     loss: torch.Tensor = 0.0
-
-    print("START TRAIN: ")
-
+    round_count = 0
     for _ in range(cfg.num_rounds):
+        round_count = round_count+1
+        print("ROUND: ", round_count)
         for _ in range(cfg.num_epochs):
             for batch in trainloader:
                 optimizer.zero_grad()
@@ -124,24 +124,19 @@ def main(cfg: DictConfig) -> None:
                 total += labels.size(0)
                 correct += (torch.max(outputs.data, 1)[1] == labels).sum().item()
 
-    print("loss: ", loss.item(), "accuracy: ", correct / total)
+        print("loss: ", loss.item(), "accuracy: ", correct / total)
 
-    print("STOP TRAIN")
-    print("START TEST")
-
-    model.to(device)
-    correct, total, loss = 0, 0, 0.0
-    # self.model.eval()
-    with torch.no_grad():
-        for batch in testloader:
-            outputs = model(batch["img"].to(device))
-            labels = batch["label"].to(device)
-            loss += criterion(outputs, labels).item()
-            total += batch["label"].size(0)
-            correct += (torch.max(outputs.data, 1)[1] == labels).sum().item()
-    print("Test Accuracy: {:.4f}".format(correct / total))
-    print("loss: ", loss / len(testloader.dataset), "accuracy: ", correct / total)
-
-    print("STOP TEST")
+        model.to(device)
+        correct, total, loss = 0, 0, 0.0
+        # self.model.eval()
+        with torch.no_grad():
+            for batch in testloader:
+                outputs = model(batch["img"].to(device))
+                labels = batch["label"].to(device)
+                loss += criterion(outputs, labels).item()
+                total += batch["label"].size(0)
+                correct += (torch.max(outputs.data, 1)[1] == labels).sum().item()
+        print("Test Accuracy: {:.4f}".format(correct / total))
+        print("loss: ", loss / len(testloader.dataset), "accuracy: ", correct / total)
 
 main()

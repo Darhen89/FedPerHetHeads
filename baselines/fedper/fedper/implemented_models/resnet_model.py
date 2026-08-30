@@ -58,7 +58,6 @@ class BasicBlock(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward inputs through the block."""
         identity = x
-
         out = self.conv1(x)
         out = self.bn1(out)
         out = self.relu(out)
@@ -222,7 +221,6 @@ class ResNetModelManager(ModelManager):
             except FileNotFoundError:
                 print("No client state found, training from scratch.")
                 pass
-
         criterion = torch.nn.CrossEntropyLoss()
         optimizer = torch.optim.SGD(
             self.model.parameters(), lr=self.learning_rate, momentum=0.9
