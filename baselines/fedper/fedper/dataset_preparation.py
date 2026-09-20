@@ -25,7 +25,7 @@ class BaseDataset(Dataset):
 
     def __init__(
         self,
-        root: Path = Path("datasets/cifar10"),
+        root: Path = Path(" /cifar10"),
         general_data_transform: transforms.transforms.Compose = None,
     ) -> None:
         """Initialize the dataset."""

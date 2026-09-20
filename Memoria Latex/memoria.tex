@@ -1,0 +1,147 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%                                                                 %%
+%%           Título del TFM/TFG                                    %%
+%%                                                                 %%
+%%                                                                 %%
+%%                            Nombre del Autor(es)                 %%
+%%                                                                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper,11pt]{book}
+
+%%  Include con la definición de estilos del usuario
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input definl
+
+%%  Paquetería necesaria de fábrica
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8x]{inputenc}
+\usepackage{hyperref}
+\usepackage{float}
+% \usepackage{palatino}
+\usepackage{graphicx}          % para importar combinados latex
+% \usepackage{color}           % para importar dibujos coloreados
+% \usepackage{rotating}        % para usar \begin{sideways} que rota tabla 90
+                               % grados
+% \usepackage{epsfig}          % para rotar figuras de Xfig  poniendo
+                               % \begin{sideways}
+\usepackage{amsmath}           % para fórmulas matemáticas
+\usepackage{amsfonts} 
+\usepackage{latexsym} 
+\usepackage{theorem} 
+\usepackage{amssymb}
+\usepackage{lscape}
+% \usepackage{stmaryrd}        % para usar la \bigsqcap
+% \usepackage{verbatim}        % para poner salidas de pantallas
+\usepackage{listings}          % para imprimir codigo fuente
+% \usepackage{shortvrb}
+\usepackage{eurosym}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{titlesec}
+\usepackage{natbib}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{defi}{{\sc Definicion}}
+\newtheorem{proposition}[theorem]{Proposicion.}
+\newtheorem{corollary}[theorem]{Corollary.}
+\newtheorem{definition}[theorem]{Definicion.}
+
+%%  Configuración de paquetes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand\lstlistingname{Listado}                   %  default is Listing
+\renewcommand\lstlistlistingname{\'Indice de listados}  %  default is Listings
+% \renewcommand\thelstlisting{\arabic{lstlisting}}        % captionstyle
+\lstset{
+  language=Java,
+  basicstyle=\small,
+  keywordstyle=\bfseries,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=5pt,
+  frame=single}
+\renewcommand*\thesection{\arabic{section}}
+
+%%  Configuraciones varias
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newcommand{\corregir}{\color{blue}}   % pintar en color azul
+\setlength{\parskip}{2ex}              % después del párrafo, doble línea
+\addto\captionsspanish{\renewcommand{\listtablename}{Índice de tablas}}
+\addto\captionsspanish{\renewcommand{\listfigurename}{Índice de figuras}}
+
+% Numeracion de secciones dentro de capitulos
+\numberwithin{section}{chapter}
+
+% Nombre de capitulo al principio de la pagina
+\titleformat{\chapter}[hang]
+{\normalfont\huge\bfseries}{\thechapter. }{0pt}{\Huge}
+
+% Para que no aparezcan las cabeceras de las páginas que están en blanco
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+  \hbox{}
+  \thispagestyle{empty}
+  \newpage
+  \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
+
+%%  Cortes de palabras especiales
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hyphenation{
+}
+
+\begin{document}
+
+%%  Título e Índices
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{Roman}
+\include{titulo/titulo}
+\clearpage
+\pagestyle{plain}
+\tableofcontents
+\cleardoublepage
+
+\addcontentsline{toc}{chapter}{\listfigurename} % para que aparezca en el indice de contenidos
+\listoffigures % indice de figuras
+\cleardoublepage
+
+\addcontentsline{toc}{chapter}{\listtablename} % para que aparezca en el indice de contenidos
+\listoftables % indice de tablas
+\cleardoublepage
+
+% En caso necesario de que añadamos código, pero lo dudo
+%\addcontentsline{toc}{chapter}{\lstlistlistingname} % para que aparezca en el indice de contenidos
+%\lstlistoflistings % indice de listados/códigos
+%\cleardoublepage
+
+
+%\newpage
+%\thispagestyle{empty}
+%\mbox{ }
+
+%%  Contenido del trabajo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{fancy}
+\pagenumbering{arabic}
+
+%\include{capitulo0/cap0}
+\include{capitulo1/cap1}
+\include{capitulo2/cap2}
+\include{capitulo3/cap3}
+\include{capitulo4/cap4}
+\include{capitulo5/cap5}
+
+%%  Bibliografía
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\addcontentsline{toc}{chapter}{Bibliografía}
+\bibliographystyle{unsrt}
+\bibliography{bibliography/bibliography}
+
+
+
+\end{document}

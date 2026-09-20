@@ -1,0 +1,248 @@
+%********************* PAQUETES ADICIONALES *******************
+
+% Para poder escribir acentos tal cual
+% \usepackage{isolatin1}
+\usepackage{fancyvrb}
+
+% \newcommand{\caja}[1]{
+%  \makebox[8mm]{\rule[-1.5ex]{0pt}{6ex}\scriptsize #1}}
+% 
+% \newcommand{\cajaa}[1]{
+%  \makebox[18mm]{\rule[-1.5ex]{0pt}{6ex}\scriptsize #1}}
+% 
+% \usepackage{shortvrb}
+% \MakeShortVerb{\§}
+% \DefineShortVerb{\§}
+
+% Para disponer de más símbolos matemáticos
+% \usepackage{amsfonts,amssymb,latexsym}
+\usepackage{fancyhdr}
+
+% Para que las órdenes como \chapter o \tableofcontents generen
+% los títulos en español.
+\usepackage[spanish,activeacute]{babel}
+
+% Una extensión para la definición de nuevos teoremas
+% \usepackage{theorem}
+
+
+\usepackage{color} % para importar dibujos coloreados
+\usepackage{rotating} % para usar \begin{sideways} que rota tabla 90 grados 
+\usepackage[colorinlistoftodos,textwidth=29mm,spanish]{todonotes} % para las notas de TODO:
+
+%\usepackage[sfdefault]{FiraSans} %% option 'sfdefault' activates Fira Sans as the default text font
+%\usepackage[T1]{fontenc}
+%\renewcommand*\oldstylenums[1]{{\firaoldstyle #1}}
+
+% https://tug.org/FontCatalogue/sansseriffonts.html
+\usepackage[sfdefault]{ClearSans}
+\usepackage[T1]{fontenc}
+
+%*********************** FORMATO DE PÁGINA **************************
+
+\voffset          -5mm
+\cfoot{}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE]{{\small  \nouppercase{\leftmark}}}
+\fancyhead[LO]{{\small  \nouppercase{\rightmark}}}
+\fancyhead[LE,RO]{\thepage}
+
+\setlength{\headheight}{15pt}
+
+
+\parskip 1.5ex 
+
+%\setlength{\parskip}{2ex} % despues del parrafo, doble linea
+
+
+%\renewcommand{\baselinestretch}{1,2}
+
+
+\voffset -0,2cm
+
+\textheight 21.5cm
+
+\textwidth 14.2cm
+
+
+\oddsidemargin 1cm % estos dos son para que no varíen tanto
+
+\evensidemargin 0,5cm % los margenes entre pags pares e impares
+
+
+\let\headwidth\textwidth
+
+
+%\setcounter{tocdepth}{1}
+
+
+\setlength{\marginparwidth}{27mm}
+
+
+
+%==============================================================================
+% Cajas numeradas para incluir código
+%==============================================================================
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newlength{\hsbw}
+
+\newcounter{sesioncount}
+\setcounter{sesioncount}{0}
+
+%%%%%%%%%%%%%%%%%%% caja no numerada  %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{sesion*}
+  {\begin{flushleft}
+   \setlength{\hsbw}{\linewidth}
+   \addtolength{\hsbw}{-\arrayrulewidth}
+   \addtolength{\hsbw}{-\tabcolsep}
+   \addtolength{\hsbw}{-\tabcolsep}
+   \begin{tabular}{@{}|c@{}|@{}}\hline
+   \begin{minipage}[b]{\hsbw}
+   \vspace{2mm}
+   \begingroup}
+  {\endgroup\vspace{-3mm}
+   \end{minipage} \\
+   \hline
+   \end{tabular}
+   \end{flushleft}}
+
+%%%%%%%%%%%%%%%%% caja normal numerada  %%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{sesion}
+  {\begin{flushleft}
+   \setlength{\hsbw}{\linewidth}
+   \begin{tabular}{@{}|c@{}|@{}}\hline
+   \begin{minipage}[b]{\hsbw}
+   \vspace*{4mm}
+   \em
+   \begingroup}
+  {\endgroup \vspace{4mm}
+   \end{minipage} \\
+   \hline
+   \end{tabular}
+   \end{flushleft}}
+
+%%%%%%%%%%%%%%%%%% caja abierta por debajo %%%%%%%%%%%%%%
+\newenvironment{sesion+}
+  {\begin{flushleft}
+ % \refstepcounter{sesioncount}
+   \setlength{\hsbw}{\linewidth}
+   \addtolength{\hsbw}{-\arrayrulewidth}
+   \addtolength{\hsbw}{-\tabcolsep}
+   \addtolength{\hsbw}{-\tabcolsep}
+   \begin{tabular}{@{}|c@{}|@{}}\hline
+   \begin{minipage}[b]{\hsbw}
+   \vspace*{-.5pt}
+   \begin{flushright}
+   \rule{0.01in}{.15in}\rule{0.3in}{0.01in}\hspace{-0.35in}
+   \raisebox{0.04in}{\makebox[0.3in][c]{\footnotesize \thesesioncount}}
+                                       % Si pongo \footnotesize\it
+                                       % el numerito sale inclinado
+   \end{flushright}
+   \vspace*{-.47in}
+   \begingroup}
+  {\endgroup\vspace{-3mm}
+   \end{minipage} \\
+   %\hline
+   \end{tabular}
+   \end{flushleft}}
+
+%%%%%%%%%%%% caja abierta por arriba %%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{sesion-}
+  {\begin{flushleft}
+   \setlength{\hsbw}{\linewidth}
+   \addtolength{\hsbw}{-\arrayrulewidth}
+   \addtolength{\hsbw}{-\tabcolsep}
+   \addtolength{\hsbw}{-\tabcolsep}
+   \begin{tabular}{@{}|c@{}|@{}}%\hline
+   \begin{minipage}[b]{\hsbw}
+   \vspace{2mm}
+   \begingroup}
+  {\endgroup\vspace{-3mm}
+   \end{minipage} \\
+   \hline
+   \end{tabular}
+   \end{flushleft}}
+
+\newenvironment{sesionx}
+  {\begin{flushleft}
+   \setlength{\hsbw}{\linewidth}
+   \addtolength{\hsbw}{-\arrayrulewidth}
+   \addtolength{\hsbw}{-\tabcolsep}
+   \addtolength{\hsbw}{-\tabcolsep}
+   \begin{tabular}{@{}|c@{}|@{}}%\hline
+   \begin{minipage}[b]{\hsbw}
+   \vspace{2mm}
+   \begingroup}
+  {\endgroup\vspace{-3mm}
+   \end{minipage} \\
+   %\hline
+   \end{tabular}
+   \end{flushleft}}
+
+\newcommand{\boxref}[1]
+  {\fbox{\footnotesize \phantom{4}\!\!\!\!\!\! \ref{#1}}}
+%Si pongo \footnotesize\it
+%el numerito sale inclinado
+
+\newcommand{\boxrefdos}[2]
+  {\fbox{\footnotesize \phantom{4}\!\!\!\!\!\! \ref{#1}-\ref{#2}}}
+%Si pongo \footnotesize\it
+%el numerito sale inclinado
+
+\newcommand{\codeindex}[1]{\index{#1@{\tt #1}}}
+
+\newcommand{\labelindex}[1]{\label{#1}\codeindex{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% § Verbatim extendido                                                      %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DefineVerbatimEnvironment{CVerbatim}{Verbatim}
+{ commandchars=\\\{\},
+  codes={\catcode`$=3\catcode`$=3},
+  fontsize=\small,
+  fontfamily=verdana,
+  frame=single}
+
+%=======================================================================
+
+%%%%%%%%%%%%%MACROS%%%%%%%%%%%%%%%%%%
+\newcommand{\te}{\vdash}
+\newcommand{\lif}{\rightarrow}
+\newcommand{\m}{\models}
+\renewcommand{\le}{\exists}
+\newcommand{\la}{\forall}
+\newcommand{\liff}{\leftrightarrow}
+\newcommand{\Lor}{\bigvee}
+\newcommand{\Land}{\bigwedge}
+%=======================================================================
+
+
+
+% FIN DE LINEA
+\newcommand{\nl}{\newline}
+
+
+
+\newcommand{\dip}{\searrow\!\!\!\!\nwarrow}
+\newcommand{\dis}{\nearrow\!\!\!\!\swarrow}
+\newcommand{\udp}{\nwarrow}
+\newcommand{\ddp}{\searrow}
+\newcommand{\uds}{\nearrow}
+\newcommand{\dds}{\swarrow}
+
+\newcommand{\ua}{\uparrow}
+\newcommand{\da}{\downarrow}
+
+\newcommand{\uda}{\uparrow\!\!\downarrow}
+
+
+\usepackage{cmtt}
+\renewcommand{\ttdefault}{cmtt}
+
+%NUEVOS
+
+
