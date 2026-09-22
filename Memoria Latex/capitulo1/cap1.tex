@@ -12,15 +12,13 @@ Vivimos una época de auge en el campo de la Inteligencia Artificial provocado p
 Este florecimiento ha traído consigo también nuevos desafíos tanto en arquitectura como en regulaciones. Que cada vez haya más dispositivos recolectando y produciendo datos necesarios para entrenar modelos hace que estos sistemas tengan que adaptarse para ser más flexibles y poder dar cobertura a diferentes tipos de topologías, por ejemplo, varios dispositivos móviles pueden colaborar para entrenar una red teniendo diferentes especificaciones. Asimismo la compartición de datos personales e información sensible trae consigo la necesidad de crear sistemas más seguros, por ejemplo una persona que esté entrenando un modelo con su geolocalización pero sin tener que compartir su posición con una empresa externa. Este tipo de problemas son el germen para el desarrollo de sistemas de aprendizaje federados. La idea detrás de esta arquitectura es la de que varios clientes entrenen modelos locales y compartan los parámetros (por ejemplo, los pesos de la red) con un servidor de manera que todos cooperan en el entrenamiento conjunto de la red mientras que los datos nunca abandonan los servidores.
 
 %modelos federados heterogéneos%
-La bondad de los modelos federados está probada para datos homogéneos
+Un sistema federado es un sistema de aprendizaje automático distribuido que está compuesto por varios clientes y un servidor. El proceso a alto nivel es el siguiente: El servidor inicializa la red global y envía una copia de los pesos de los nodos de la red a cada cliente, los clientes realizan un entrenamiento local con sus datos. Una vez acabado el entrenamiento local los pesos de cada red local se devuelven al servidor el cuál realiza una agregación de todos los pesos para actualizar la red global la cual se vuelve a enviar actualizada a los clientes.
 
 %Beneficios modelos heterogéneos, facilidad integración con modelos ya existentes%
+Como vemos los datos siempre se quedan en los clientes y no son compartidos con el servidor, podemos imaginar un entorno en el que los clientes tienen datos sensibles (datos en un dispositivo personal o de pacientes en un centro sanitario) que no se desea compartir con una empresa externa o que no pueden salir de una determinada zona como por ejemplo datos de empresas de la Unión Europea que no se pueden compartir con servidores fuera de ella. A parte de la privacidad otro beneficio es que los recursos requeridos para los entrenamientos locales son menores comparados con una estructura centralizada de manera que el resultado de la cooperación de muchos clientes es más eficiente que si trabajasen de manera aislada con esos mismos recursos. También es importante mencionar que de esta forma se permite de manera más fácil la integración de nuevos clientes (dispositivos, empresas, entidades públicas...) con sistemas ya establecidos.
+
 %Problema de los modelos heterogéneos%
-
-
-
-
-
+Sin embargo aún existen varios desafíos en el campo del aprendizaje federado. La bondad de los modelos federados está probada para datos homogéneos, sin embargo cuando los datos son consistentes en etiquetas, características o cantidad es más fácil que los clientes al entrenarse lleguen a un máximo global. Sin embargo si hay desequilibrios en estas categorías es más fácil que lleguen a un máximo local, lo que dificulta la agregación de los pesos de las distintas redes de los clientes en el servidor.
 
 
 %ejemplo cita ~\cite{20NGDataset:web}

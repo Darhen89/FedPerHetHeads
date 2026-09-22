@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.9.16)  21 SEP 2026 19:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.9.16)  22 SEP 2026 08:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1017,19 +1017,23 @@ LaTeX Info: Redefining \% on input line 1.
 
  (./capitulo1/cap1.tex
 Cap\'{\i }tulo 1.
-[1
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1
 
 
 ]
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <10> not availabl
 e
 (Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on in
-put line 39.
+put line 37.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 10.0pt on input line 39.
-LaTeX Info: Redefining \. on input line 39.
-LaTeX Info: Redefining \% on input line 39.
- [2])
+(Font)              scaled to size 10.0pt on input line 37.
+LaTeX Info: Redefining \. on input line 37.
+LaTeX Info: Redefining \% on input line 37.
+
+[2])
 \openout2 = `capitulo2/cap2.aux'.
 
  (./capitulo2/cap2.tex
@@ -1150,7 +1154,7 @@ Package rerunfilecheck Info: File `memoria.out' has not changed.
 Here is how much of TeX's memory you used:
  26481 strings out of 480185
  479928 string characters out of 5894213
- 923103 words of memory out of 5000000
+ 923102 words of memory out of 5000000
  43826 multiletter control sequences out of 15000+600000
  559402 words of font info for 78 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
@@ -1167,7 +1171,7 @@ usr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Italic.pfb><
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fo
 nts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on memoria.pdf (21 pages, 928049 bytes).
+Output written on memoria.pdf (21 pages, 929579 bytes).
 PDF statistics:
  300 PDF objects out of 1000 (max. 8388607)
  216 compressed objects within 3 object streams
