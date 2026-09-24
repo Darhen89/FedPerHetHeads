@@ -1,36 +1,21 @@
 \begin{thebibliography}{1}
 
-\bibitem{20NGDataset:web}
-K.~Lang.
-\newblock The 20 newsgroups data set.
-\newblock \url{http://qwone.com/~jason/20Newsgroups/}, 2008.
-\newblock Last access: 02-05-2020.
+\bibitem{Ye:HFL_Survey}
+Mang Ye, Xiuwen Fang, Bo~Du, Pong~C. Yuen, and Dacheng Tao.
+\newblock Heterogeneous federated learning: State-of-the-art and research
+  challenges.
+\newblock {\em ACM Comput. Surv.}, 56(3), October 2023.
 
-\bibitem{Moyano:2020c_CEC}
-Jose~M. Moyano, Eva~L. Gibaja, Krzysztof~J. Cios, and Sebasti{\'a}n Ventura.
-\newblock Tree-shaped ensemble of multi-label classifiers using grammar-guided
-  genetic programming.
-\newblock In {\em 2020 {IEEE} Congress on Evolutionary Computation, {CEC}
-  2020}, pages 1--8, Glasgow, United Kingdom, 2020.
+\bibitem{Manoj:FedPer}
+Manoj~Ghuhan Arivazhagan, Vinay Aggarwal, Aaditya~Kumar Singh, and Sunav
+  Choudhary.
+\newblock Federated learning with personalization layers.
+\newblock 2019.
 
-\bibitem{Moyano:2022a_INFFUS}
-Jose~M. Moyano and Sebasti{\'a}n Ventura.
-\newblock Auto-adaptive grammar-guided genetic programming algorithm to build
-  ensembles of multi-label classifiers.
-\newblock {\em Information Fusion}, 78:1--19, 2022.
-
-\bibitem{BOE-A-2010-20147}
-{Spanish Government}.
-\newblock {Real Decreto 1791/2010, de 30 de diciembre, por el que se aprueba el
-  Estatuto del Estudiante Universitario.}
-\newblock Official State Gazzete number 318, December 31$^{\textrm{st}}$ 2010,
-  pp. 109353-109380, 2010.
-\newblock \url{https://www.boe.es/buscar/doc.php?id=BOE-A-2010-20147}, last
-  accesed: 21/03/2024.
-
-\bibitem{Ventura:2022_InTechOpen}
-Sebasti{\'a}n Ventura, Jose~M. Luna, and Jose~M. Moyano.
-\newblock {\em Genetic Algorithms}.
-\newblock IntechOpen, 2022.
+\bibitem{Meng:MVML}
+Hongdao Meng, Yongjian Deng, Qiyu Zhong, Yipeng Wang, Zhen Yang, and Gengyu
+  Lyu.
+\newblock Federated multi-view multi-label classification.
+\newblock {\em IEEE Transactions on Big Data}, 11(4):2072--2084, 2025.
 
 \end{thebibliography}

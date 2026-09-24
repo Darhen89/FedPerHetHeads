@@ -20,15 +20,16 @@ Como vemos los datos siempre se quedan en los clientes y no son compartidos con 
 %Problema de los modelos heterogéneos%
 Sin embargo aún existen varios desafíos en el campo del aprendizaje federado. La bondad de los modelos federados está probada para datos homogéneos, sin embargo cuando los datos son consistentes en etiquetas, características o cantidad es más fácil que los clientes al entrenarse lleguen a un máximo global. Sin embargo si hay desequilibrios en estas categorías es más fácil que lleguen a un máximo local, lo que dificulta la agregación de los pesos de las distintas redes de los clientes en el servidor.
 
+%Clasificación multi etiqueta%
+En nuestro caso particular analizaremos la viabilidad de implementar un modelo de clasificación multi-etiqueta con datos heterogéneos dentro de un sistema federado. La idea es que cada cliente sea usado para una tarea diferente entrenando solo un subconjunto de etiquetas y se pueda beneficiar del aporte del resto de clientes.
 
-%ejemplo cita ~\cite{20NGDataset:web}
 
 El resto de la memoria se organiza del siguiente modo:
 
 \begin{description}
-\item[2. Estado del arte.] En este capítulo se analizarán ...
+\item[2. Estado del arte.] En este capítulo se analizarán qué sistemas existen que implementen clasificación multi-etiqueta en entornos federados o qué estudios se acercan. También se definirá la base da la que partiremos para nuestra implementación.
 \item[3. Propuesta.] Se describen los sistemas desarrollados en este trabajo. 
-\item[4. Estudio Experimental.] Se presentan los resultados de los experimentos realizados....
+\item[4. Estudio Experimental.] Se presentan los resultados de los experimentos realizados.
 \item[5. Conclusiones y Trabajo Futuro.] Se plantean las conclusiones y futuras ampliaciones del sistema y líneas de trabajo futuro en este campo.
 \end{description}
 

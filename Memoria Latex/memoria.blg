@@ -9,44 +9,46 @@ A level-1 auxiliary file: capitulo4/cap4.aux
 A level-1 auxiliary file: capitulo5/cap5.aux
 The style file: unsrt.bst
 Database file #1: bibliography/bibliography.bib
-You've used 5 entries,
+Warning--empty journal in Manoj:FedPer
+You've used 3 entries,
             1791 wiz_defined-function locations,
-            486 strings with 4744 characters,
-and the built_in function-call counts, 972 in all, are:
-= -- 83
-> -- 41
-< -- 1
-+ -- 16
-- -- 11
-* -- 42
-:= -- 159
-add.period$ -- 17
-call.type$ -- 5
-change.case$ -- 4
+            474 strings with 4257 characters,
+and the built_in function-call counts, 689 in all, are:
+= -- 47
+> -- 51
+< -- 0
++ -- 18
+- -- 15
+* -- 59
+:= -- 128
+add.period$ -- 9
+call.type$ -- 3
+change.case$ -- 3
 chr.to.int$ -- 0
-cite$ -- 5
-duplicate$ -- 46
-empty$ -- 106
-format.name$ -- 11
-if$ -- 228
+cite$ -- 4
+duplicate$ -- 25
+empty$ -- 56
+format.name$ -- 15
+if$ -- 140
 int.to.chr$ -- 0
-int.to.str$ -- 5
-missing$ -- 4
-newline$ -- 30
-num.names$ -- 5
-pop$ -- 26
+int.to.str$ -- 3
+missing$ -- 3
+newline$ -- 18
+num.names$ -- 3
+pop$ -- 7
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 18
+skip$ -- 10
 stack$ -- 0
-substring$ -- 24
-swap$ -- 10
-text.length$ -- 1
+substring$ -- 27
+swap$ -- 2
+text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 0
-while$ -- 8
-width$ -- 6
-write$ -- 59
+warning$ -- 1
+while$ -- 4
+width$ -- 4
+write$ -- 33
+(There was 1 warning)
