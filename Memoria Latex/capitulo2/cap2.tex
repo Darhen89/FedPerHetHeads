@@ -3,10 +3,14 @@
 \vspace*{5mm}
 
 %Introducción%
-En esta sección vamos a hacer un resumen sobre los trabajos realizados alrededor del problema de multi-etiquetado de imágenes en sistemas federados. Aunque no
+En esta sección vamos a hacer un resumen sobre los trabajos realizados alrededor del problema de multi-etiquetado de imágenes en sistemas federados. Aunque no todos los estudios que vamos a revisar atacan directamente el problema sí que nos serán útiles para ver el estado de la implementación de sistemas federados heterogéneos.
 
 %Comentarios sobre estado del arte de sistemas federados heterogéneos, cita: Ye:HFL_Survey%
- ~\cite{Ye:HFL_Survey}
+Lo primero que debemos entender es la categorización de nuestro caso y los problemas que presenta. El estudio Heterogeneous Federated Learning: State-of-the-art and Research Challenges ~\cite{Ye:HFL_Survey} realiza una clasificación de los problemas presentes en las diferentes arquitecturas de modelos federados. La característica principal de un modelo federado heterogéneo, y su principal problema, es que los datos no son independientes e identicamente distribuídos (no-IID). Centrándose en la distribución de los datos los clasifica en cuatro categorías: desbalance de etiquetas, desbalance de características, desbalance de calidad y desbalance de cantidad.
+
+En nuestro caso y con respecto a los datos observamos un desbalance en etiquetas ya que la premisa es que cada cliente va a entrenar datos con etiquetas propias no compartidas con otros clientes, esto provoca dificultades en la convergencia del modelo global.
+
+El estudio también evalúa otros tipos de heterogeneidad en la comunicación, los dispositivos y los modelos. Ésta última es relevante ya que para la solución propuesta vamos a explorar el uso de diferentes modelos en cada cliente lo cuál aumenta los costes de entrenamiento, lo veremos en la siguiente sección.
 
 %Clasificación multi-etiqueta pero de datos tabulados, cita: Meng:MVML%
 ~\cite{Meng:MVML}
