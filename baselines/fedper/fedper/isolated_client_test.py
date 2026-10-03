@@ -97,6 +97,9 @@ def main(cfg: DictConfig) -> None:
 
     animalstrainloader, animalstestloader, vehiclestrainloader, vehiclestestloader = dataset_class_type_split(cfg, 0)
     trainloader = animalstrainloader
+
+    print(animalstrainloader.dataset[0])
+    exit(0)
     testloader = animalstestloader
     model = ResNet()
     model.to(device)
