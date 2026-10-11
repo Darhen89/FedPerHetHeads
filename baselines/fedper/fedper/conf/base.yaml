@@ -1,8 +1,8 @@
 ---
 num_clients: 4 # 10 total number of clients
-num_epochs: 1 # 4 number of local epochs
-batch_size: 128
-num_rounds: 2 # 100
+num_epochs: 4 # 4 number of local epochs
+batch_size: 64
+num_rounds: 100 # 100
 clients_per_round: 4 # 10
 learning_rate: 0.01
 algorithm: fedper
@@ -15,7 +15,7 @@ client_resources:
 server_device: cuda:0
 
 dataset:
-  name : "cifar10"
+  name : "corel5k"
   split: sample
   num_classes: 10
   seed: 42
@@ -26,8 +26,8 @@ model:
   _target_: null
   num_head_layers: 2
   num_classes: 10
-  num_classes_animals: 6
-  num_classes_vehicles: 4
+  num_classes_water: 179
+  num_classes_sky: 168
 
 fit_config:
   drop_client: false

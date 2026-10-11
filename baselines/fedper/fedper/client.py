@@ -15,7 +15,7 @@ from torchvision import transforms
 from torchvision.datasets import ImageFolder
 
 from fedper.constants import MEAN, STD
-from fedper.dataset_preparation import call_dataset, dataset_class_type_split
+from fedper.dataset_preparation import call_dataset, dataset_class_type_split, corel5k_dataset_split
 from fedper.implemented_models.mobile_model import MobileNetModelManager
 from fedper.implemented_models.resnet_model import ResNetModelManager
 
@@ -44,13 +44,13 @@ class ClientEssentials:
         client_state_save_path: str = "",
     ) -> None:
         """Set client state save path and client ID."""
+
         self.client_id = int(client_id)
         self.client_state_save_path = (
             (client_state_save_path + f"/client_{self.client_id}")
             if client_state_save_path != ""
             else None
         )
-
 
 class BaseClient(NumPyClient):
     """Implementation of Federated Averaging (FedAvg) Client."""
@@ -187,16 +187,18 @@ class BaseClient(NumPyClient):
             "tst": tst_results,
         }
         self.test_id += 1
-
         return (
             tst_results.get("loss", 0.0),
             self.model_manager.test_dataset_size(),
-            {k: v for k, v in tst_results.items() if not isinstance(v, (dict, list))},
+            {k: v for k, v in tst_results.items()},
         )
-
+#{k: v for k, v in tst_results.items() if not isinstance(v, (dict, list))},
 
 class FedPerClient(BaseClient):
     """Implementation of Federated Personalization (FedPer) Client."""
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
 
     def get_parameters(self, config: Dict[str, Scalar]) -> NDArrays:
         """Return the current local body parameters."""
@@ -218,7 +220,7 @@ class FedPerClient(BaseClient):
             if k.startswith("_body")
         ]
 
-        if not evaluate:
+        '''if not evaluate:
             # Only update client's local head if it hasn't trained yet
             print("Setting head parameters to global head parameters.")
             model_keys.extend(
@@ -227,7 +229,7 @@ class FedPerClient(BaseClient):
                     for k in self.model_manager.model.state_dict().keys()
                     if k.startswith("_head")
                 ]
-            )
+            )'''
 
         params_dict = zip(model_keys, parameters)
 
@@ -239,6 +241,10 @@ class FedPerClient(BaseClient):
 def get_client_fn_simulation(
     config: DictConfig,
     client_state_save_path: str = "",
+    water_train_loader: DataLoader = None,
+    water_test_loader: DataLoader = None,
+    sky_train_loader: DataLoader = None,
+    sky_test_loader: DataLoader = None,
 ) -> Callable[[str], Client]:
     """Generate the client function that creates the Flower Clients.
 
@@ -255,103 +261,28 @@ def get_client_fn_simulation(
         A tuple containing the client function that creates Flower Clients and
         the DataLoader that will be used for testing
     """
-    assert config.model_name.lower() in [
-        "mobile",
-        "resnet",
-    ], f"Model {config.model.name} not implemented"
-
-    # load dataset and clients' data indices
-    if config.dataset.name.lower() == "cifar10":
-        try:
-            partition_path = (
-                PROJECT_DIR / "datasets" / config.dataset.name / "partition.pkl"
-            )
-            print(f"Loading partition from {partition_path}")
-            with open(partition_path, "rb") as pickle_file:
-                partition = pickle.load(pickle_file)
-            data_indices: Dict[int, Dict[str, List[int]]] = partition["data_indices"]
-        except FileNotFoundError as error:
-            print(f"Partition not found at {partition_path}")
-            raise error
-
-        # - you can define your own data transformation strategy here -
-        general_data_transform = transforms.Compose(
-            [
-                transforms.Resize((224, 224)),
-                transforms.RandomCrop(224, padding=4),
-                # transforms.RandomHorizontalFlip(),
-                # transforms.ToTensor(),
-                transforms.Normalize(
-                    MEAN[config.dataset.name], STD[config.dataset.name]
-                ),
-            ]
-        )
-        # ------------------------------------------------------------
+    water_train_loader=water_train_loader
+    water_test_loader=water_test_loader
+    sky_train_loader=sky_train_loader
+    sky_test_loader=sky_test_loader
 
     def client_fn(cid: str) -> Client:
         """Create a Flower client representing a single organization."""
         cid_use = int(cid)
-        if config.dataset.name.lower() == "flickr":
-            transform = transforms.Compose(
-                [
-                    transforms.Resize((224, 224)),
-                    transforms.ToTensor(),
-                ]
-            )
-            data_path = (
-                PROJECT_DIR / "datasets" / config.dataset.name / "tmp" / f"client_{cid}"
-            )
-            dataset = ImageFolder(root=data_path, transform=transform)
+        if config.dataset.name.lower() == "corel5k":
 
-            trainset, testset = random_split(
-                dataset,
-                [int(len(dataset) * 0.8), len(dataset) - int(len(dataset) * 0.8)],
-            )
-        else:
-            """dataset = call_dataset(
-                dataset_name=config.dataset.name,
-                root=PROJECT_DIR / "datasets" / config.dataset.name,
-                general_data_transform=general_data_transform,
-            )"""
-            animalstrainloader, animalstestloader, vehiclestrainloader, vehiclestestloader = dataset_class_type_split(config, cid_use)
-
-
-            """@@@@ Here I have to make the changes on the datasets to split between vehicles and animals and shrink the classes.@@@@"""
-            if(cid_use == 0):
-                print("Cliente: ",cid_use)
-                trainloader = animalstrainloader
-                testloader = animalstestloader
-            elif(cid_use == 1):
-                print("Cliente: ",cid_use)
-                trainloader = animalstrainloader
-                testloader = animalstestloader
-            elif(cid_use == 2):
-                print("Cliente: ",cid_use)
-                trainloader = vehiclestrainloader
-                testloader = vehiclestestloader
-            elif(cid_use == 3):
-                print("Cliente: ",cid_use)
-                trainloader = vehiclestrainloader
-                testloader = vehiclestestloader
-            """@@@@ @@@@"""
-
-            #trainset = Subset(dataset, indices=[])
-            #testset = Subset(dataset, indices=[])
-            #trainset.indices = data_indices[cid_use]["train"]
-            #testset.indices = data_indices[cid_use]["test"]
-
-        # Create the train loader
-        #trainloader = DataLoader(trainset, config.batch_size, shuffle=False)
-        # Create the test loader
-        #testloader = DataLoader(testset, config.batch_size)
+            if(cid_use == 0 or cid_use == 1):
+                trainloader = water_train_loader
+                testloader = water_test_loader
+            elif(cid_use == 2 or cid_use == 3):
+                trainloader = sky_train_loader
+                testloader = sky_test_loader
 
         manager: Union[Type[MobileNetModelManager], Type[ResNetModelManager]] = (
             MobileNetModelManager
         )
         if config.model_name.lower() == "resnet":
             manager = ResNetModelManager
-        elif config.model_name.lower() == "mobile":
-            manager = MobileNetModelManager
         else:
             raise NotImplementedError("Model not implemented, check name.")
         client_data_loaders = ClientDataloaders(trainloader, testloader)

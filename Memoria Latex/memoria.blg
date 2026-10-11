@@ -9,46 +9,57 @@ A level-1 auxiliary file: capitulo4/cap4.aux
 A level-1 auxiliary file: capitulo5/cap5.aux
 The style file: unsrt.bst
 Database file #1: bibliography/bibliography.bib
+Warning--empty journal in Zhao_ML
+Warning--empty journal in criado2021noniiddatacontinuallearning
+Warning--empty journal in Zhaobin:FedMLP
 Warning--empty journal in Manoj:FedPer
-You've used 3 entries,
+Warning--empty journal in zhu2026rethinkingmultilabelimageclassification
+Warning--empty journal in he2015deepresiduallearningimage
+Warning--empty journal in dosovitskiy2021imageworth16x16words
+Warning--empty journal in chen2019multilabelimagerecognitiongraph
+Warning--empty journal in benbaruch2021asymmetriclossmultilabelclassification
+Warning--empty journal in liu2021query2labelsimpletransformerway
+Warning--empty journal in 10378641
+Warning--empty journal in xie2024counterfactualreasoningmultilabelimage
+You've used 16 entries,
             1791 wiz_defined-function locations,
-            474 strings with 4257 characters,
-and the built_in function-call counts, 689 in all, are:
-= -- 47
-> -- 51
-< -- 0
-+ -- 18
-- -- 15
-* -- 59
-:= -- 128
-add.period$ -- 9
-call.type$ -- 3
-change.case$ -- 3
+            523 strings with 6980 characters,
+and the built_in function-call counts, 3503 in all, are:
+= -- 218
+> -- 311
+< -- 1
++ -- 109
+- -- 93
+* -- 253
+:= -- 638
+add.period$ -- 47
+call.type$ -- 16
+change.case$ -- 15
 chr.to.int$ -- 0
-cite$ -- 4
-duplicate$ -- 25
-empty$ -- 56
-format.name$ -- 15
-if$ -- 140
+cite$ -- 28
+duplicate$ -- 140
+empty$ -- 267
+format.name$ -- 93
+if$ -- 719
 int.to.chr$ -- 0
-int.to.str$ -- 3
-missing$ -- 3
-newline$ -- 18
-num.names$ -- 3
-pop$ -- 7
+int.to.str$ -- 16
+missing$ -- 16
+newline$ -- 82
+num.names$ -- 16
+pop$ -- 76
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 10
+skip$ -- 63
 stack$ -- 0
-substring$ -- 27
-swap$ -- 2
-text.length$ -- 0
+substring$ -- 69
+swap$ -- 15
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 1
-while$ -- 4
-width$ -- 4
-write$ -- 33
-(There was 1 warning)
+warning$ -- 12
+while$ -- 19
+width$ -- 18
+write$ -- 151
+(There were 12 warnings)

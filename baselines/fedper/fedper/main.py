@@ -47,13 +47,18 @@ def main(cfg: DictConfig) -> None:
     client_state_save_path = set_client_state_save_path()
 
     # 2. Prepare your dataset
-    dataset_main(cfg.dataset)
+    water_train_loader, water_test_loader, sky_train_loader, sky_test_loader = dataset_main(cfg.dataset)
+
 
     # 3. Define your clients
     # Get client function
     client_fn = get_client_fn(
         config=cfg,
         client_state_save_path=client_state_save_path,
+        water_train_loader=water_train_loader,
+        water_test_loader=water_test_loader,
+        sky_train_loader=sky_train_loader,
+        sky_test_loader=sky_test_loader,
     )
 
     # get a function that will be used to construct the config that the client's

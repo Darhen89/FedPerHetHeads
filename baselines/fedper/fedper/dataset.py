@@ -18,8 +18,7 @@ import numpy as np
 
 from fedper.dataset_preparation import (
     call_dataset,
-    flickr_preprocess,
-    randomly_assign_classes,
+    randomly_assign_classes, corel5k_preprocess,
 )
 
 # working dir is two up
@@ -80,7 +79,7 @@ def dataset_main(config: dict) -> None:
         # with open(dataset_root / "all_stats.json", "w") as f:
         #    json.dump(stats, f)
 
-    elif dataset_name.lower() == "flickr":
-        flickr_preprocess(dataset_root, config)
+    elif dataset_name.lower() == "corel5k":
+        return corel5k_preprocess(dataset_root, config)
     else:
         raise RuntimeError("Please implement the dataset preparation for your dataset.")

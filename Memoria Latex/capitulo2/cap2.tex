@@ -3,63 +3,23 @@
 \vspace*{5mm}
 
 %Introducción%
-En esta sección vamos a hacer un resumen sobre los trabajos realizados alrededor del problema de multi-etiquetado de imágenes en sistemas federados. Aunque no todos los estudios que vamos a revisar atacan directamente el problema sí que nos serán útiles para ver el estado de la implementación de sistemas federados heterogéneos.
+En esta sección vamos a hacer un resumen sobre los trabajos realizados alrededor del problema de multi-etiquetado de imágenes en sistemas federados centrándonos en el problema de la heterogeneidad y cómo solucionarla.
+
+\section{Federación heterogénea}
 
 %Comentarios sobre estado del arte de sistemas federados heterogéneos, cita: Ye:HFL_Survey%
-Lo primero que debemos entender es la categorización de nuestro caso y los problemas que presenta. El estudio Heterogeneous Federated Learning: State-of-the-art and Research Challenges ~\cite{Ye:HFL_Survey} realiza una clasificación de los problemas presentes en las diferentes arquitecturas de modelos federados. La característica principal de un modelo federado heterogéneo, y su principal problema, es que los datos no son independientes e identicamente distribuídos (no-IID). Centrándose en la distribución de los datos, el estudio los clasifica en cuatro categorías: desbalance de etiquetas, desbalance de características, desbalance de calidad y desbalance de cantidad.
+El estudio Heterogeneous Federated Learning: State-of-the-art and Research Challenges ~\cite{Ye:HFL_Survey} realiza una clasificación de los problemas presentes en las diferentes arquitecturas de modelos federados según si la heterogeneidad es estadística, en el modelo, en las comunicaciones o en los dispositivos. Si hablamos de la heterogeneidad estadística estamos hablando de los datos y el principal problema es que no sean independientes e identicamente distribuídos (no-IID) lo que hace que el aprendizaje se reduzca considerablemente ~\cite{Zhao_ML}~\cite{criado2021noniiddatacontinuallearning}. Ahondando más en esta categorización pueden tener desbalance de etiquetas, desbalance de características, desbalance de calidad y desbalance de cantidad. Artículos como ~\cite{Zhaobin:FedMLP} hablan de este problema en datos médicos y atacan el problema centrándose en la normalización de los datos.
 
-En nuestro caso y con respecto a los datos observamos un desbalance en etiquetas ya que la premisa es que cada cliente va a entrenar datos con etiquetas propias no compartidas con otros clientes, esto provoca dificultades en la convergencia del modelo global.
+El estudio también evalúa otros tipos de heterogeneidad en la comunicación, los dispositivos y los modelos y propone diferentes soluciones para mitigar estos problemas. El caso que nos compete tiene desbalance en etiquetas ya que como hemos comentado antes cada cliente va a entrenar una tarea distinta, por lo que los datos de cada uno solo tendrán un subconjunto de las etiquetas y también desbalance en los modelos ya que cada cliente va a tener un número de etiquetas diferente por lo que la salida de la red local no será consistente entre todo el sistema. En cuanto al desbalance en el modelo se proponen varias soluciones, una de ellas es la compartición de arquitectura, que consiste en compartir parte del modelo y hacer un entrenamiento personalizado, este método es capaz de solucionar tanto la heterogeneidad estadística como la de modelo y de dispositivo al mismo tiempo ~\cite{Manoj:FedPer}.
 
-El estudio también evalúa otros tipos de heterogeneidad en la comunicación, los dispositivos y los modelos. Ésta última es relevante ya que para la solución propuesta vamos a explorar el uso de diferentes modelos en cada cliente lo cuál aumenta los costes de entrenamiento, en la siguiente sección exponemos cómo atajar estor problemas.
-
-%Clasificación multi-etiqueta pero de datos tabulados, cita: Meng:MVML%
-~\cite{Meng:MVML}
-
-%atiende al problema pero se centra en las diferentes arquitecturas de red en vez de la arquitectura del sistema federado%
-%@misc{büyüktaş2024transformerbasedfederatedlearningmultilabel,
-      title={Transformer-based Federated Learning for Multi-Label Remote Sensing Image Classification}, 
-      author={Barış Büyüktaş and Kenneth Weitzel and Sebastian Völkers and Felix Zailskas and Begüm Demir},
-      year={2024},
-      eprint={2405.15405},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2405.15405}, 
-}%
-
-%Base de la que partiremos por simplicidad y herramientas, cita: Manoj:FedPer%
-~\cite{Manoj:FedPer}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id tortor eget tellus sollicitudin molestie. Morbi vehicula aliquam turpis, eget efficitur dolor rhoncus non. Integer mi odio, elementum non euismod sed, elementum eu dolor. Maecenas commodo sapien sed ultricies posuere. Ut molestie, mauris et tempor fermentum, ex massa consequat elit, eu consequat justo nibh ut augue. Sed in justo dui. Sed non molestie nisi. Ut fermentum nec ante sed ultrices. Vestibulum placerat quam urna, nec sollicitudin nibh rhoncus non. Curabitur pulvinar facilisis pouere ~\cite{Meng:MVML}.
-
-Donec eu dolor et quam porta vulputate vitae vulputate augue. Etiam fermentum, lectus vitae euismod feugiat, elit ligula luctus ante, eget commodo turpis leo vel quam. Aenean consectetur in turpis sit amet varius. Sed porta porttitor lectus, id tempus nunc suscipit vitae. Etiam blandit quam quis magna ornare pharetra. Aenean eget tortor nisi. Sed sit amet tempus eros. Phasellus pretium, nunc nec fringilla placerat, metus lectus maximus eros, nec condimentum neque ex nec orci. Vivamus facilisis at turpis sit amet maximus. Ut dolor justo, bibendum eget rhoncus eget, malesuada malesuada lacus. Suspendisse potenti.
-
-\begin{equation}
-    \frac{1}{n} + \sum_1^n \alpha_i \cdot w_{ij} 
-\end{equation}
-
-Donec augue nulla, semper ac tempor sit amet, vehicula sed est, $\alpha_i \cdot w_{ij} $. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel convallis justo, quis feugiat velit. Etiam fermentum, risus et venenatis rhoncus, ipsum ligula congue neque, sed consectetur arcu turpis vel metus. Integer ornare turpis et luctus ullamcorper. Ut placerat a ex et consequat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
-Donec eu dolor et quam porta vulputate vitae vulputate augue. Etiam fermentum, lectus vitae euismod feugiat, elit ligula luctus ante, eget commodo turpis leo vel quam. Aenean consectetur in turpis sit amet varius. Sed porta porttitor lectus, id tempus nunc suscipit vitae. Etiam blandit quam quis magna ornare pharetra. Aenean eget tortor nisi. Sed sit amet tempus eros. Phasellus pretium, nunc nec fringilla placerat, metus lectus maximus eros, nec condimentum neque ex nec orci. Vivamus facilisis at turpis sit amet maximus. Ut dolor justo, bibendum eget rhoncus eget, malesuada malesuada lacus. Suspendisse potenti.
-
-\section{Primera sección}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id tortor eget tellus sollicitudin molestie. Morbi vehicula aliquam turpis, eget efficitur dolor rhoncus non. Integer mi odio, elementum non euismod sed, elementum eu dolor. Maecenas commodo sapien sed ultricies posuere. Ut molestie, mauris et tempor fermentum, ex massa consequat elit, eu consequat justo nibh ut augue. Sed in justo dui. Sed non molestie nisi. Ut fermentum nec ante sed ultrices. Vestibulum placerat quam urna, nec sollicitudin nibh rhoncus non. Curabitur pulvinar facilisis posuere.
-
-Donec eu dolor et quam porta vulputate vitae vulputate augue. Etiam fermentum, lectus vitae euismod feugiat, elit ligula luctus ante, eget commodo turpis leo vel quam. Aenean consectetur in turpis sit amet varius. Sed porta porttitor lectus, id tempus nunc suscipit vitae. Etiam blandit quam quis magna ornare pharetra. Aenean eget tortor nisi. Sed sit amet tempus eros. Phasellus pretium, nunc nec fringilla placerat, metus lectus maximus eros, nec condimentum neque ex nec orci. Vivamus facilisis at turpis sit amet maximus. Ut dolor justo, bibendum eget rhoncus eget, malesuada malesuada lacus. Suspendisse potenti.
-
-Donec augue nulla, semper ac tempor sit amet, vehicula sed est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel convallis justo, quis feugiat velit. Etiam fermentum, risus et venenatis rhoncus, ipsum ligula congue neque, sed consectetur arcu turpis vel metus. Integer ornare turpis et luctus ullamcorper. Ut placerat a ex et consequat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
-
-\section{Segunda sección}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id tortor eget tellus sollicitudin molestie. Morbi vehicula aliquam turpis, eget efficitur dolor rhoncus non. Integer mi odio, elementum non euismod sed, elementum eu dolor. Maecenas commodo sapien sed ultricies posuere. Ut molestie, mauris et tempor fermentum, ex massa consequat elit, eu consequat justo nibh ut augue. Sed in justo dui. Sed non molestie nisi. Ut fermentum nec ante sed ultrices. Vestibulum placerat quam urna, nec sollicitudin nibh rhoncus non. Curabitur pulvinar facilisis posuere.
-
-Donec eu dolor et quam porta vulputate vitae vulputate augue. Etiam fermentum, lectus vitae euismod feugiat, elit ligula luctus ante, eget commodo turpis leo vel quam. Aenean consectetur in turpis sit amet varius. Sed porta porttitor lectus, id tempus nunc suscipit vitae. Etiam blandit quam quis magna ornare pharetra. Aenean eget tortor nisi. Sed sit amet tempus eros. Phasellus pretium, nunc nec fringilla placerat, metus lectus maximus eros, nec condimentum neque ex nec orci. Vivamus facilisis at turpis sit amet maximus. Ut dolor justo, bibendum eget rhoncus eget, malesuada malesuada lacus. Suspendisse potenti.
-
-Donec augue nulla, semper ac tempor sit amet, vehicula sed est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel convallis justo, quis feugiat velit. Etiam fermentum, risus et venenatis rhoncus, ipsum ligula congue neque, sed consectetur arcu turpis vel metus. Integer ornare turpis et luctus ullamcorper. Ut placerat a ex et consequat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
+Los métodos a nivel de datos pueden resolver el problema asociado a las grandes diferencias en la distribución de los datos y acelerar la convergencia reduciendo heterogeneidad estadística entre ellos. Por el contrario, los métodos a nivel de modelo buscan aprender un modelo local para cada cliente que se adapte a su distribución de datos privada, esta solución es la que queremos estudiar en este trabajo.
 
 
-\section{Tercera sección}
+\section{Clasificación de imágenes multi-etiqueta}
 
-\subsection{Incluso subsección dentro de la tercera}
+En cuanto al problema de clasificación multi-etiqueta en el reciente estudio Rethinking Multi-Label Image Classification With Deep Learning: Taxonomy, Challenge, and Outlook ~\cite{zhu2026rethinkingmultilabelimageclassification} analiza el cambio de paradigma en el problema que han traido los sistemas basados en redes convolucionales y transformers y estudia como diferentes métodos derivados de estas redes han mejorado la calidad de los sistemas de aprendizaje para esta tarea. Podemos encontrar un benchmarking de diferentes arquitecturas de redes como ResNet101 ~\cite{he2015deepresiduallearningimage}, ViT-Base ~\cite{dosovitskiy2021imageworth16x16words}, ML-GCN ~\cite{chen2019multilabelimagerecognitiongraph}, ASL ~\cite{benbaruch2021asymmetriclossmultilabelclassification}, Q2L ~\cite{liu2021query2labelsimpletransformerway}, SALGL ~\cite{10378641}, SGRE ~\cite{10546293}, and PAT ~\cite{xie2024counterfactualreasoningmultilabelimage}.
+
+En cuanto a la resolución del problema conjunto de crear un clasificador multi-etiqueta dentro de un entorno federado, como ya hemos visto anterioremente hay estudios que se centran en evitar el problema haciendo un tratamiento previo de los datos para evitar el desbalanceo, otros estudian diferentes arquitecturas de la red como Transformer-based Federated Learning for Multi-Label Remote Sensing Image Classification ~\cite{2024transformerbasedfederatedlearningmultilabel}. Sin embargo estos estudios comparten la misma red entre los clientes o se aplican sobre datos tabulados. Nuestra propuesta requiere que la distribución de los datos contenga diferente número de etiquetas y que el sistema acepte una arquitectura con diferentes redes, no hemos encontrado ningún estudio que una todos estos conceptos en una solución.
 
 
 %%

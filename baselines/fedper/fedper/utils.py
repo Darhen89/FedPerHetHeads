@@ -12,6 +12,7 @@ import numpy as np
 from flwr.client import Client
 from flwr.server.history import History
 from omegaconf import DictConfig
+from torch.utils.data import DataLoader
 
 from fedper.client import get_client_fn_simulation
 from fedper.implemented_models.mobile_model import MobileNet, MobileNetModelSplit
@@ -43,6 +44,9 @@ def set_num_classes(config: DictConfig) -> DictConfig:
         config.batch_size = 4
         config.num_clients = 30
         config.clients_per_round = 30
+    elif config.dataset.name.lower() == "corel5k":
+        config.model.num_classes_water = 179
+        config.model.num_classes_sky = 168
     else:
         raise NotImplementedError(f"Dataset {config.dataset.name} not implemented")
     return config
@@ -73,7 +77,12 @@ def set_client_state_save_path() -> str:
 
 
 def get_client_fn(
-    config: DictConfig, client_state_save_path: str = ""
+    config: DictConfig,
+    client_state_save_path: str = "",
+    water_train_loader: DataLoader = None,
+    water_test_loader: DataLoader = None,
+    sky_train_loader: DataLoader = None,
+    sky_test_loader: DataLoader = None,
 ) -> Callable[[str], Client]:
     """Get client function."""
     # Get algorithm
@@ -83,10 +92,10 @@ def get_client_fn(
         client_fn = get_client_fn_simulation(
             config=config,
             client_state_save_path=client_state_save_path,
-        )
-    elif algorithm == "fedavg":
-        client_fn = get_client_fn_simulation(
-            config=config,
+            water_train_loader=water_train_loader,
+            water_test_loader=water_test_loader,
+            sky_train_loader=sky_train_loader,
+            sky_test_loader=sky_test_loader,
         )
     else:
         raise NotImplementedError
@@ -121,8 +130,8 @@ def get_create_model_fn(
             return ResNet(
                 num_head_layers=config.model.num_head_layers,
                 num_classes=config.model.num_classes,
-                num_classes_animals=config.model.num_classes_animals,
-                num_classes_vehicles=config.model.num_classes_vehicles,
+                num_classes_water=config.model.num_classes_water,
+                num_classes_sky=config.model.num_classes_sky,
             ).to(device)
 
     else:

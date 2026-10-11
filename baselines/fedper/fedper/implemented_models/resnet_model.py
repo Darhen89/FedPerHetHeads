@@ -7,6 +7,7 @@ import torch.nn as nn
 from omegaconf import DictConfig
 from torch.utils.data import DataLoader
 from torchvision.models.resnet import resnet34
+from sklearn.metrics import f1_score
 
 from fedper.models import ModelManager, ModelSplit
 
@@ -81,15 +82,11 @@ class ResNet(nn.Module):
         self,
         num_head_layers: int = 1,
         num_classes: int = 10,
-        num_classes_animals: int = 6,
-        num_classes_vehicles: int = 4,
-        client_id: int = 0,
+        num_classes_water: int = 179,
+        num_classes_sky: int = 168,
+        client_id: int = -1,
     ) -> None:
         super(ResNet, self).__init__()
-
-        """@@@@ Here I have to set the heads based on the client id or data classes.@@@@"""
-        """@@@@ @@@@"""
-
 
         assert (
             num_head_layers > 0 and num_head_layers <= 17
@@ -99,10 +96,11 @@ class ResNet(nn.Module):
         self.body = resnet34()
 
         # if only one head layer
+
         if client_id == 0 or client_id == 1:
-            num_classes = num_classes_animals
+            num_classes = num_classes_water
         elif client_id == 2 or client_id == 3:
-            num_classes = num_classes_vehicles
+            num_classes = num_classes_sky
 
         if self.num_head_layers == 1:
             self.head = self.body.fc
@@ -134,8 +132,6 @@ class ResNet(nn.Module):
             self.body.layer4 = nn.Sequential(*list(body_layer4.children())[:-2])
         else:
             raise NotImplementedError("Only 1 or 2 head layers supported")
-
-        print("Num classes: ", num_classes)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward inputs through the model."""
@@ -173,15 +169,18 @@ class ResNetModelManager(ModelManager):
             testloader: DataLoader containing the test data.
             learning_rate: Learning rate for the optimizer.
         """
+
         super().__init__(
             model_split_class=ResNetModelSplit,
             client_id=client_id,
             config=config,
         )
+
         self.client_save_path = client_save_path
         self.trainloader, self.testloader = trainloader, testloader
         self.device = self.config["server_device"]
         self.learning_rate = learning_rate
+
 
     def _create_model(self) -> nn.Module:
         """Return MobileNet-v1 model to be splitted into head and body."""
@@ -196,6 +195,7 @@ class ResNetModelManager(ModelManager):
             return ResNet(
                 num_head_layers=self.config["model"]["num_head_layers"],
                 num_classes=self.config["model"]["num_classes"],
+                client_id=self.client_id
             ).to(self.device)
 
     def train(
@@ -221,30 +221,45 @@ class ResNetModelManager(ModelManager):
             except FileNotFoundError:
                 print("No client state found, training from scratch.")
                 pass
-        criterion = torch.nn.CrossEntropyLoss()
+
+        criterion = torch.nn.BCEWithLogitsLoss().to(self.device)
+        #criterion = torch.nn.CrossEntropyLoss().to(self.device)
         optimizer = torch.optim.SGD(
             self.model.parameters(), lr=self.learning_rate, momentum=0.9
         )
+
+
+
+        epoch_count = 0
+        train_roc_auc = 0
         correct, total = 0, 0
-        loss: torch.Tensor = 0.0
-        # self.model.train()
+        running_loss = 0.0
         for _ in range(epochs):
+            epoch_count = epoch_count + 1
             for batch in self.trainloader:
                 optimizer.zero_grad()
-                outputs = self.model(batch["img"].to(self.device))
-                labels = batch["label"].to(self.device)
+                outputs = self.model(batch["image_name"].to(self.device))
+                labels = batch["image_labels"].to(self.device)
                 loss = criterion(outputs, labels)
-                loss.backward()
 
+                loss.backward()
                 optimizer.step()
+
+                running_loss += loss.item()
+
+                preds = (outputs > 0.5).long()
+
+                correct += (preds == labels).all(dim=1).sum().item()
+
                 total += labels.size(0)
-                correct += (torch.max(outputs.data, 1)[1] == labels).sum().item()
+                #correct += (preds == labels).sum().item()
+                #total += labels.numel()
 
         # Save client state (head)
         if self.client_save_path is not None:
             torch.save(self.model.head.state_dict(), self.client_save_path)
 
-        return {"loss": loss.item(), "accuracy": correct / total}
+        return {"loss": running_loss / len(self.trainloader), "accuracy": correct / total}
 
     def test(
         self,
@@ -254,24 +269,43 @@ class ResNetModelManager(ModelManager):
         if self.client_save_path is not None:
             self.model.head.load_state_dict(torch.load(self.client_save_path))
 
-        criterion = torch.nn.CrossEntropyLoss()
+        criterion = torch.nn.BCEWithLogitsLoss().to(self.device)
         correct, total, loss = 0, 0, 0.0
+        running_loss = 0.0
         # self.model.eval()
+        micro_f1 = 0.0
+        weighted_f1 = 0.0
         with torch.no_grad():
             for batch in self.testloader:
-                outputs = self.model(batch["img"].to(self.device))
-                labels = batch["label"].to(self.device)
-                loss += criterion(outputs, labels).item()
-                total += batch["label"].size(0)
-                correct += (torch.max(outputs.data, 1)[1] == labels).sum().item()
-        print("Test Accuracy: {:.4f}".format(correct / total))
+                outputs = self.model(batch["image_name"].to(self.device))
+                labels = batch["image_labels"].to(self.device)
+                loss = criterion(outputs, labels)
+
+                running_loss += loss.item()
+
+                preds = (outputs > 0).long()
+                correct += (preds == labels).all(dim=1).sum().item()
+                total += labels.size(0)
+                #correct += (preds == labels).sum().item()
+                #total += labels.numel()
+                batch_micro_f1 = 0.0
+                batch_weighted_f1 = 0.0
+                for pred, label in zip(preds, labels):
+                    pred_list = pred.tolist()
+                    label_list = label.tolist()
+                    batch_micro_f1 += f1_score(label_list, pred_list, average='micro')
+                    batch_weighted_f1 += f1_score(label_list, pred_list, average='weighted')
+                micro_f1 += batch_micro_f1 / len(labels)
+                weighted_f1 += batch_weighted_f1 / len(labels)
 
         if self.client_save_path is not None:
             torch.save(self.model.head.state_dict(), self.client_save_path)
 
         return {
-            "loss": loss / len(self.testloader.dataset),
+            "loss": running_loss / len(self.testloader),
             "accuracy": correct / total,
+            "f1_micro": micro_f1 / total,
+            "f1_weighted": weighted_f1 / total
         }
 
     def train_dataset_size(self) -> int:

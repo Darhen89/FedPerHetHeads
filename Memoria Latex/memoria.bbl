@@ -1,4 +1,9 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{Yang_FL}
+Qiang Yang, Yang Liu, Yong Cheng, Yan Kang, Tianjian Chen, and Han Yu.
+\newblock {\em Federated Learning}.
+\newblock Morgan \& Claypool publishers, 2019.
 
 \bibitem{Ye:HFL_Survey}
 Mang Ye, Xiuwen Fang, Bo~Du, Pong~C. Yuen, and Dacheng Tao.
@@ -6,16 +11,90 @@ Mang Ye, Xiuwen Fang, Bo~Du, Pong~C. Yuen, and Dacheng Tao.
   challenges.
 \newblock {\em ACM Comput. Surv.}, 56(3), October 2023.
 
+\bibitem{Zhao_ML}
+Yue Zhao, Meng Li, Liangzhen Lai, Naveen Suda, Damon Civin, and Vikas Chandra.
+\newblock Federated learning with non-iid data.
+\newblock 2018.
+
+\bibitem{criado2021noniiddatacontinuallearning}
+Marcos~F. Criado, Fernando~E. Casado, Roberto Iglesias, Carlos~V. Regueiro, and
+  Senén Barro.
+\newblock Non-iid data and continual learning processes in federated learning:
+  A long road ahead.
+\newblock 2021.
+
+\bibitem{Zhaobin:FedMLP}
+Zhaobin Sun, Nannan Wu, Junjie Shi, Li~Yu, Xin Yang, Kwang-Ting Cheng, and
+  Zengqiang Yan.
+\newblock Fedmlp: Federated multi-label medical image classification under task
+  heterogeneity.
+\newblock 2024.
+
 \bibitem{Manoj:FedPer}
 Manoj~Ghuhan Arivazhagan, Vinay Aggarwal, Aaditya~Kumar Singh, and Sunav
   Choudhary.
 \newblock Federated learning with personalization layers.
 \newblock 2019.
 
-\bibitem{Meng:MVML}
-Hongdao Meng, Yongjian Deng, Qiyu Zhong, Yipeng Wang, Zhen Yang, and Gengyu
-  Lyu.
-\newblock Federated multi-view multi-label classification.
-\newblock {\em IEEE Transactions on Big Data}, 11(4):2072--2084, 2025.
+\bibitem{zhu2026rethinkingmultilabelimageclassification}
+Xuelin Zhu, Xiu-Shen Wei, Jiawei Ge, Shuai Xu, and Bing Wang.
+\newblock Rethinking multi-label image classification with deep learning:
+  Taxonomy, challenge, and outlook.
+\newblock 2026.
+
+\bibitem{he2015deepresiduallearningimage}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock 2015.
+
+\bibitem{dosovitskiy2021imageworth16x16words}
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn,
+  Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg
+  Heigold, Sylvain Gelly, Jakob Uszkoreit, and Neil Houlsby.
+\newblock An image is worth 16x16 words: Transformers for image recognition at
+  scale.
+\newblock 2021.
+
+\bibitem{chen2019multilabelimagerecognitiongraph}
+Zhao-Min Chen, Xiu-Shen Wei, Peng Wang, and Yanwen Guo.
+\newblock Multi-label image recognition with graph convolutional networks.
+\newblock 2019.
+
+\bibitem{benbaruch2021asymmetriclossmultilabelclassification}
+Emanuel Ben-Baruch, Tal Ridnik, Nadav Zamir, Asaf Noy, Itamar Friedman, Matan
+  Protter, and Lihi Zelnik-Manor.
+\newblock Asymmetric loss for multi-label classification.
+\newblock 2021.
+
+\bibitem{liu2021query2labelsimpletransformerway}
+Shilong Liu, Lei Zhang, Xiao Yang, Hang Su, and Jun Zhu.
+\newblock Query2label: A simple transformer way to multi-label classification.
+\newblock 2021.
+
+\bibitem{10378641}
+Xuelin Zhu, Jian Liu, Weijia Liu, Jiawei Ge, Bo~Liu, and Jiuxin Cao.
+\newblock Scene-aware label graph learning for multi-label image
+  classification.
+\newblock pages 1473--1482, 2023.
+
+\bibitem{10546293}
+Xuelin Zhu, Jianshu Li, Jiuxin Cao, Dongqi Tang, Jian Liu, and Bo~Liu.
+\newblock Semantic-guided representation enhancement for multi-label image
+  classification.
+\newblock {\em IEEE Transactions on Circuits and Systems for Video Technology},
+  34(10):10036--10049, 2024.
+
+\bibitem{xie2024counterfactualreasoningmultilabelimage}
+Ming-Kun Xie, Jia-Hao Xiao, Pei Peng, Gang Niu, Masashi Sugiyama, and Sheng-Jun
+  Huang.
+\newblock Counterfactual reasoning for multi-label image classification via
+  patching-based training.
+\newblock 2024.
+
+\bibitem{2024transformerbasedfederatedlearningmultilabel}
+Barış Büyüktaş, Kenneth Weitzel, Sebastian Völkers, Felix Zailskas, and
+  Begüm Demir.
+\newblock Transformer-based federated learning for multi-label remote sensing
+  image classification, 2024.
 
 \end{thebibliography}
