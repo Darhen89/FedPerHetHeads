@@ -5,11 +5,15 @@
 \contentsline {chapter}{\numberline {2}Estado del arte}{5}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Federaci\IeC {\'o}n heterog\IeC {\'e}nea}{5}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Clasificaci\IeC {\'o}n de im\IeC {\'a}genes multi-etiqueta}{6}{section.2.2}%
-\contentsline {chapter}{\numberline {3}Nombre de la propuesta}{7}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Estudio experimental}{9}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Configuraci\IeC {\'o}n de los experimentos}{9}{section.4.1}%
-\contentsline {section}{\numberline {4.2}An\IeC {\'a}lisis de resultados}{10}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{11}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Conclusiones}{11}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Trabajo futuro}{12}{section.5.2}%
-\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{13}{section.5.2}%
+\contentsline {chapter}{\numberline {3}Federaci\IeC {\'o}n con capas personalizadas y salidas heterog\IeC {\'e}neas (FedPerH)}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Descripci\IeC {\'o}n del problema}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Datos de entrenamiento}{8}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Arquitectura de la soluci\IeC {\'o}n}{9}{section.3.3}%
+\contentsline {section}{\numberline {3.4}M\IeC {\'e}tricas}{9}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Estudio experimental}{11}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Configuraci\IeC {\'o}n de los experimentos}{11}{section.4.1}%
+\contentsline {section}{\numberline {4.2}An\IeC {\'a}lisis de resultados}{12}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{13}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Conclusiones}{13}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Trabajo futuro}{14}{section.5.2}%
+\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{15}{section.5.2}%

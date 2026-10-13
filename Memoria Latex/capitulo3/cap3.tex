@@ -1,10 +1,49 @@
-\chapter{Nombre de la propuesta} \label{cap3}
+\chapter{Federación con capas personalizadas y salidas heterogéneas (FedPerH)} \label{cap3}
 
 \vspace*{5mm}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id tortor eget tellus sollicitudin molestie. Morbi vehicula aliquam turpis, eget efficitur dolor rhoncus non. Integer mi odio, elementum non euismod sed, elementum eu dolor. Maecenas commodo sapien sed ultricies posuere. Ut molestie, mauris et tempor fermentum, ex massa consequat elit, eu consequat justo nibh ut augue. Sed in justo dui. Sed non molestie nisi. Ut fermentum nec ante sed ultrices. Vestibulum placerat quam urna, nec sollicitudin nibh rhoncus non. Curabitur pulvinar facilisis posuere.
+En esta sección vamos a definir el problema que debemos solucionar, concretaremos las herramientas que usaremos basándonos en el estado del arte de la sección anterior y describiremos la arquitectura que hemos propuesto para la solución de dicho problema.
 
-Donec eu dolor et quam porta vulputate vitae vulputate augue. Etiam fermentum, lectus vitae euismod feugiat, elit ligula luctus ante, eget commodo turpis leo vel quam. Aenean consectetur in turpis sit amet varius. Sed porta porttitor lectus, id tempus nunc suscipit vitae. Etiam blandit quam quis magna ornare pharetra. Aenean eget tortor nisi. Sed sit amet tempus eros. Phasellus pretium, nunc nec fringilla placerat, metus lectus maximus eros, nec condimentum neque ex nec orci. Vivamus facilisis at turpis sit amet maximus. Ut dolor justo, bibendum eget rhoncus eget, malesuada malesuada lacus. Suspendisse potenti.
 
-Donec augue nulla, semper ac tempor sit amet, vehicula sed est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel convallis justo, quis feugiat velit. Etiam fermentum, risus et venenatis rhoncus, ipsum ligula congue neque, sed consectetur arcu turpis vel metus. Integer ornare turpis et luctus ullamcorper. Ut placerat a ex et consequat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
+
+
+\section{Descripción del problema}
+
+El problema que estamos intentando resolver es la clasificación de imágenes multi-etiqueta en un entorno federado y validar la viabilidad de que cada cliente tenga etiquetas que no estén compartidas con los demás clientes. 
+
+Como casos de uso podemos plantear un entorno en el que varios centros médicos de diferentes disciplinas quieren hacer uso de un sistema de procesado de imágenes médicas sin que estas abandonen los centros. El coste de que cada centro entrene su propio modelo es alto y requeriría un gran número de datos de entrenamiento. Para que todos los centros pudieran colaborar en entrenar un mismo modelo tendrían que agregar las imágenes médicas en un mismo servidor y esto crearía problemas de privacidad y políticas de tratamiento de datos. Un sistema federado puede solucionar estos problemas ya que los datos no abandonan los clientes y al participar todos ellos en el entrenamiento común el resultado que obtienen es mayor que el aporte que hacen al entrenamiento por separado, por lo que los recursos son usados de manera más eficiente.
+
+Sin embargo aún tendríamos un problema y es el de la especialización de cada cliente, en el supuesto actual todos ellos deberían realizar la misma tarea pero lo que queremos es que las tareas sean diferentes para cada uno. Por tanto antes debemos crear un desbalance en las etiquetas de los datos de entrenamiento y variar el número de clases de salida en los modelos. De esta forma nos aseguramos de que las tareas de entrenamiento son diferentes para cada cliente.
+
+Por tanto vamos a crear un sistema federado en el que cada cliente tendrá un modelo diferente y usaremos un dataset de imágenes con una o más etiquetas para cada ejemplo.
+
+\section{Datos de entrenamiento}
+
+Para los datos de entrenamiento vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o clases ~\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}.
+
+El dataset se compone de una carpeta con las 5000 imágenes y tres archivos csv que asignan las etiquetas a cada nombre de imagen. Lo primero que hacemos es componer tres DataFrame de Pandas, uno por cada archivo csv de manera que para cada elemento en la columna "\verb|image_name|" tiene las imágenes en formato PIL y en la columna "\verb|image_labels|" tiene una lista con el nombre de cada etiqueta de esa imagen. Luego los unimos en un único DataFrame ya que es más cómodo trabajar con todos los datos juntos.
+
+Una vez tenemos un único DataFrame el siguiente paso es separarlo en dos de manera que tengamos dos conjuntos de datos con etiquetas diferentes, para ello primero contamos el número de etiquetas totales del dataset y lo ordenamos por las que más se repiten, en nuestro caso son "water" y "sky". Creamos un subconjunto de ejemplos que contienen la etiqueta "water" y eliminamos de ese subconjunto todas las etiquetas "sky", de esta manera conseguimos que la etiqueta "sky" sea exclusiva del segundo conjunto el cuál tendrá un procesado similar pero seleccionando los ejemplos que contengan "sky" y eliminando la etiqueta "water".
+
+Ya hemos conseguido dos DataFrame que contienen clases exclusivas, en este paso vamos a convertirlos al tipo Dataset para seguir trabajando con ellos y dividir cada uno en dos subconjuntos "train" y "test" en una distribución de 80 y 20\%. Ahora tenemos un DataSet de imágenes y etiquetas en forma de palabras que vamos a cambiar para que sean números desde 0 hasta el número de etiquetas para el conjunto water y lo mismo para sky. Seleccionamos todas las etiquetas únicas de cada conjunto y las numeramos desde 0 hasta el tamaño del conjunto de etiquetas únicas -1 y luego aplicamos una transformación al DataSet para que intercambie cada etiqueta por su identificador.
+
+Una vez tenemos el remapeo de etiquetas lo siguente es realizar transformaciones aleatorias sobre las imágenes para normalizarlas y para añadir varibilidad en el entrenamiento. Las operaciones que vamos a aplicar son reescalar a un tamaño de 32x32, volcado horizontal aleatorio, rotación aleatoria, recorte central, normalización y los conjuntos de etiquetas los vamos a poner en formato one-hot.
+
+Por último vamos a configurar los DataLoaders que serán los conjuntos que se van a usar para el entrenamiento y la evaluación ajustando el formato para que tenga un diccionario con todas las imágenes en "\verb|image_name|" y todas las etiquetas en one-hot en "\verb|image_name|".
+
+Con estos DataLoaders podemos empezar a trabajar.
+
+
+
+\section{Arquitectura de la solución}
+
+%Backbone Resnet
+%Fedper
+%Modificaciones para multi-etiqueta
+
+\section{Métricas}
+
+
+
+
 
