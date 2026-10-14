@@ -80,94 +80,66 @@ def main(cfg: DictConfig) -> None:
     set_4_df.loc[:, 'image_labels'] = set_4_df['image_labels'].apply(lambda labels: [label for label in labels if label in set_4_labels])
     set_4_df.reset_index(drop=True, inplace=True)
 
+    set_1_ds = Dataset.from_dict(set_1_df.to_dict(orient='list'))
+    set_2_ds = Dataset.from_dict(set_2_df.to_dict(orient='list'))
+    set_3_ds = Dataset.from_dict(set_3_df.to_dict(orient='list'))
+    set_4_ds = Dataset.from_dict(set_4_df.to_dict(orient='list'))
 
-    print(set_1_df.shape)
-    print(set_2_df.shape)
-    print(set_3_df.shape)
-    print(set_4_df.shape)
+    set_1_ds_partition = set_1_ds.train_test_split(test_size=0.2)
+    set_2_ds_partition = set_2_ds.train_test_split(test_size=0.2)
+    set_3_ds_partition = set_3_ds.train_test_split(test_size=0.2)
+    set_4_ds_partition = set_4_ds.train_test_split(test_size=0.2)
 
-    water_ds = Dataset.from_dict(water_df.to_dict(orient='list'))
-    sky_ds = Dataset.from_dict(sky_df.to_dict(orient='list'))
+    train_set_1_ds = set_1_ds_partition['train']
+    test_set_1_ds = set_1_ds_partition['test']
+    train_set_2_ds = set_2_ds_partition['train']
+    test_set_2_ds = set_2_ds_partition['test']
+    train_set_3_ds = set_3_ds_partition['train']
+    test_set_3_ds = set_3_ds_partition['test']
+    train_set_4_ds = set_4_ds_partition['train']
+    test_set_4_ds = set_4_ds_partition['test']
 
-    water_partition = water_ds.train_test_split(test_size=0.2)
-    sky_partition = sky_ds.train_test_split(test_size=0.2)
+    set_1_map = {'water': 0, 'buildings': 1, 'rocks': 2, 'field': 3, 'sand': 4, 'cars': 5, 'polar': 6, 'ruins': 7, 'statue': 8, 'wall': 9}
+    set_2_map = {'sky': 0, 'mountain': 1, 'stone': 2, 'street': 3, 'birds': 4, 'leaf': 5, 'valley': 6, 'garden': 7, 'horses': 8, 'cat': 9}
+    set_3_map = {'tree': 0, 'flowers': 1, 'snow': 2, 'plane': 3, 'beach': 4, 'plants': 5, 'house': 6, 'hills': 7, 'tracks': 8, 'ocean': 9}
+    set_4_map = {'people': 0, 'grass': 1, 'clouds': 2, 'bear': 3, 'boats': 4, 'jet': 5, 'bridge': 6, 'close-up': 7, 'sun': 8, 'ice': 9}
 
-    water_map = {'herd': 0, 'tiger': 1, 'reflection': 2, 'cat': 3, 'grass': 4, 'harbor': 5, 'sunrise': 6, 'snow': 7,
-                 'face': 8, 'museum': 9, 'scotland': 10, 'formation': 11, 'bush': 12, 'ocean': 13, 'plane': 14,
-                 'branch': 15, 'kauai': 16, 'moose': 17, 'calf': 18, 'tree': 19, 'frozen': 20, 'grizzly': 21,
-                 'white-tailed': 22, 'hut': 23, 'fish': 24, 'road': 25, 'river': 26, 'roofs': 27, 'cave': 28,
-                 'valley': 29, 'restaurant': 30, 'elk': 31, 'tusks': 32, 'stone': 33, 'temple': 34, 'lighthouse': 35,
-                 'booby': 36, 'market': 37, 'desert': 38, 'windmills': 39, 'silhouette': 40, 'interior': 41,
-                 'iguana': 42, 'pool': 43, 'sun': 44, 'sunset': 45, 'palace': 46, 'hills': 47, 'flight': 48,
-                 'decoration': 49, 'swimmers': 50, 'cottage': 51, 'lizard': 52, 'lake': 53, 'locomotive': 54,
-                 'meadow': 55, 'courtyard': 56, 'mountain': 57, 'close-up': 58, 'shore': 59, 'marine': 60, 'door': 61,
-                 'cafe': 62, 'people': 63, 'cars': 64, 'horizon': 65, 'bear': 66, 'garden': 67, 'log': 68,
-                 'monastery': 69, 'house': 70, 'bengal': 71, 'african': 72, 'forest': 73, 'sand': 74, 'castle': 75,
-                 'palm': 76, 'reefs': 77, 'tulip': 78, 'wood': 79, 'canyon': 80, 'city': 81, 'shops': 82, 'sign': 83,
-                 'train': 84, 'black': 85, 'pillar': 86, 'dress': 87, 'athlete': 88, 'shrubs': 89, 'waves': 90,
-                 'wall': 91, 'peaks': 92, 'hotel': 93, 'vegetation': 94, 'cubs': 95, 'birds': 96, 'rocks': 97,
-                 'clouds': 98, 'elephant': 99, 'shadows': 100, 'porcupine': 101, 'dock': 102, 'lawn': 103, 'light': 104,
-                 'monument': 105, 'sea': 106, 'gate': 107, 'horns': 108, 'fox': 109, 'crab': 110, 'zebra': 111,
-                 'polar': 112, 'oahu': 113, 'nets': 114, 'lion': 115, 'hillside': 116, 'night': 117, 'island': 118,
-                 'bulls': 119, 'ruins': 120, 'rodent': 121, 'town': 122, 'water': 123, 'buildings': 124, 'caribou': 125,
-                 'tundra': 126, 'ships': 127, 'art': 128, 'antlers': 129, 'clothes': 130, 'coyote': 131, 'statue': 132,
-                 'plants': 133, 'window': 134, 'canal': 135, 'leaf': 136, 'bridge': 137, 'arctic': 138, 'flowers': 139,
-                 'giraffe': 140, 'nest': 141, 'coast': 142, 'tower': 143, 'ground': 144, 'sails': 145, 'anemone': 146,
-                 'mist': 147, 'maui': 148, 'street': 149, 'petals': 150, 'display': 151, 'park': 152, 'skyline': 153,
-                 'field': 154, 'frost': 155, 'marsh': 156, 'head': 157, 'buddhist': 158, 'church': 159, 'fence': 160,
-                 'landscape': 161, 'whales': 162, 'dunes': 163, 'arch': 164, 'farms': 165, 'flag': 166, 'land': 167,
-                 'entrance': 168, 'railroad': 169, 'hawaii': 170, 'ice': 171, 'deer': 172, 'sculpture': 173,
-                 'village': 174, 'fountain': 175, 'coral': 176, 'boats': 177, 'beach': 178}
-    sky_map = {'sand': 0, 'temple': 1, 'mountain': 2, 'door': 3, 'prop': 4, 'stems': 5, 'sunset': 6, 'tracks': 7,
-               'dock': 8, 'waves': 9, 'herd': 10, 'zebra': 11, 'tower': 12, 'canal': 13, 'entrance': 14, 'forest': 15,
-               'jet': 16, 'beach': 17, 'caribou': 18, 'smoke': 19, 'ground': 20, 'stone': 21, 'festival': 22,
-               'flag': 23, 'hotel': 24, 'palace': 25, 'buddha': 26, 'hut': 27, 'tiger': 28, 'rocks': 29, 'village': 30,
-               'window': 31, 'hills': 32, 'elephant': 33, 'black': 34, 'river': 35, 'land': 36, 'gate': 37, 'fence': 38,
-               'shadows': 39, 'lighthouse': 40, 'kauai': 41, 'street': 42, 'field': 43, 'goat': 44, 'courtyard': 45,
-               'flight': 46, 'sign': 47, 'buildings': 48, 'bridge': 49, 'albatross': 50, 'wall': 51, 'cottage': 52,
-               'ruins': 53, 'town': 54, 'fountain': 55, 'valley': 56, 'leaf': 57, 'island': 58, 'light': 59,
-               'roofs': 60, 'vegetation': 61, 'sun': 62, 'clouds': 63, 'tree': 64, 'arch': 65, 'deer': 66, 'maui': 67,
-               'buddhist': 68, 'art': 69, 'cat': 70, 'pool': 71, 'sculpture': 72, 'coyote': 73, 'cathedral': 74,
-               'restaurant': 75, 'statue': 76, 'tulip': 77, 'church': 78, 'pillar': 79, 'silhouette': 80, 'frozen': 81,
-               'baby': 82, 'sky': 83, 'antelope': 84, 'monument': 85, 'bush': 86, 'ceremony': 87, 'windmills': 88,
-               'bulls': 89, 'giraffe': 90, 'lawn': 91, 'post': 92, 'ice': 93, 'bear': 94, 'head': 95, 'park': 96,
-               'landscape': 97, 'museum': 98, 'harbor': 99, 'antlers': 100, 'grass': 101, 'dance': 102,
-               'formation': 103, 'snow': 104, 'outside': 105, 'trunk': 106, 'plants': 107, 'house': 108, 'elk': 109,
-               'pyramid': 110, 'moose': 111, 'stairs': 112, 'lake': 113, 'shrubs': 114, 'barn': 115, 'nest': 116,
-               'desert': 117, 'coast': 118, 'market': 119, 'sea': 120, 'palm': 121, 'hillside': 122, 'balcony': 123,
-               'close-up': 124, 'flowers': 125, 'frost': 126, 'city': 127, 'doorway': 128, 'castle': 129,
-               'locomotive': 130, 'tundra': 131, 'cars': 132, 'decoration': 133, 'face': 134, 'ocean': 135,
-               'monastery': 136, 'boats': 137, 'path': 138, 'railroad': 139, 'oahu': 140, 'architecture': 141,
-               'plane': 142, 'branch': 143, 'road': 144, 'clothes': 145, 'horizon': 146, 'people': 147, 'slope': 148,
-               'canyon': 149, 'lion': 150, 'tusks': 151, 'reflection': 152, 'dunes': 153, 'farms': 154, 'garden': 155,
-               'shore': 156, 'ships': 157, 'train': 158, 'skyline': 159, 'birds': 160, 'wood': 161, 'peaks': 162,
-               'f-16': 163, 'basket': 164, 'fox': 165, 'hawaii': 166, 'vineyard': 167}
-
-    train_water_ds = water_partition['train']
-    test_water_ds = water_partition['test']
-    train_sky_ds = sky_partition['train']
-    test_sky_ds = sky_partition['test']
-
-    def remap_water_labels(example):
+    def remap_set_1_labels(example):
         mapped_labels = []
         for label in example["image_labels"]:
-            mapped_labels.append(water_map[label])
-        # mapped_labels = mapped_labels + ([179] * (5 - len(mapped_labels)))
+            mapped_labels.append(set_1_map[label])
         example["image_labels"] = mapped_labels
         return example
 
-    def remap_sky_labels(example):
+    def remap_set_2_labels(example):
         mapped_labels = []
         for label in example["image_labels"]:
-            mapped_labels.append(sky_map[label])
-        # mapped_labels = mapped_labels + ([168] * (5 - len(mapped_labels)))
+            mapped_labels.append(set_2_map[label])
         example["image_labels"] = mapped_labels
         return example
 
-    remapped_train_water_ds = train_water_ds.map(remap_water_labels)
-    remapped_test_water_ds = test_water_ds.map(remap_water_labels)
-    remapped_train_sky_ds = train_sky_ds.map(remap_sky_labels)
-    remapped_test_sky_ds = test_sky_ds.map(remap_sky_labels)
+    def remap_set_3_labels(example):
+        mapped_labels = []
+        for label in example["image_labels"]:
+            mapped_labels.append(set_3_map[label])
+        example["image_labels"] = mapped_labels
+        return example
+
+    def remap_set_4_labels(example):
+        mapped_labels = []
+        for label in example["image_labels"]:
+            mapped_labels.append(set_4_map[label])
+        example["image_labels"] = mapped_labels
+        return example
+
+    remapped_train_set_1_ds = train_set_1_ds.map(remap_set_1_labels)
+    remapped_test_set_1_ds = test_set_1_ds.map(remap_set_1_labels)
+    remapped_train_set_2_ds = train_set_2_ds.map(remap_set_2_labels)
+    remapped_test_set_2_ds = test_set_2_ds.map(remap_set_2_labels)
+    remapped_train_set_3_ds = train_set_3_ds.map(remap_set_3_labels)
+    remapped_test_set_3_ds = test_set_3_ds.map(remap_set_3_labels)
+    remapped_train_set_4_ds = train_set_4_ds.map(remap_set_4_labels)
+    remapped_test_set_4_ds = test_set_4_ds.map(remap_set_4_labels)
 
     pytorch_transforms = Compose([ToTensor(),
                                   Resize(size=(32, 32)),
@@ -176,7 +148,7 @@ def main(cfg: DictConfig) -> None:
                                   CenterCrop(size=(32, 32)),
                                   Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    def apply_water_transforms(batch):
+    def apply_transforms(batch):
         if isinstance(batch['image_name'], list):
             batch['image_name'] = torch.stack([pytorch_transforms(img) for img in batch['image_name']])
         else:
@@ -184,30 +156,20 @@ def main(cfg: DictConfig) -> None:
         # One-hot encode the multilabels
         all_labels = [torch.tensor(labels) for labels in batch['image_labels']]
         # Create one-hot encoding for each image's classes
-        one_hot_labels = [nn.functional.one_hot(label, num_classes=179).sum(dim=0) for label in all_labels]
+        one_hot_labels = [nn.functional.one_hot(label, num_classes=10).sum(dim=0) for label in all_labels]
         # Stack them into a batch
         batch['image_labels'] = torch.stack(one_hot_labels)
 
         return batch
 
-    def apply_sky_transforms(batch):
-        if isinstance(batch['image_name'], list):
-            batch['image_name'] = torch.stack([pytorch_transforms(img) for img in batch['image_name']])
-        else:
-            batch['image_name'] = pytorch_transforms(batch['image'])
-        # One-hot encode the multilabels
-        all_labels = [torch.tensor(labels) for labels in batch['image_labels']]
-        # Create one-hot encoding for each image's classes
-        one_hot_labels = [nn.functional.one_hot(label, num_classes=168).sum(dim=0) for label in all_labels]
-        # Stack them into a batch
-        batch['image_labels'] = torch.stack(one_hot_labels)
-
-        return batch
-
-    remapped_train_water_ds = remapped_train_water_ds.with_transform(apply_water_transforms)
-    remapped_test_water_ds = remapped_test_water_ds.with_transform(apply_water_transforms)
-    remapped_train_sky_ds = remapped_train_sky_ds.with_transform(apply_sky_transforms)
-    remapped_test_sky_ds = remapped_test_sky_ds.with_transform(apply_sky_transforms)
+    remapped_train_set_1_ds = remapped_train_set_1_ds.with_transform(apply_transforms)
+    remapped_test_set_1_ds = remapped_test_set_1_ds.with_transform(apply_transforms)
+    remapped_train_set_2_ds = remapped_train_set_2_ds.with_transform(apply_transforms)
+    remapped_test_set_2_ds = remapped_test_set_2_ds.with_transform(apply_transforms)
+    remapped_train_set_3_ds = remapped_train_set_3_ds.with_transform(apply_transforms)
+    remapped_test_set_3_ds = remapped_test_set_3_ds.with_transform(apply_transforms)
+    remapped_train_set_4_ds = remapped_train_set_4_ds.with_transform(apply_transforms)
+    remapped_test_set_4_ds = remapped_test_set_4_ds.with_transform(apply_transforms)
 
     def collate_fn(batch):
         return {
@@ -215,11 +177,15 @@ def main(cfg: DictConfig) -> None:
             'image_labels': torch.stack([x['image_labels'] for x in batch]).float()
         }
 
-    water_train_loader = DataLoader(remapped_train_water_ds, batch_size=64, shuffle=True, num_workers=2, drop_last=True, collate_fn=collate_fn)
-    water_test_loader = DataLoader(remapped_test_water_ds, batch_size=64, drop_last=True, collate_fn=collate_fn)
-    sky_train_loader = DataLoader(remapped_train_sky_ds, batch_size=64, shuffle=True, num_workers=2, drop_last=True, collate_fn=collate_fn)
-    sky_test_loader = DataLoader(remapped_test_sky_ds, batch_size=64, drop_last=True, collate_fn=collate_fn)
+    set_1_train_loader = DataLoader(remapped_train_set_1_ds, batch_size=64, shuffle=True, num_workers=2, drop_last=True, collate_fn=collate_fn)
+    set_1_test_loader = DataLoader(remapped_test_set_1_ds, batch_size=64, drop_last=True, collate_fn=collate_fn)
+    set_2_train_loader = DataLoader(remapped_train_set_2_ds, batch_size=64, shuffle=True, num_workers=2, drop_last=True, collate_fn=collate_fn)
+    set_2_test_loader = DataLoader(remapped_test_set_2_ds, batch_size=64, drop_last=True, collate_fn=collate_fn)
+    set_3_train_loader = DataLoader(remapped_train_set_3_ds, batch_size=64, shuffle=True, num_workers=2, drop_last=True, collate_fn=collate_fn)
+    set_3_test_loader = DataLoader(remapped_test_set_3_ds, batch_size=64, drop_last=True, collate_fn=collate_fn)
+    set_4_train_loader = DataLoader(remapped_train_set_4_ds, batch_size=64, shuffle=True, num_workers=2, drop_last=True, collate_fn=collate_fn)
+    set_4_test_loader = DataLoader(remapped_test_set_4_ds, batch_size=64, drop_last=True, collate_fn=collate_fn)
 
-    print("TEST: ",water_train_loader)
+    print("TEST: ",next(iter(set_1_train_loader)))
 
 main()
