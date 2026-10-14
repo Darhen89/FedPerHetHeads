@@ -133,7 +133,8 @@ def corel5k_preprocess(root, config):
 
     joined_df = pd.concat([train_df, train_aug_df, test_df])
 
-    # print(joined_df["image_labels"].explode().value_counts())
+    print(joined_df["image_labels"].explode().value_counts())
+    exit(0)
 
     water_df = joined_df.loc[joined_df['image_labels'].apply(lambda tup: 'water' in tup)]
     water_df.reset_index(drop=True, inplace=True)
