@@ -6,30 +6,84 @@
 En esta sección explicaremos los elementos necesarios para la resolución del problema propuesto. Haremos una explicación en profundidad de los sistemas de aprendizaje federados y de la clasificación multi-etiqueta.
 
 \section{Aprendizaje Federado}
-En aprendizaje automático clásico tenemos un modelo que entrenamos conuna serie de datos para que realize una tarea que puede ser reconcoer objetos en una imagen, controlar la reacción de un sistema ante una situación o jugar a un juego. En la práctica estos datos no se generan en la máquina dónde entrenamos al modelo sino que pueden venir de un dispositivo móvil, unos sensores o un micrófono. Estos datos también pueden venir no de una única fuente sino de varios lugares que recopilen información para realizar una tarea en conjunto. La aproximación más común ante esta estructura de datos es unir todas las fuentes en un lugar centralizado y tratarlas para crear un único conjunto de datos y usarlo para realizar el entrenamiento de nuestro modelo.
+En aprendizaje automático clásico tenemos un modelo que entrenamos con una serie de datos para que realice una tarea que puede ser reconocer objetos en una imagen, controlar la reacción de un sistema ante una situación o jugar a un juego. En la práctica estos datos no se generan en la máquina dónde entrenamos al modelo sino que pueden venir de un dispositivo móvil, unos sensores o un micrófono. Estos datos también pueden venir no de una única fuente sino de varios lugares que recopilen información para realizar una tarea en conjunto. La aproximación más común ante esta estructura de datos es unir todas las fuentes en un lugar centralizado y tratarlas para crear un único conjunto de datos y usarlo para realizar el entrenamiento de nuestro modelo.
 
 Esta manera no puede usarse en todos los casos, por ejemplo cuando los datos no pueden compartirse con el servidor central debido a regulaciones, preferencias de privacidad o simplemente que el volumen de datos es tan grande que el servidor no es capaz de procesarlos todos entre muchos otros ejemplos.
 
-Frente a estos problemas nace el paradigma de aprendizaje federado el cuál invierte esta estructura de manera que lleva el entrenamiento a los datos. Esto nos permite amplicar el campo de aplicación de los sistemas de aprendizaje automático a lugares donde antes era difícil o imposible debido a la naturaleza de los datos como detección de fraude financiero haciendo que varias entidades bancarias cooperen en el entrenamiento o mejorar modelos médicos agregando el entrenamiento de diferentes sistemas sanitarios sin que las normas de privacidad se vean comprometidas.
+Frente a estos problemas nace el paradigma de aprendizaje federado el cuál invierte esta estructura de manera que lleva el entrenamiento a los datos. Esto nos permite aplicar el campo de aplicación de los sistemas de aprendizaje automático a lugares donde antes era difícil o imposible debido a la naturaleza de los datos como detección de fraude financiero haciendo que varias entidades bancarias cooperen en el aprendizaje o mejorar modelos médicos agregando el entrenamiento de diferentes sistemas sanitarios sin que las normas de privacidad se vean comprometidas.
 
-Hay varias aproximaciones como la arquitectura peer to peer donde todos los nodos comparten entre ellos el resultado del entrenamiento de los demás. Nosotros nos centraremos en explicar el aprendizaje federado centralizado. Con este método primero se inicializa el modelo global con pesos aleatorios y se envía a todos los clientes, de esta manera nos aseguramos de que todos los clientes partan de los mismos parámetros. Luego cada cliente entrena su modelo local, que es una copia del modelo global con sus datos locales. Este entrenamiento no se realiza hasta la convergencia del modelo, sino solo realiza unos pocos pasos de entrenamiento.
+Hay varias aproximaciones como la arquitectura peer to peer donde todos los nodos comparten entre ellos el resultado del entrenamiento de los demás. Nosotros nos centraremos en explicar el aprendizaje federado centralizado. Con este método primero se inicializa el modelo global con pesos aleatorios y se envía a todos los clientes, de esta manera nos aseguramos de que todos los clientes partan de los mismos parámetros. Luego cada cliente entrena su modelo local, que es una copia del modelo global con sus datos locales. Este entrenamiento no se realiza hasta la convergencia del modelo, sino solo realiza unos pocos pasos de entrenamiento. Una vez actualizado el modelo local de cada cliente estos envían la actualización al servidor ya sean los modelos completos o los pesos de estos. El servidor recibe una versión diferente del modelo inicial por cada cliente que ha participado en la ronda de entrenamiento. En este punto recordamos que el objetivo es que los clientes colaboren con sus entrenamientos parciales a actualizar un modelo global, para ello el servidor realiza una operación de unificación de todas las versiones del modelo que le han mandado mediante un proceso que llamamos agregación. El método más básico se conoce como \textit{Federated Averaging} ~\cite{mcmahan2023communicationefficientlearningdeepnetworks} abreviado como \textit{FedAvg}, este proceso realiza una media ponderada sobre los pesos de los diferentes modelos en base al número de ejemplos que han usado en el entrenamiento para asegurarse de que cada ejemplo que ha participado tiene la misma influencia. Una vez finalizada la agregación el servidor envía el nuevo modelo resultando a cada uno de los clientes. Este proceso se vuelve a ejecutar en bucle hasta que los modelos locales alcanzan la convergencia. Este proceso está ilustrado en la figura 2.1.
 
-Un entorno de aprendizaje federado tiene como objetivo el entrenamiento de un modelo de aprendizaje automático mediante la colaboración de distintos clientes. Los datos están también federados de manera que cada cliente contiene un subconjunto de los datos totales de manera que permanecen decentralizados. Cada cliente entrena de manera local su modelo y una vez finaliza el entrenamiento comparte los pesos del modelo entrenado con el resto de clientes de manera que se agregan para actualizar los modelos locales con todos los entrenamientos de la red, de esta forma no se comparten los datos de los clientes pero el conjunto de clientes se puede aprovechar del entrenamiento que han realizado los demás.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo2/entrenamientofederadocentralizado}
+	\caption{Entrenamiento federado cliente-servidor}
+	\label{fig:entrenamientofederadocentralizado}
+\end{figure}
 
-\section{Clasificación multi-etiqueta}
+\newpage
 
-El estudio Heterogeneous Federated Learning: State-of-the-art and Research Challenges ~\cite{Ye:HFL_Survey} realiza una clasificación de los problemas presentes en las diferentes arquitecturas de modelos federados según si la heterogeneidad es estadística, en el modelo, en las comunicaciones o en los dispositivos. Si hablamos de la heterogeneidad estadística estamos hablando de los datos y el principal problema es que no sean independientes e identicamente distribuídos (no-IID) lo que hace que el aprendizaje se reduzca considerablemente ~\cite{Zhao_ML}~\cite{criado2021noniiddatacontinuallearning}. Ahondando más en esta categorización pueden tener desbalance de etiquetas, desbalance de características, desbalance de calidad y desbalance de cantidad. Artículos como ~\cite{Zhaobin:FedMLP} hablan de este problema en datos médicos y atacan el problema centrándose en la normalización de los datos.
+\subsection{Aprendizaje federado heterogéneo}
+
+En ~\cite{Ye:HFL_Survey} se realiza una clasificación de los problemas presentes en las diferentes arquitecturas de modelos federados según si la heterogeneidad es estadística, en el modelo, en las comunicaciones o en los dispositivos. Si hablamos de la heterogeneidad estadística estamos hablando de los datos y el principal problema es que no sean independientes e identicamente distribuídos (no-IID) lo que hace que el aprendizaje se reduzca considerablemente ~\cite{Zhao_ML}~\cite{criado2021noniiddatacontinuallearning}. Ahondando más en esta categorización pueden tener desbalance de etiquetas, desbalance de características, desbalance de calidad y desbalance de cantidad. Artículos como ~\cite{Zhaobin:FedMLP} hablan de este problema en datos médicos y atacan el problema centrándose en la normalización de los datos.
 
 El estudio también evalúa otros tipos de heterogeneidad en la comunicación, los dispositivos y los modelos y propone diferentes soluciones para mitigar estos problemas. El caso que nos compete tiene desbalance en etiquetas ya que como hemos comentado antes cada cliente va a entrenar una tarea distinta, por lo que los datos de cada uno solo tendrán un subconjunto de las etiquetas y también desbalance en los modelos ya que cada cliente va a tener un número de etiquetas diferente por lo que la salida de la red local no será consistente entre todo el sistema. En cuanto al desbalance en el modelo se proponen varias soluciones, una de ellas es la compartición de arquitectura, que consiste en compartir parte del modelo y hacer un entrenamiento personalizado, este método es capaz de solucionar tanto la heterogeneidad estadística como la de modelo y de dispositivo al mismo tiempo ~\cite{Manoj:FedPer}.
 
 Los métodos a nivel de datos pueden resolver el problema asociado a las grandes diferencias en la distribución de los datos y acelerar la convergencia reduciendo heterogeneidad estadística entre ellos. Por el contrario, los métodos a nivel de modelo buscan aprender un modelo local para cada cliente que se adapte a su distribución de datos privada, esta solución es la que queremos estudiar en este trabajo.
 
 
-\section{Clasificación de imágenes multi-etiqueta}
+\newpage
 
-En cuanto al problema de clasificación multi-etiqueta en el reciente estudio Rethinking Multi-Label Image Classification With Deep Learning: Taxonomy, Challenge, and Outlook ~\cite{zhu2026rethinkingmultilabelimageclassification} analiza el cambio de paradigma en el problema que han traido los sistemas basados en redes convolucionales y transformers y estudia como diferentes métodos derivados de estas redes han mejorado la calidad de los sistemas de aprendizaje para esta tarea. Podemos encontrar un benchmarking de diferentes arquitecturas de redes como ResNet101 ~\cite{he2015deepresiduallearningimage}, ViT-Base ~\cite{dosovitskiy2021imageworth16x16words}, ML-GCN ~\cite{chen2019multilabelimagerecognitiongraph}, ASL ~\cite{benbaruch2021asymmetriclossmultilabelclassification}, Q2L ~\cite{liu2021query2labelsimpletransformerway}, SALGL ~\cite{10378641}, SGRE ~\cite{10546293}, and PAT ~\cite{xie2024counterfactualreasoningmultilabelimage}.
+\section{Clasificación multi-etiqueta}
+
+Una de las tareas más extendidas en el ámbito del aprendizaje automático es la de la clasificación ya sea de textos, imágenes o cualquier otro tipo de conjunto de información. Consiste en crear un modelo en base a las características del conjunto de datos que vayamos a procesar para que realice una predicción sobre las clases asignadas a esos datos. Los ejemplos más comunes son la clasificación binaria y la clasificación multi-clase. En la clasificación binaria asignamos un valor binario a los datos de entrada, por ejemplo un sistema que detecte si un correo es spam o no. La clasificación multi-clase define una serie de elementos de los cuales se debe elegir el que sea más probable que sea relacionado con los datos que estamos evaluando, por ejemplo detectar qué tipo de animal aparece en una foto.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo2/binarymulticlassclassification}
+	\caption{Clasificación binaria y multi-clase}
+	\label{fig:binarymulticlass}
+\end{figure}
+
+
+En el mundo real existen muchos escenarios donde se requiere una clasificación múltiple en la misma tarea, por ejemplo detectar diferentes patologías en una imagen médica, añadir distintas categorías o temas a un texto, detectar diferentes objetos en un vídeo en tiempo real etcétera. En situaciones donde un mismo conjunto de datos pueden clasificarse con más de una clase como en la figura 2.3 donde aparecen dos animales diferentes la clasificación multi-clase provocaría una pérdida de información. Debido a esto la clasificación multi-etiqueta es un campo que se ha desarrollado mucho en los últimos años.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo2/multilabelclassification}
+	\caption{Clasificación multi-etiqueta}
+	\label{fig:multilabelclassification}
+\end{figure}
+
+\newpage
+
+\subsection{Descripción formal del MLC}
+
+Siendo \(\mathcal{D}\) un dataset multi-etiquetas compuesto por un conjunto de $\mathcal{m}$ instancias, y definido como
+\(\mathcal{D} = \{(x_i,Y_i)|1\leq i \leq m\}\). Siendo \(\mathcal{X} = X_1 \times \dotsb \times X_d\) el espacio de entrada de dimensión \(d\), e \(\mathcal{Y} = \{\lambda_1,\lambda_2, \dots , \lambda_q\}\) el espacio compuesto por \(q> 1\) etiquetas. Cada instancia multi-etiqueta está compuesta por un vector de entrada \(xi\) y un conjunto de etiquetas relevantes asociadas a él 
+\(Y_i \subseteq Y\). Tener en cuenta que cada \(Y\) diferente también recibe el nombre de conjunto de etiquetas. En la tabla 1.1,
+podemos ver un ejemplo de un conjunto de datos multi-etiquetas. Como podemos observar cada ejemplo está etiquetado con una o más etiquetas de manera simultánea.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo2/multilabeltable}
+	\caption{Ejemplo de conjunto de datos multi-etiqueta}
+	\label{fig:multilabeltable}
+\end{figure}
+
+El objetivo del MLC es construir en modelo predictivo \(h: \mathcal{X} \rightarrow 2^\mathcal{Y}\) que ofrezca un conjunto de etiquetas relevantes para una instancia desconocida. Por tanto, para cada \(x \in \mathcal{X}\), una bipartición \(\hat{b} = (\hat{Y},\overline{\hat{Y}}) \) del espacio de etiquetas \(\mathcal{Y}\) es dado, donde \(\hat{Y} = h(x)\) es el conjunto de etiquetas relevantes e \(\overline{\hat{Y}}\) el conjunto de irrelevantes. Esta bipartición también se puede dar como un vector binario \(\hat{b} = \{0,1\}^q\), indicando si cada etiqueta es relevante (1) o no (0).
+
+Además, vamos a definir un Grupo de Clasificadores Multi-Etiqueta como un conjunto de \(n\) clasificadores multi-etiqueta. Cada uno de los clasificadores base \(h_j\) da una predicción \(\hat{b_j} = \{ \hat{b_{j1}},\hat{b_{j2}},\dots,\hat{b_{jq}} \}\) para todas (o parte) de las etiquetas, siendo cada \(b_j\) 1 si la etiqueta es relevante y 0 si no lo es. La predicción final del conjunto suele ser calculada mediante el valor medio de las predicciones para cada etiqueta \(\hat{v_l} = \frac{1}{n}\sum_{j=1}^{n}\hat{b_{jl}}\). Sin embargo, hay otros métodos a parte de simplemente votar para combinar las predicciones en el conjunto.
+
+\subsection{Eligiendo modelo para clasificación multi-etiqueta}
+
+Para la implementación de un clasificador multi-etiqueta debemos elegir qué arquitectura de red usaremos. Vamos a revisar las opciones que tenemos, por ejemplo en ~\cite{zhu2026rethinkingmultilabelimageclassification} se analiza el cambio de paradigma en el problema que han traído los sistemas basados en redes convolucionales y transformers y estudia como diferentes métodos derivados de estas redes han mejorado la calidad de los sistemas de aprendizaje para esta tarea. Podemos encontrar un benchmarking de diferentes arquitecturas de redes como ResNet101 ~\cite{he2015deepresiduallearningimage}, ViT-Base ~\cite{dosovitskiy2021imageworth16x16words}, ML-GCN ~\cite{chen2019multilabelimagerecognitiongraph}, ASL ~\cite{benbaruch2021asymmetriclossmultilabelclassification}, Q2L ~\cite{liu2021query2labelsimpletransformerway}, SALGL ~\cite{10378641}, SGRE ~\cite{10546293}, and PAT ~\cite{xie2024counterfactualreasoningmultilabelimage}. Por simplicidad y su uso tan extendido usaremos ResNet en nuestra implementación.
 
 En cuanto a la resolución del problema conjunto de crear un clasificador multi-etiqueta dentro de un entorno federado, como ya hemos visto anterioremente hay estudios que se centran en evitar el problema haciendo un tratamiento previo de los datos para evitar el desbalanceo, otros estudian diferentes arquitecturas de la red como Transformer-based Federated Learning for Multi-Label Remote Sensing Image Classification ~\cite{2024transformerbasedfederatedlearningmultilabel}. Sin embargo estos estudios comparten la misma red entre los clientes o se aplican sobre datos tabulados. Nuestra propuesta requiere que la distribución de los datos contenga diferente número de etiquetas y que el sistema acepte una arquitectura con diferentes redes, no hemos encontrado ningún estudio que una todos estos conceptos en una solución.
+
+
+
+
 
 
 %%

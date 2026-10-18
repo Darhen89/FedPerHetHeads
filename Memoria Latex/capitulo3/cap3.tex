@@ -6,17 +6,6 @@ En esta sección vamos a definir el problema que debemos solucionar, concretarem
 
 
 
-
-\section{Descripción del problema}
-
-El problema que estamos intentando resolver es la clasificación de imágenes multi-etiqueta en un entorno federado y validar la viabilidad de que cada cliente tenga etiquetas que no estén compartidas con los demás clientes. 
-
-Como casos de uso podemos plantear un entorno en el que varios centros médicos de diferentes disciplinas quieren hacer uso de un sistema de procesado de imágenes médicas sin que estas abandonen los centros. El coste de que cada centro entrene su propio modelo es alto y requeriría un gran número de datos de entrenamiento. Para que todos los centros pudieran colaborar en entrenar un mismo modelo tendrían que agregar las imágenes médicas en un mismo servidor y esto crearía problemas de privacidad y políticas de tratamiento de datos. Un sistema federado puede solucionar estos problemas ya que los datos no abandonan los clientes y al participar todos ellos en el entrenamiento común el resultado que obtienen es mayor que el aporte que hacen al entrenamiento por separado, por lo que los recursos son usados de manera más eficiente.
-
-Sin embargo aún tendríamos un problema y es el de la especialización de cada cliente, en el supuesto actual todos ellos deberían realizar la misma tarea pero lo que queremos es que las tareas sean diferentes para cada uno. Por tanto antes debemos crear un desbalance en las etiquetas de los datos de entrenamiento y variar el número de clases de salida en los modelos. De esta forma nos aseguramos de que las tareas de entrenamiento son diferentes para cada cliente.
-
-Por tanto vamos a crear un sistema federado en el que cada cliente tendrá un modelo diferente y usaremos un dataset de imágenes con una o más etiquetas para cada ejemplo.
-
 \section{Datos de entrenamiento}
 
 Para los datos de entrenamiento vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o clases ~\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}.

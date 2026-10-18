@@ -5,6 +5,13 @@ Qiang Yang, Yang Liu, Yong Cheng, Yan Kang, Tianjian Chen, and Han Yu.
 \newblock {\em Federated Learning}.
 \newblock Morgan \& Claypool publishers, 2019.
 
+\bibitem{mcmahan2023communicationefficientlearningdeepnetworks}
+H.~Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, and
+  Blaise~Agüera y~Arcas.
+\newblock Communication-efficient learning of deep networks from decentralized
+  data.
+\newblock 2023.
+
 \bibitem{Ye:HFL_Survey}
 Mang Ye, Xiuwen Fang, Bo~Du, Pong~C. Yuen, and Dacheng Tao.
 \newblock Heterogeneous federated learning: State-of-the-art and research

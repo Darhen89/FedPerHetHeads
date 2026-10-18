@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.9.16)  13 OCT 2026 08:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.9.16)  18 OCT 2026 20:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -883,7 +883,7 @@ LaTeX Info: Redefining \nameref on input line 97.
 \openout2 = `titulo/titulo.aux'.
 
  (./titulo/titulo.tex
-<figuras/titulo/logo_etsii_us_2.png, id=78, 2116.5474pt x 1246.4166pt>
+<figuras/titulo/logo_etsii_us_2.png, id=86, 2116.5474pt x 1246.4166pt>
 File: figuras/titulo/logo_etsii_us_2.png Graphic file (type png)
 <use figuras/titulo/logo_etsii_us_2.png>
 Package pdftex.def Info: figuras/titulo/logo_etsii_us_2.png  used on input line
@@ -1024,28 +1024,16 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 ]
-<capitulo1/FLArchitecture.png, id=144, 825.83531pt x 435.87843pt>
-File: capitulo1/FLArchitecture.png Graphic file (type png)
-<use capitulo1/FLArchitecture.png>
-Package pdftex.def Info: capitulo1/FLArchitecture.png  used on input line 19.
-(pdftex.def)             Requested size: 282.81909pt x 149.27415pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <10> not availabl
 e
 (Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on in
-put line 36.
+put line 29.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 10.0pt on input line 36.
-LaTeX Info: Redefining \. on input line 36.
-LaTeX Info: Redefining \% on input line 36.
- [2pdfTeX warning (ext4): destination with the same identifier (name{figure.1.1
-}) has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.36 
-      <./capitulo1/FLArchitecture.png>] [3] [4
+(Font)              scaled to size 10.0pt on input line 29.
+LaTeX Info: Redefining \. on input line 29.
+LaTeX Info: Redefining \% on input line 29.
+
+[2] [3] [4
 
 ])
 \openout2 = `capitulo2/cap2.aux'.
@@ -1058,15 +1046,89 @@ ble
  line 8.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
 (Font)              scaled to size 14.4pt on input line 8.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/it' in size <10.95> not avai
+lable
+(Font)              Font shape `T1/ClearSans-TLF/regular/it' tried instead on i
+nput line 15.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/it' will be
+(Font)              scaled to size 10.95pt on input line 15.
 [5
 
 
 
 
 ]
-LaTeX Info: Redefining \. on input line 26.
-LaTeX Info: Redefining \% on input line 26.
- [6])
+<capitulo2/entrenamientofederadocentralizado.png, id=179, 1065.9825pt x 643.403
+75pt>
+File: capitulo2/entrenamientofederadocentralizado.png Graphic file (type png)
+<use capitulo2/entrenamientofederadocentralizado.png>
+Package pdftex.def Info: capitulo2/entrenamientofederadocentralizado.png  used 
+on input line 19.
+(pdftex.def)             Requested size: 282.81909pt x 170.69753pt.
+LaTeX Info: Redefining \. on input line 24.
+LaTeX Info: Redefining \% on input line 24.
+ [6pdfTeX warning (ext4): destination with the same identifier (name{figure.2.1
+}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.24 \newpage
+              <./capitulo2/entrenamientofederadocentralizado.png>]
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/b/n' in size <12> not availabl
+e
+(Font)              Font shape `T1/ClearSans-TLF/bold/n' tried instead on input
+ line 26.
+LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
+(Font)              scaled to size 12.0pt on input line 26.
+LaTeX Info: Redefining \. on input line 35.
+LaTeX Info: Redefining \% on input line 35.
+ [7]
+<capitulo2/binarymulticlassclassification.png, id=201, 1203.49625pt x 427.5975p
+t>
+File: capitulo2/binarymulticlassclassification.png Graphic file (type png)
+<use capitulo2/binarymulticlassclassification.png>
+Package pdftex.def Info: capitulo2/binarymulticlassclassification.png  used on 
+input line 43.
+(pdftex.def)             Requested size: 282.81909pt x 100.48541pt.
+<capitulo2/multilabelclassification.png, id=202, 644.4075pt x 465.74pt>
+File: capitulo2/multilabelclassification.png Graphic file (type png)
+<use capitulo2/multilabelclassification.png>
+Package pdftex.def Info: capitulo2/multilabelclassification.png  used on input 
+line 53.
+(pdftex.def)             Requested size: 282.81909pt x 204.41455pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+LaTeX Info: Redefining \. on input line 58.
+LaTeX Info: Redefining \% on input line 58.
+[8pdfTeX warning (ext4): destination with the same identifier (name{figure.2.2}
+) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.58 \newpage
+              <./capitulo2/binarymulticlassclassification.png>]
+<capitulo2/multilabeltable.png, id=208, 430.60875pt x 252.945pt>
+File: capitulo2/multilabeltable.png Graphic file (type png)
+<use capitulo2/multilabeltable.png>
+Package pdftex.def Info: capitulo2/multilabeltable.png  used on input line 69.
+(pdftex.def)             Requested size: 282.81909pt x 166.13368pt.
+LaTeX Info: Redefining \. on input line 75.
+LaTeX Info: Redefining \% on input line 75.
+ [9pdfTeX warning (ext4): destination with the same identifier (name{figure.2.3
+}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.75 
+     pdfTeX warning (ext4): destination with the same identifier (name{figure.2
+.4}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.75 
+      <./capitulo2/multilabelclassification.png> <./capitulo2/multilabeltable.p
+ng>]
+LaTeX Info: Redefining \. on input line 90.
+LaTeX Info: Redefining \% on input line 90.
+ [10])
 \openout2 = `capitulo3/cap3.aux'.
 
  (./capitulo3/cap3.tex
@@ -1076,53 +1138,50 @@ Overfull \hbox (15.51341pt too wide) in paragraph at lines 1--1
 \T1/ClearSans-TLF/bold/n/24.88 za-das y sa-li-das he-te-ro-gé-neas (Fed-
  []
 
-[7
+LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
+1.
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+) [11
 
 
 
 
 
 ]
-LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 2
-2.
- (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
-File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
-)
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/n' in size <8> not available
 
 (Font)              Font shape `T1/ClearSans-TLF/regular/n' tried instead on in
-put line 28.
+put line 17.
 LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/n' will be
-(Font)              scaled to size 8.0pt on input line 28.
-LaTeX Info: Redefining \. on input line 31.
-LaTeX Info: Redefining \% on input line 31.
- [8])
+(Font)              scaled to size 8.0pt on input line 17.
+)
 LaTeX Info: Redefining \. on input line 134.
 LaTeX Info: Redefining \% on input line 134.
- [9]
+ [12]
 \openout2 = `capitulo4/cap4.aux'.
 
 
-(./capitulo4/cap4.tex [10
-
-
-
-
-]
+(./capitulo4/cap4.tex
 Cap\'{\i }tulo 4.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [11]
+ [13
+
+
+
+
+]
 LaTeX Info: Redefining \. on input line 24.
 LaTeX Info: Redefining \% on input line 24.
 
-[12])
+[14])
 \openout2 = `capitulo5/cap5.aux'.
 
  (./capitulo5/cap5.tex
 Cap\'{\i }tulo 5.
-[13
+[15
 
 
 
@@ -1131,14 +1190,7 @@ Cap\'{\i }tulo 5.
 ])
 LaTeX Info: Redefining \. on input line 136.
 LaTeX Info: Redefining \% on input line 136.
- [14] (./memoria.bbl
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/m/it' in size <10.95> not avai
-lable
-(Font)              Font shape `T1/ClearSans-TLF/regular/it' tried instead on i
-nput line 5.
-LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/it' will be
-(Font)              scaled to size 10.95pt on input line 5.
- [15
+ [16] (./memoria.bbl [17
 
 
 
@@ -1148,7 +1200,7 @@ File: uni-1.def 2013/05/13 UCS: Unicode data U+0100..U+01FF
 ))
 LaTeX Info: Redefining \. on input line 147.
 LaTeX Info: Redefining \% on input line 147.
- [16]
+ [18]
 (./memoria.aux (./titulo/titulo.aux)
 LaTeX Info: Redefining \. on input line 27.
 LaTeX Info: Redefining \% on input line 27.
@@ -1159,25 +1211,32 @@ LaTeX Info: Redefining \% on input line 27.
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `memoria.out' has not changed.
-(rerunfilecheck)             Checksum: 93D76C7C3A57C85F782D8761BB209DEF;3115.
+(rerunfilecheck)             Checksum: 9208E933A1ABA830EAFF01EB9BAA1301;3608.
  ) 
 Here is how much of TeX's memory you used:
- 27156 strings out of 480185
- 488292 string characters out of 5894213
- 924102 words of memory out of 5000000
- 44484 multiletter control sequences out of 15000+600000
- 546727 words of font info for 73 fonts, out of 8000000 for 9000
+ 27217 strings out of 480185
+ 490498 string characters out of 5894213
+ 924103 words of memory out of 5000000
+ 44533 multiletter control sequences out of 15000+600000
+ 552005 words of font info for 75 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
- 100i,11n,94p,1187b,713s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_zxbkm4.enc} </ho
-me/manuel/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1095.600pk></u
+ 100i,11n,94p,1958b,733s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/manuel/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1095.60
+0pk>{/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_zxbkm4.enc}</u
 sr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Bold.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Italic.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Regular.pfb>
-Output written on memoria.pdf (24 pages, 1045454 bytes).
+sr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Regular.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmsy8.pfb>
+Output written on memoria.pdf (26 pages, 1400413 bytes).
 PDF statistics:
- 302 PDF objects out of 1000 (max. 8388607)
- 240 compressed objects within 3 object streams
- 61 named destinations out of 1000 (max. 500000)
- 167 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 371 PDF objects out of 1000 (max. 8388607)
+ 287 compressed objects within 3 object streams
+ 69 named destinations out of 1000 (max. 500000)
+ 198 words of extra memory for PDF output out of 10000 (max. 10000000)
 

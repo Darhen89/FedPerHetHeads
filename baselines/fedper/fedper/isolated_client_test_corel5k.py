@@ -9,7 +9,7 @@ from torcheval.metrics import MulticlassAccuracy
 
 from typing import Optional
 
-from fedper.dataset_preparation import dataset_class_type_split, corel5k_dataset_split, corel5k_preprocess
+from fedper.dataset_preparation import corel5k_dataset_split, corel5k_preprocess
 from fedper.utils import (
     set_num_classes,
     )

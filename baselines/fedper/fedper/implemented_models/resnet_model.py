@@ -82,9 +82,6 @@ class ResNet(nn.Module):
         self,
         num_head_layers: int = 1,
         num_classes: int = 10,
-        num_classes_water: int = 179,
-        num_classes_sky: int = 168,
-        client_id: int = -1,
     ) -> None:
         super(ResNet, self).__init__()
 
@@ -96,12 +93,6 @@ class ResNet(nn.Module):
         self.body = resnet34()
 
         # if only one head layer
-
-        if client_id == 0 or client_id == 1:
-            num_classes = num_classes_water
-        elif client_id == 2 or client_id == 3:
-            num_classes = num_classes_sky
-
         if self.num_head_layers == 1:
             self.head = self.body.fc
             self.body.fc = nn.Identity()
@@ -153,7 +144,6 @@ class ResNetModelManager(ModelManager):
     def __init__(
         self,
         client_save_path: Optional[str],
-        client_id: int,
         config: DictConfig,
         trainloader: DataLoader,
         testloader: DataLoader,
@@ -172,7 +162,6 @@ class ResNetModelManager(ModelManager):
 
         super().__init__(
             model_split_class=ResNetModelSplit,
-            client_id=client_id,
             config=config,
         )
 
@@ -188,14 +177,12 @@ class ResNetModelManager(ModelManager):
             return ResNet(
                 num_head_layers=self.config["model"]["num_head_layers"],
                 num_classes=self.config["model"]["num_classes"],
-                client_id=self.client_id
             ).to(self.device)
         except AttributeError:
             self.device = self.config["server_device"]
             return ResNet(
                 num_head_layers=self.config["model"]["num_head_layers"],
                 num_classes=self.config["model"]["num_classes"],
-                client_id=self.client_id
             ).to(self.device)
 
     def train(

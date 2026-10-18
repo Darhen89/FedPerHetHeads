@@ -79,10 +79,15 @@ def set_client_state_save_path() -> str:
 def get_client_fn(
     config: DictConfig,
     client_state_save_path: str = "",
-    water_train_loader: DataLoader = None,
-    water_test_loader: DataLoader = None,
-    sky_train_loader: DataLoader = None,
-    sky_test_loader: DataLoader = None,
+
+    set_1_train_loader: DataLoader = None,
+    set_1_test_loader: DataLoader = None,
+    set_2_train_loader: DataLoader = None,
+    set_2_test_loader: DataLoader = None,
+    set_3_train_loader: DataLoader = None,
+    set_3_test_loader: DataLoader = None,
+    set_4_train_loader: DataLoader = None,
+    set_4_test_loader: DataLoader = None,
 ) -> Callable[[str], Client]:
     """Get client function."""
     # Get algorithm
@@ -91,11 +96,14 @@ def get_client_fn(
     if algorithm == "fedper":
         client_fn = get_client_fn_simulation(
             config=config,
-            client_state_save_path=client_state_save_path,
-            water_train_loader=water_train_loader,
-            water_test_loader=water_test_loader,
-            sky_train_loader=sky_train_loader,
-            sky_test_loader=sky_test_loader,
+            set_1_train_loader=set_1_train_loader,
+            set_1_test_loader = set_1_test_loader,
+            set_2_train_loader = set_2_train_loader,
+            set_2_test_loader = set_2_test_loader,
+            set_3_train_loader = set_3_train_loader,
+            set_3_test_loader = set_3_test_loader,
+            set_4_train_loader = set_4_train_loader,
+            set_4_test_loader = set_4_test_loader,
         )
     else:
         raise NotImplementedError
@@ -113,16 +121,7 @@ def get_create_model_fn(
     split: Union[Type[MobileNetModelSplit], Type[ResNetModelSplit]] = (
         MobileNetModelSplit
     )
-    if config.model_name.lower() == "mobile":
-
-        def create_model() -> Union[Type[MobileNet], Type[ResNet]]:
-            """Create initial MobileNet-v1 model."""
-            return MobileNet(
-                num_head_layers=config.model.num_head_layers,
-                num_classes=config.model.num_classes,
-            ).to(device)
-
-    elif config.model_name.lower() == "resnet":
+    if config.model_name.lower() == "resnet":
         split = ResNetModelSplit
 
         def create_model() -> Union[Type[MobileNet], Type[ResNet]]:
@@ -130,8 +129,6 @@ def get_create_model_fn(
             return ResNet(
                 num_head_layers=config.model.num_head_layers,
                 num_classes=config.model.num_classes,
-                num_classes_water=config.model.num_classes_water,
-                num_classes_sky=config.model.num_classes_sky,
             ).to(device)
 
     else:

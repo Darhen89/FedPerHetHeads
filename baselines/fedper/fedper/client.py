@@ -15,7 +15,6 @@ from torchvision import transforms
 from torchvision.datasets import ImageFolder
 
 from fedper.constants import MEAN, STD
-from fedper.dataset_preparation import call_dataset, dataset_class_type_split, corel5k_dataset_split
 from fedper.implemented_models.mobile_model import MobileNetModelManager
 from fedper.implemented_models.resnet_model import ResNetModelManager
 
@@ -80,7 +79,6 @@ class BaseClient(NumPyClient):
         self.hist: Dict[str, Dict[str, Any]] = defaultdict(dict)
         self.num_epochs: int = config["num_epochs"]
         self.model_manager = model_manager_class(
-            client_id=self.client_id,
             config=config,
             trainloader=data_loaders.trainloader,
             testloader=data_loaders.testloader,
@@ -241,10 +239,14 @@ class FedPerClient(BaseClient):
 def get_client_fn_simulation(
     config: DictConfig,
     client_state_save_path: str = "",
-    water_train_loader: DataLoader = None,
-    water_test_loader: DataLoader = None,
-    sky_train_loader: DataLoader = None,
-    sky_test_loader: DataLoader = None,
+    set_1_train_loader: DataLoader = None,
+    set_1_test_loader: DataLoader = None,
+    set_2_train_loader: DataLoader = None,
+    set_2_test_loader: DataLoader = None,
+    set_3_train_loader: DataLoader = None,
+    set_3_test_loader: DataLoader = None,
+    set_4_train_loader: DataLoader = None,
+    set_4_test_loader: DataLoader = None,
 ) -> Callable[[str], Client]:
     """Generate the client function that creates the Flower Clients.
 
@@ -261,22 +263,32 @@ def get_client_fn_simulation(
         A tuple containing the client function that creates Flower Clients and
         the DataLoader that will be used for testing
     """
-    water_train_loader=water_train_loader
-    water_test_loader=water_test_loader
-    sky_train_loader=sky_train_loader
-    sky_test_loader=sky_test_loader
+    set_1_train_loader=set_1_train_loader
+    set_1_test_loader=set_1_test_loader
+    set_2_train_loader=set_2_train_loader
+    set_2_test_loader=set_2_test_loader
+    set_3_train_loader=set_3_train_loader
+    set_3_test_loader=set_3_test_loader
+    set_4_train_loader=set_4_train_loader
+    set_4_test_loader=set_4_test_loader
 
     def client_fn(cid: str) -> Client:
         """Create a Flower client representing a single organization."""
         cid_use = int(cid)
         if config.dataset.name.lower() == "corel5k":
 
-            if(cid_use == 0 or cid_use == 1):
-                trainloader = water_train_loader
-                testloader = water_test_loader
-            elif(cid_use == 2 or cid_use == 3):
-                trainloader = sky_train_loader
-                testloader = sky_test_loader
+            if cid_use == 0:
+                train_loader = set_1_train_loader
+                test_loader = set_1_test_loader
+            elif cid_use == 1:
+                train_loader = set_2_train_loader
+                test_loader = set_2_test_loader
+            elif cid_use == 2:
+                train_loader = set_3_train_loader
+                test_loader = set_3_test_loader
+            elif cid_use == 3:
+                train_loader = set_4_train_loader
+                test_loader = set_4_test_loader
 
         manager: Union[Type[MobileNetModelManager], Type[ResNetModelManager]] = (
             MobileNetModelManager
@@ -285,7 +297,7 @@ def get_client_fn_simulation(
             manager = ResNetModelManager
         else:
             raise NotImplementedError("Model not implemented, check name.")
-        client_data_loaders = ClientDataloaders(trainloader, testloader)
+        client_data_loaders = ClientDataloaders(train_loader, test_loader)
         client_essentials = ClientEssentials(
             client_id=cid,
             client_state_save_path=client_state_save_path,

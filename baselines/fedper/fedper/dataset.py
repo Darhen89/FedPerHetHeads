@@ -16,10 +16,7 @@ from pathlib import Path
 
 import numpy as np
 
-from fedper.dataset_preparation import (
-    call_dataset,
-    randomly_assign_classes, corel5k_preprocess,
-)
+from fedper.dataset_preparation import (corel5k_preprocess,)
 
 # working dir is two up
 WORKING_DIR = Path(__file__).resolve().parent.parent
@@ -37,49 +34,7 @@ def dataset_main(config: dict) -> None:
     if not os.path.isdir(dataset_root):
         os.makedirs(dataset_root)
 
-    if dataset_name == "cifar10":
-        dataset = call_dataset(dataset_name=dataset_name, root=dataset_root)
-
-        # randomly assign classes
-        assert config["num_classes"] > 0, "Number of classes must be positive"
-        config["num_classes"] = max(1, min(config["num_classes"], len(dataset.classes)))
-        # partition, stats = randomly_assign_classes(
-        partition = randomly_assign_classes(
-            dataset=dataset,
-            client_num=config["num_clients"],
-            class_num=config["num_classes"],
-        )
-
-        clients_4_train = list(range(config["num_clients"]))
-        clients_4_test = list(range(config["num_clients"]))
-
-        partition["separation"] = {
-            "train": clients_4_train,
-            "test": clients_4_test,
-            "total": config["num_clients"],
-        }
-        for client_id, idx in enumerate(partition["data_indices"]):
-            if config["split"] == "sample":
-                num_train_samples = int(len(idx) * config["fraction"])
-
-                np.random.shuffle(idx)
-                idx_train, idx_test = idx[:num_train_samples], idx[num_train_samples:]
-                partition["data_indices"][client_id] = {
-                    "train": idx_train,
-                    "test": idx_test,
-                }
-            else:
-                if client_id in clients_4_train:
-                    partition["data_indices"][client_id] = {"train": idx, "test": []}
-                else:
-                    partition["data_indices"][client_id] = {"train": [], "test": idx}
-        with open(dataset_root / "partition.pkl", "wb") as pickle_file:
-            pickle.dump(partition, pickle_file)
-
-        # with open(dataset_root / "all_stats.json", "w") as f:
-        #    json.dump(stats, f)
-
-    elif dataset_name.lower() == "corel5k":
+    if dataset_name.lower() == "corel5k":
         return corel5k_preprocess(dataset_root, config)
     else:
         raise RuntimeError("Please implement the dataset preparation for your dataset.")
