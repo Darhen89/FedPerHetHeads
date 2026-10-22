@@ -79,6 +79,7 @@ class BaseClient(NumPyClient):
         self.hist: Dict[str, Dict[str, Any]] = defaultdict(dict)
         self.num_epochs: int = config["num_epochs"]
         self.model_manager = model_manager_class(
+            client_id=self.client_id,
             config=config,
             trainloader=data_loaders.trainloader,
             testloader=data_loaders.testloader,

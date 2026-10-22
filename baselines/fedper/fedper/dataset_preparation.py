@@ -1,25 +1,16 @@
 """Dataset preparation."""
 
 import os
-import random
-from collections import Counter
 from pathlib import Path
-from typing import Any, Dict, List, Union
 
-import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
-import torchvision
 import json
 from PIL import Image
 
-#from torch.utils.data import Dataset
 from datasets import Dataset
-from torchvision import transforms
 
-from flwr_datasets import FederatedDataset
-from flwr_datasets.partitioner import IidPartitioner
 from torch.utils.data import DataLoader
 from torchvision.transforms import Compose, Normalize, ToTensor, Resize, RandomHorizontalFlip, RandomRotation, \
     CenterCrop

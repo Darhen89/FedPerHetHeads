@@ -27,12 +27,6 @@ def conv3x3(
         dilation=dilation,
     )
 
-
-def conv1x1(in_planes: int, out_planes: int, stride: int = 1) -> nn.Conv2d:
-    """1x1 convolution."""
-    return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
-
-
 class BasicBlock(nn.Module):
     """Basic block for ResNet."""
 
@@ -144,6 +138,7 @@ class ResNetModelManager(ModelManager):
     def __init__(
         self,
         client_save_path: Optional[str],
+        client_id: int,
         config: DictConfig,
         trainloader: DataLoader,
         testloader: DataLoader,
@@ -162,6 +157,7 @@ class ResNetModelManager(ModelManager):
 
         super().__init__(
             model_split_class=ResNetModelSplit,
+            client_id=client_id,
             config=config,
         )
 
@@ -210,15 +206,11 @@ class ResNetModelManager(ModelManager):
                 pass
 
         criterion = torch.nn.BCEWithLogitsLoss().to(self.device)
-        #criterion = torch.nn.CrossEntropyLoss().to(self.device)
         optimizer = torch.optim.SGD(
             self.model.parameters(), lr=self.learning_rate, momentum=0.9
         )
 
-
-
         epoch_count = 0
-        train_roc_auc = 0
         correct, total = 0, 0
         running_loss = 0.0
         for _ in range(epochs):
@@ -239,8 +231,6 @@ class ResNetModelManager(ModelManager):
                 correct += (preds == labels).all(dim=1).sum().item()
 
                 total += labels.size(0)
-                #correct += (preds == labels).sum().item()
-                #total += labels.numel()
 
         # Save client state (head)
         if self.client_save_path is not None:

@@ -31,27 +31,6 @@ def set_model_class(config: DictConfig) -> DictConfig:
     return config
 
 
-def set_num_classes(config: DictConfig) -> DictConfig:
-    """Set the number of classes based on the dataset name in the config file."""
-    # Set the number of classes
-    if config.dataset.name.lower() == "cifar10":
-        config.model.num_classes = 10
-        config.model.num_classes_animals = 6
-        config.model.num_classes_vehicles = 4
-    elif config.dataset.name.lower() == "flickr":
-        config.model.num_classes = 5
-        # additionally for flickr
-        config.batch_size = 4
-        config.num_clients = 30
-        config.clients_per_round = 30
-    elif config.dataset.name.lower() == "corel5k":
-        config.model.num_classes_water = 179
-        config.model.num_classes_sky = 168
-    else:
-        raise NotImplementedError(f"Dataset {config.dataset.name} not implemented")
-    return config
-
-
 def set_server_target(config: DictConfig) -> DictConfig:
     """Set the server target based on the algorithm in the config file."""
     # Set the server target

@@ -9,6 +9,8 @@ A level-1 auxiliary file: capitulo4/cap4.aux
 A level-1 auxiliary file: capitulo5/cap5.aux
 The style file: unsrt.bst
 Database file #1: bibliography/bibliography.bib
+Warning--entry type for "Moyano:MULTI" isn't style-file defined
+--line 212 of file bibliography/bibliography.bib
 Warning--empty journal in mcmahan2023communicationefficientlearningdeepnetworks
 Warning--empty journal in Zhao_ML
 Warning--empty journal in criado2021noniiddatacontinuallearning
@@ -23,45 +25,45 @@ Warning--empty journal in liu2021query2labelsimpletransformerway
 Warning--empty journal in 10378641
 Warning--empty journal in xie2024counterfactualreasoningmultilabelimage
 Warning--empty journal in 2024transformerbasedfederatedlearningmultilabel
-You've used 17 entries,
+You've used 18 entries,
             1791 wiz_defined-function locations,
-            526 strings with 7202 characters,
-and the built_in function-call counts, 3698 in all, are:
-= -- 231
-> -- 328
+            531 strings with 7329 characters,
+and the built_in function-call counts, 3816 in all, are:
+= -- 239
+> -- 332
 < -- 1
-+ -- 115
-- -- 98
-* -- 267
-:= -- 679
-add.period$ -- 51
-call.type$ -- 17
-change.case$ -- 16
++ -- 117
+- -- 99
+* -- 268
+:= -- 696
+add.period$ -- 53
+call.type$ -- 18
+change.case$ -- 17
 chr.to.int$ -- 0
-cite$ -- 31
-duplicate$ -- 151
-empty$ -- 277
-format.name$ -- 98
-if$ -- 755
+cite$ -- 32
+duplicate$ -- 156
+empty$ -- 295
+format.name$ -- 99
+if$ -- 783
 int.to.chr$ -- 0
-int.to.str$ -- 17
+int.to.str$ -- 18
 missing$ -- 18
-newline$ -- 88
-num.names$ -- 17
-pop$ -- 79
+newline$ -- 92
+num.names$ -- 18
+pop$ -- 86
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 65
+skip$ -- 69
 stack$ -- 0
 substring$ -- 69
-swap$ -- 14
+swap$ -- 15
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 14
-while$ -- 20
-width$ -- 19
-write$ -- 161
-(There were 14 warnings)
+while$ -- 21
+width$ -- 20
+write$ -- 169
+(There were 15 warnings)

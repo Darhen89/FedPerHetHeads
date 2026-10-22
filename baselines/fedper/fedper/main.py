@@ -20,7 +20,6 @@ from fedper.utils import (
     save_results_as_pickle,
     set_client_state_save_path,
     set_model_class,
-    set_num_classes,
     set_server_target,
 )
 
@@ -38,7 +37,6 @@ def main(cfg: DictConfig) -> None:
     # Set the model class, server target, and number of classes
     cfg = set_model_class(cfg)
     cfg = set_server_target(cfg)
-    cfg = set_num_classes(cfg)
 
     print(OmegaConf.to_yaml(cfg))
 

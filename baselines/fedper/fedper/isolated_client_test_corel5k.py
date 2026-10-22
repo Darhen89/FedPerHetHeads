@@ -1,24 +1,214 @@
 import hydra
-from accelerate import Accelerator
-import evaluate
+import numpy as np
+
 from omegaconf import DictConfig
 import torch
 import torch.nn as nn
+from torch import sigmoid
+
+from sklearn.metrics import multilabel_confusion_matrix, label_ranking_average_precision_score, label_ranking_loss, f1_score
+
 from torchvision.models.resnet import resnet34
-from torcheval.metrics import MulticlassAccuracy
+
+import os
+import json
+import pandas as pd
+from PIL import Image
+from datasets import Dataset
+from torch.utils.data import DataLoader
+from torchvision.transforms import Compose, Normalize, ToTensor, Resize, RandomHorizontalFlip, RandomRotation, CenterCrop
 
 from typing import Optional
 
-from fedper.dataset_preparation import corel5k_dataset_split, corel5k_preprocess
-from fedper.utils import (
-    set_num_classes,
+from pathlib import Path
+
+@hydra.main(config_path="conf", config_name="base", version_base=None)
+def main(cfg: DictConfig) -> None:
+    cfg = cfg
+    device = cfg.server_device
+
+    set_1_train_loader, set_1_test_loader = corel5k_preprocess("datasets/corel5k", cfg)
+
+    trainloader = set_1_train_loader
+    testloader = set_1_test_loader
+
+    model = ResNet()
+    model.to(device)
+
+    criterion = torch.nn.BCEWithLogitsLoss().to(device)
+    optimizer = torch.optim.SGD(
+        model.parameters(), lr=0.01, momentum=0.9
     )
+
+    epoch_count = 0
+    correct, total = 0.0, 0.0
+
+    for _ in range(cfg.num_epochs):
+        running_loss = 0.0
+        epoch_count = epoch_count + 1
+        for batch in trainloader:
+            optimizer.zero_grad()
+            outputs = model(batch["image_name"].to(device))
+            labels = batch["image_labels"].to(device)
+            loss = criterion(outputs, labels)
+
+            preds = sigmoid(outputs)
+            correct += label_ranking_average_precision_score(labels.tolist(), preds.tolist())
+
+            loss.backward()
+            optimizer.step()
+            running_loss += loss.item()
+
+            total += labels.size(0)
+
+        print("epoch: ",epoch_count,"loss: ", running_loss / len(trainloader), "accuracy: ", correct / total)
+
+    total_tn = np.zeros(10)
+    total_tp = np.zeros(10)
+    total_fn = np.zeros(10)
+    total_fp = np.zeros(10)
+
+    model.eval()
+    with torch.no_grad():
+        for batch in testloader:
+            outputs = model(batch["image_name"].to(device))
+            labels = batch["image_labels"].to(device)
+            loss = criterion(outputs, labels)
+
+            preds = sigmoid(outputs)
+            preds_binary = (preds > 0.5).float()
+
+            '''Referencias para las métricas:
+            ranking de etiquetas:
+            https://scikit-learn.org/stable/modules/model_evaluation.html#multilabel-ranking-metrics
+            matriz de confusión y métricas derivadas
+            https://medium.com/data-science/evaluating-multi-label-classifiers-a31be83da6ea
+            https://medium.com/synthesio-engineering/precision-accuracy-and-f1-score-for-multi-label-classification-34ac6bdfb404
+            https://scikit-learn.org/stable/modules/model_evaluation.html#multi-label-confusion-matrix
+            '''
+
+            # LABEL RANKING AVERAGE PRECISION: fracción de las etiquetas predichas que corresponden a las etiquetas reales
+            #print("label ranking average precision: ", label_ranking_average_precision_score(labels.tolist(), preds.tolist()))
+            # LABEL RANKING LOSS:
+            #print("label ranking loss: ", label_ranking_loss(labels.tolist(), preds.tolist()))
+
+            #F1 SCORE: media armónica de la precision y el recall
+            #print("F1 score: ",f1_score(labels.tolist(), preds_binary.tolist(), average='micro'))
+
+            #CONFUSION MATRIX
+            confusion_matrix = multilabel_confusion_matrix(labels.tolist(), preds_binary.tolist())
+            tn = confusion_matrix[:, 0, 0]
+            tp = confusion_matrix[:, 1, 1]
+            fn = confusion_matrix[:, 1, 0]
+            fp = confusion_matrix[:, 0, 1]
+
+            total_tn += tn
+            total_tp += tp
+            total_fn += fn
+            total_fp += fp
+
+            #print("accuracy: ", (tp + tn) / (tp + tn + fp + fn)) #proporcion de ejemplos correctamente clasificados
+            #print("precision: ",tp / (tp + fp)) #proporción de predicciones correctas entre el total de predicciones para una clase
+            #print("recall: ",tp / (tp + fn)) #proporción de veces que una clase ha sido predicha correctamente, probabilidad de positivos verdaderos
+            #print("specificity",tn / (tn + fp)) #probabilidad de negativos verdaderos
+            #print("fall out: ",fp / (fp + tn)) #probabilidad de falsos positivos
+            #print("miss rate: ",fn / (fn + tp)) #probabilidad de falsos negativos
+
+        total = len(trainloader)
+
+        accuracy = ((total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)) / total #proporcion de ejemplos correctamente clasificados
+        precision = (total_tp / (total_tp + total_fp)) / total #proporción de predicciones correctas entre el total de predicciones para una clase
+        recall = (total_tp / (total_tp + total_fn)) / total #proporción de veces que una clase ha sido predicha correctamente, probabilidad de positivos verdaderos
+        specificity = (total_tn / (total_tn + total_fp)) / total #probabilidad de negativos verdaderos
+        fall_out = (total_fp / (total_fp + total_tn)) / total #probabilidad de falsos positivos
+        miss_rate = (total_fn / (total_fn + total_tp)) / total #probabilidad de falsos negativos
+
+        print("accuracy: ",accuracy)
+        print("precision: ",precision)
+        print("recall: ",recall)
+        print("specificity: ",specificity)
+        print("fall_out: ",fall_out)
+        print("miss_rate: ",miss_rate)
+
+        report = {'water': {'accuracy': accuracy[0],
+                            'precision': precision[0],
+                            'recall': recall[0],
+                            'specificity': specificity[0],
+                            'fall_out': fall_out[0],
+                            'miss_rate': miss_rate[0],},
+                'buildings': {'accuracy': accuracy[1],
+                            'precision': precision[1],
+                            'recall': recall[1],
+                            'specificity': specificity[1],
+                            'fall_out': fall_out[1],
+                            'miss_rate': miss_rate[1],},
+                'rocks': {'accuracy': accuracy[2],
+                            'precision': precision[2],
+                            'recall': recall[2],
+                            'specificity': specificity[2],
+                            'fall_out': fall_out[2],
+                            'miss_rate': miss_rate[2],},
+                'field': {'accuracy': accuracy[3],
+                        'precision': precision[3],
+                        'recall': recall[3],
+                        'specificity': specificity[3],
+                        'fall_out': fall_out[3],
+                        'miss_rate': miss_rate[3], },
+                'sand': {'accuracy': accuracy[4],
+                        'precision': precision[4],
+                        'recall': recall[4],
+                        'specificity': specificity[4],
+                        'fall_out': fall_out[4],
+                        'miss_rate': miss_rate[4], },
+                'cars': {'accuracy': accuracy[5],
+                        'precision': precision[5],
+                        'recall': recall[5],
+                        'specificity': specificity[5],
+                        'fall_out': fall_out[5],
+                        'miss_rate': miss_rate[5], },
+                'polar': {'accuracy': accuracy[6],
+                        'precision': precision[6],
+                        'recall': recall[6],
+                        'specificity': specificity[6],
+                        'fall_out': fall_out[6],
+                        'miss_rate': miss_rate[6], },
+                'ruins': {'accuracy': accuracy[7],
+                        'precision': precision[7],
+                        'recall': recall[7],
+                        'specificity': specificity[7],
+                        'fall_out': fall_out[7],
+                        'miss_rate': miss_rate[7], },
+                'statue': {'accuracy': accuracy[8],
+                        'precision': precision[8],
+                        'recall': recall[8],
+                        'specificity': specificity[8],
+                        'fall_out': fall_out[8],
+                        'miss_rate': miss_rate[8], },
+                'wall': {'accuracy': accuracy[9],
+                        'precision': precision[9],
+                        'recall': recall[9],
+                        'specificity': specificity[9],
+                        'fall_out': fall_out[9],
+                        'miss_rate': miss_rate[9], },
+
+                }
+        print("Classification report")
+        print(report)
+
+
+
+
+
+def Accuracy(y_true, y_pred):
+    temp = 0
+    for i in range(y_true.shape[0]):
+        temp += sum(np.logical_and(y_true[i], y_pred[i])) / sum(np.logical_or(y_true[i], y_pred[i]))
+    return temp / y_true.shape[0]
 
 def conv3x3(
     in_planes: int, out_planes: int, stride: int = 1, groups: int = 1, dilation: int = 1
 ) -> nn.Conv2d:
     """3x3 convolution with padding."""
-
     return nn.Conv2d(
         in_planes,
         out_planes,
@@ -81,7 +271,7 @@ class ResNet(nn.Module):
             BasicBlock(512, 512),
             nn.AdaptiveAvgPool2d((1, 1)),
             nn.Flatten(),
-            nn.Linear(512, 179),
+            nn.Linear(512, 10),
         )
         self.body = nn.Sequential(*list(self.body.children())[:-2])
         body_layer4 = list(self.body.children())[-1]
@@ -93,69 +283,99 @@ class ResNet(nn.Module):
         x = self.body(x)
         return self.head(x)
 
-@hydra.main(config_path="conf", config_name="base", version_base=None)
-def main(cfg: DictConfig) -> None:
-    cfg = cfg = set_num_classes(cfg)
-    device = cfg.server_device
-
-    water_train_loader, water_test_loader, sky_train_loader, sky_test_loader = corel5k_preprocess("datasets/corel5k", cfg)
-
-    for batch in water_train_loader:
-        print(batch["image_labels"][0].__len__())
-        break
-    for batch in sky_train_loader:
-        print(batch["image_labels"][0].__len__())
-        break
-    exit(0)
-
-    trainloader = water_train_loader
-    testloader = water_test_loader
-
-    model = ResNet()
-    model.to(device)
-
-    criterion = torch.nn.CrossEntropyLoss().to(device)
-    optimizer = torch.optim.SGD(
-        model.parameters(), lr=cfg.learning_rate, momentum=0.9
-    )
-    correct, total = 0, 0
-    loss: torch.Tensor = 0.0
-    round_count = 0
-
-    metric = MulticlassAccuracy(device=device)
-
-    for _ in range(cfg.num_rounds):
-        round_count = round_count+1
-        epoch_count = 0
-        for _ in range(cfg.num_epochs):
-            epoch_count = epoch_count+1
-            train_metric = evaluate.load('roc_auc', 'multilabel')
-            running_loss = 0.
-            for batch in trainloader:
-                optimizer.zero_grad()
-                outputs = model(batch["image_name"].to(device))
-                labels = batch["image_labels"].to(device)
-                loss = criterion(outputs, labels)
-
-                loss.backward()
-                optimizer.step()
-
-                total += labels.size(0)
-                correct += (torch.max(outputs.data, 1)[1] == labels).sum().item()
-
-            # loss and metric over 1 epoch
-    print("loss: ", loss.item(), "accuracy: ", correct / total)
 
 
-        #model.to(device)
-        #correct, total, loss = 0, 0, 0.0
-        # self.model.eval()
-        #with torch.no_grad():
-    #    for batch in testloader:
-    #            outputs = model(batch["image_name"].to(device))
-    #            labels = batch["image_labels"].to(device)
-    #            loss += criterion(outputs, labels.float()).item()
-    #            total += batch["image_labels"].size(0)
-    #    print("eval loss: ", loss / len(testloader.dataset))
+def corel5k_preprocess(root, config):
+    print("Preprocessing Corel-5k dataset...")
+
+    # define dataset path
+    train_file_path = Path(root, "train.json")
+    train_aug_file_path = Path(root, "train_aug.json")
+    test_file_path = Path(root, "test.json")
+    images_path = Path(root, "images")
+
+    # read the files to create pandas dataframe
+    with open(train_file_path) as json_data:
+        train_data = json.load(json_data)
+        train_df = pd.DataFrame(train_data['samples'])
+        train_df['image_name'] = train_df['image_name'].apply(
+            lambda image_name: Image.open(os.path.join(images_path, image_name)).convert('RGB'))
+
+    with open(train_aug_file_path) as json_data:
+        train_aug_data = json.load(json_data)
+        train_aug_df = pd.DataFrame(train_data['samples'])
+        train_aug_df['image_name'] = train_aug_df['image_name'].apply(
+            lambda image_name: Image.open(os.path.join(images_path, image_name)).convert('RGB'))
+
+    with open(test_file_path) as json_data:
+        test_data = json.load(json_data)
+        test_df = pd.DataFrame(test_data['samples'])
+        test_df['image_name'] = test_df['image_name'].apply(
+            lambda image_name: Image.open(os.path.join(images_path, image_name)).convert('RGB'))
+
+    joined_df = pd.concat([train_df, train_aug_df, test_df])
+
+    set_1_labels = ['water', 'buildings', 'rocks', 'field', 'sand', 'cars', 'polar', 'ruins', 'statue', 'wall']
+
+    set_1_df = joined_df.loc[
+        joined_df['image_labels'].apply(lambda labels: any(label in labels for label in set_1_labels))]
+    set_1_df.loc[:, 'image_labels'] = set_1_df['image_labels'].apply(
+        lambda labels: [label for label in labels if label in set_1_labels])
+    set_1_df.reset_index(drop=True, inplace=True)
+
+    set_1_ds = Dataset.from_dict(set_1_df.to_dict(orient='list'))
+
+
+    set_1_ds_partition = set_1_ds.train_test_split(test_size=0.2)
+
+
+    train_set_1_ds = set_1_ds_partition['train']
+    test_set_1_ds = set_1_ds_partition['test']
+
+    set_1_map = {'water': 0, 'buildings': 1, 'rocks': 2, 'field': 3, 'sand': 4, 'cars': 5, 'polar': 6, 'ruins': 7, 'statue': 8, 'wall': 9}
+
+    def remap_set_1_labels(example):
+        mapped_labels = []
+        for label in example["image_labels"]:
+            mapped_labels.append(set_1_map[label])
+        example["image_labels"] = mapped_labels
+        return example
+
+    remapped_train_set_1_ds = train_set_1_ds.map(remap_set_1_labels)
+    remapped_test_set_1_ds = test_set_1_ds.map(remap_set_1_labels)
+
+    pytorch_transforms = Compose([ToTensor(),
+                                  Resize(size=(32, 32)),
+                                  RandomHorizontalFlip(),
+                                  RandomRotation(30),
+                                  CenterCrop(size=(32, 32)),
+                                  Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+
+    def apply_transforms(batch):
+        if isinstance(batch['image_name'], list):
+            batch['image_name'] = torch.stack([pytorch_transforms(img) for img in batch['image_name']])
+        else:
+            batch['image_name'] = pytorch_transforms(batch['image'])
+        # One-hot encode the multilabels
+        all_labels = [torch.tensor(labels) for labels in batch['image_labels']]
+        # Create one-hot encoding for each image's classes
+        one_hot_labels = [nn.functional.one_hot(label, num_classes=10).sum(dim=0) for label in all_labels]
+        # Stack them into a batch
+        batch['image_labels'] = torch.stack(one_hot_labels)
+
+        return batch
+
+    remapped_train_set_1_ds = remapped_train_set_1_ds.with_transform(apply_transforms)
+    remapped_test_set_1_ds = remapped_test_set_1_ds.with_transform(apply_transforms)
+
+    def collate_fn(batch):
+        return {
+            'image_name': torch.stack([x['image_name'] for x in batch]),
+            'image_labels': torch.stack([x['image_labels'] for x in batch]).float()
+        }
+
+    set_1_train_loader = DataLoader(remapped_train_set_1_ds, batch_size=64, shuffle=True, num_workers=2, drop_last=True, collate_fn=collate_fn)
+    set_1_test_loader = DataLoader(remapped_test_set_1_ds, batch_size=64, drop_last=True, collate_fn=collate_fn)
+    return set_1_train_loader, set_1_test_loader
 
 main()

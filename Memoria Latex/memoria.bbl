@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{Moyano:MULTI}
+Jose~M. Moyano.
+\newblock Multi-label classification models for heterogeneous data: an
+  ensemble-based approach, 2020.
+
 \bibitem{Yang_FL}
 Qiang Yang, Yang Liu, Yong Cheng, Yan Kang, Tianjian Chen, and Han Yu.
 \newblock {\em Federated Learning}.
