@@ -2,11 +2,11 @@
 
 \vspace*{5mm}
 
-En esta sección vamos a definir el problema que debemos solucionar, concretaremos las herramientas que usaremos basándonos en el estado del arte de la sección anterior y describiremos la arquitectura que hemos propuesto para la solución de dicho problema.
-
-
+En esta sección vamos a proponer una solución al problema de clasificación multi-etiqueta en entornos federados. Veremos cómo trataremos los datos del dataset para adaptarlos a nuestro entorno federado, seleccionaremos la herramienta para el sistema federado, el modelo que usaremos y las modificciones pertinentes. Por último definiremos las métricas elegidas para evaluar la bondad del sistema.
 
 \section{Datos de entrenamiento}
+
+%comentar desbalance de las etiquetas
 
 Para los datos de entrenamiento vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o clases ~\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}.
 
@@ -26,8 +26,13 @@ Con estos DataLoaders podemos empezar a trabajar.
 
 \section{Arquitectura de la solución}
 
+\subsection{FedPer}
+
+\subsection{Resnet}
+
+\subsection{Modificaciones}
 %Backbone Resnet
-%Fedper
+
 %Modificaciones para multi-etiqueta
 
 \section{Métricas}
