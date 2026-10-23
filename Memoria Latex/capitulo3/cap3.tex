@@ -2,13 +2,16 @@
 
 \vspace*{5mm}
 
-En esta sección vamos a proponer una solución al problema de clasificación multi-etiqueta en entornos federados. Veremos cómo trataremos los datos del dataset para adaptarlos a nuestro entorno federado, seleccionaremos la herramienta para el sistema federado, el modelo que usaremos y las modificciones pertinentes. Por último definiremos las métricas elegidas para evaluar la bondad del sistema.
+En esta sección vamos a proponer una solución al problema de clasificación multi-etiqueta en entornos federados. Veremos cómo trataremos los datos del dataset para adaptarlos a nuestro entorno federado, seleccionaremos la herramienta para el sistema federado, el modelo a usar y las modificciones pertinentes. Por último definiremos las métricas elegidas para evaluar la bondad del sistema.
 
 \section{Datos de entrenamiento}
 
-%comentar desbalance de las etiquetas
+Nuestro objetivo es tener un número de distintos conjuntos de datos con sus propias etiquetas no compartidas con los demás, lo que buscamos es simular distintas tareas a entrenar que sean específicas para cada cliente. Para ello no solo vamos a separar los diferentes ejemplos por cada cliente sino que también tenemos que hacer una discriminación por etiquetas.
 
-Para los datos de entrenamiento vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o clases ~\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}.
+Como base vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o clases ~\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}. A partir de él crearemos 4 conjuntos de datos con 10 etiquetas diferentes cada uno, para hacer la separacion por etiquetas vamos a ordenar las 40 etiquetas que más se repiten, creamos cuatro grupos de 10 etiquetas de manera que el número de ejemplos de cada grupo sea similiar. Una vez tenemos los 4 grupos seleccionamos del dataset total los ejemplos correspondientes a las etiquetas de cada grupo, luego eliminamos de esos ejemplos todas las etiquetas que no crrespondan a su grupo. Hacemos esto para los 4 subsets y así conseguimos separar las imágenes de manera que cada conjunto solo contenga etiquetas propias y que el número de ejemplos sea parecido.
+
+Una vez hemos conseguido fabricar unos conjuntos de datos que nos permitan 
+
 
 El dataset se compone de una carpeta con las 5000 imágenes y tres archivos csv que asignan las etiquetas a cada nombre de imagen. Lo primero que hacemos es componer tres DataFrame de Pandas, uno por cada archivo csv de manera que para cada elemento en la columna "\verb|image_name|" tiene las imágenes en formato PIL y en la columna "\verb|image_labels|" tiene una lista con el nombre de cada etiqueta de esa imagen. Luego los unimos en un único DataFrame ya que es más cómodo trabajar con todos los datos juntos.
 
