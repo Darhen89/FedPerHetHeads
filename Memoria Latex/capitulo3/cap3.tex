@@ -6,30 +6,19 @@ En esta sección vamos a proponer una solución al problema de clasificación mu
 
 \section{Datos de entrenamiento}
 
-Nuestro objetivo es tener un número de distintos conjuntos de datos con sus propias etiquetas no compartidas con los demás, lo que buscamos es simular distintas tareas a entrenar que sean específicas para cada cliente. Para ello no solo vamos a separar los diferentes ejemplos por cada cliente sino que también tenemos que hacer una discriminación por etiquetas.
+Nuestro objetivo es tener un número de distintos conjuntos de datos con sus propias etiquetas no compartidas con los demás, buscamos simular distintas tareas a entrenar que sean específicas para cada cliente. Para ello no solo vamos a separar los diferentes ejemplos por cada cliente sino que también tenemos que hacer una discriminación por etiquetas.
 
-Como base vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o clases ~\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}. A partir de él crearemos 4 conjuntos de datos con 10 etiquetas diferentes cada uno, para hacer la separacion por etiquetas vamos a ordenar las 40 etiquetas que más se repiten, creamos cuatro grupos de 10 etiquetas de manera que el número de ejemplos de cada grupo sea similiar. Una vez tenemos los 4 grupos seleccionamos del dataset total los ejemplos correspondientes a las etiquetas de cada grupo, luego eliminamos de esos ejemplos todas las etiquetas que no crrespondan a su grupo. Hacemos esto para los 4 subsets y así conseguimos separar las imágenes de manera que cada conjunto solo contenga etiquetas propias y que el número de ejemplos sea parecido.
+Como base vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o clases ~\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}. A partir de él crearemos 4 conjuntos de datos con 10 etiquetas diferentes cada uno ya que vamos a usar 4 clientes en nuestra federación, para hacer la separacion por etiquetas vamos a ordenar las 40 que más se repiten, creamos cuatro grupos de 10 etiquetas de manera que el número de ejemplos de cada grupo sea similiar. Una vez tenemos los 4 grupos seleccionamos del dataset total los ejemplos correspondientes a las etiquetas de cada grupo, por ejemplo si en nuestro grupo tenemos \"agua\" cogemos todos los elementos del conjunto de datos que estén etiquetados con \"agua\", luego eliminamos de esos ejemplos todas las etiquetas que no crrespondan a su grupo. Hacemos esto para los 4 subsets y así conseguimos separar las imágenes de manera que cada conjunto solo contenga etiquetas propias y que el número de ejemplos sea parecido.
 
-Una vez hemos conseguido fabricar unos conjuntos de datos que nos permitan 
-
-
-El dataset se compone de una carpeta con las 5000 imágenes y tres archivos csv que asignan las etiquetas a cada nombre de imagen. Lo primero que hacemos es componer tres DataFrame de Pandas, uno por cada archivo csv de manera que para cada elemento en la columna "\verb|image_name|" tiene las imágenes en formato PIL y en la columna "\verb|image_labels|" tiene una lista con el nombre de cada etiqueta de esa imagen. Luego los unimos en un único DataFrame ya que es más cómodo trabajar con todos los datos juntos.
-
-Una vez tenemos un único DataFrame el siguiente paso es separarlo en dos de manera que tengamos dos conjuntos de datos con etiquetas diferentes, para ello primero contamos el número de etiquetas totales del dataset y lo ordenamos por las que más se repiten, en nuestro caso son "water" y "sky". Creamos un subconjunto de ejemplos que contienen la etiqueta "water" y eliminamos de ese subconjunto todas las etiquetas "sky", de esta manera conseguimos que la etiqueta "sky" sea exclusiva del segundo conjunto el cuál tendrá un procesado similar pero seleccionando los ejemplos que contengan "sky" y eliminando la etiqueta "water".
-
-Ya hemos conseguido dos DataFrame que contienen clases exclusivas, en este paso vamos a convertirlos al tipo Dataset para seguir trabajando con ellos y dividir cada uno en dos subconjuntos "train" y "test" en una distribución de 80 y 20\%. Ahora tenemos un DataSet de imágenes y etiquetas en forma de palabras que vamos a cambiar para que sean números desde 0 hasta el número de etiquetas para el conjunto water y lo mismo para sky. Seleccionamos todas las etiquetas únicas de cada conjunto y las numeramos desde 0 hasta el tamaño del conjunto de etiquetas únicas -1 y luego aplicamos una transformación al DataSet para que intercambie cada etiqueta por su identificador.
-
-Una vez tenemos el remapeo de etiquetas lo siguente es realizar transformaciones aleatorias sobre las imágenes para normalizarlas y para añadir varibilidad en el entrenamiento. Las operaciones que vamos a aplicar son reescalar a un tamaño de 32x32, volcado horizontal aleatorio, rotación aleatoria, recorte central, normalización y los conjuntos de etiquetas los vamos a poner en formato one-hot.
-
-Por último vamos a configurar los DataLoaders que serán los conjuntos que se van a usar para el entrenamiento y la evaluación ajustando el formato para que tenga un diccionario con todas las imágenes en "\verb|image_name|" y todas las etiquetas en one-hot en "\verb|image_name|".
-
-Con estos DataLoaders podemos empezar a trabajar.
-
-
+Una vez hemos conseguido fabricar unos conjuntos de datos que nos permitan simular una situación real en la que tenemos conjuntos de datos distintos que quieren entrenar un mismo modelo lo siguiente es preparar el sistema que va a procesar esos datos.
 
 \section{Arquitectura de la solución}
 
+Vamos a montar un sistema que nos permita comparar el rendimiento de un clasificador multi-etiqueta en un entorno federado y uno centralizado usando los mismos parámetros para ver si existe mejora en la tarea al pertenecer a un grupo colaborativo de entrenamiento. Tendremos 4 clientes y cada uno realizará una tarea de clasificación distinta ya que cada conjunto de datos va a tener etiquetas distintas. Para que realicen esta tarea vamos a usar modelos personalizados que contarán con una parte comun que es la que se compartirá con el servidor y un conjunto de capas personalizadas que quedarán en los clientes. De esta manera parte del modelo tendrá una función general y compartida entre los demás nodos y cada uno de ellos entrenará la parte específica a su tarea de manera local. Los clientes compartirán la parte común del modelo y el servidor se encargará de realizar la agregación y de devolverle esa parte actualizada todos ellos.
+
 \subsection{FedPer}
+
+Para evitar la implementación de todo el sistema desde cero vamos a usar de base el entorno de trabajo para aprendizaje federado Flower ~\cite{} que nos provee de herramientas de simulación para este tipo de sistemas. Más en concreto haremos uso del baseline FedPer, una implementación de ~\cite{} el cual usa estas capas federadas para una tarea de clasificación multi-clase. 
 
 \subsection{Resnet}
 
