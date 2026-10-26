@@ -40,35 +40,39 @@ def main(cfg: DictConfig) -> None:
         model.parameters(), lr=0.01, momentum=0.9
     )
 
-    epoch_count = 0
-    correct, total = 0.0, 0.0
+    round_count = 0
+    for _ in range(cfg.num_rounds):
+        round_count = round_count + 1
+        print("Round", round_count)
+        correct, total = 0.0, 0.0
+        loss: torch.Tensor = 0.0
+        for _ in range(cfg.num_epochs):
+            running_loss = 0.0
+            for batch in trainloader:
+                optimizer.zero_grad()
+                outputs = model(batch["image_name"].to(device))
+                labels = batch["image_labels"].to(device)
+                loss = criterion(outputs, labels)
 
-    for _ in range(cfg.num_epochs):
-        running_loss = 0.0
-        epoch_count = epoch_count + 1
-        for batch in trainloader:
-            optimizer.zero_grad()
-            outputs = model(batch["image_name"].to(device))
-            labels = batch["image_labels"].to(device)
-            loss = criterion(outputs, labels)
+                preds = sigmoid(outputs)
+                correct += label_ranking_average_precision_score(labels.tolist(), preds.tolist())
 
-            preds = sigmoid(outputs)
-            correct += label_ranking_average_precision_score(labels.tolist(), preds.tolist())
+                loss.backward()
+                optimizer.step()
+                running_loss += loss.item()
 
-            loss.backward()
-            optimizer.step()
-            running_loss += loss.item()
+                total += labels.size(0)
 
-            total += labels.size(0)
+        print("loss: ", loss.item(), "accuracy: ", correct / total)
 
-        print("epoch: ",epoch_count,"loss: ", running_loss / len(trainloader), "accuracy: ", correct / total)
-
+    #----------------EVALUATION--------------
+    f1_s = np.zeros(10)
     total_tn = np.zeros(10)
     total_tp = np.zeros(10)
     total_fn = np.zeros(10)
     total_fp = np.zeros(10)
 
-    model.eval()
+    #model.eval()
     with torch.no_grad():
         for batch in testloader:
             outputs = model(batch["image_name"].to(device))
@@ -102,6 +106,7 @@ def main(cfg: DictConfig) -> None:
             fn = confusion_matrix[:, 1, 0]
             fp = confusion_matrix[:, 0, 1]
 
+            f1_s += f1_score(labels.tolist(), preds_binary.tolist(), average=None, zero_division=0.0)
             total_tn += tn
             total_tp += tp
             total_fn += fn
@@ -114,8 +119,9 @@ def main(cfg: DictConfig) -> None:
             #print("fall out: ",fp / (fp + tn)) #probabilidad de falsos positivos
             #print("miss rate: ",fn / (fn + tp)) #probabilidad de falsos negativos
 
-        total = len(trainloader)
+        total = len(testloader)
 
+        f1_s = f1_s / total
         accuracy = ((total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)) / total #proporcion de ejemplos correctamente clasificados
         precision = (total_tp / (total_tp + total_fp)) / total #proporción de predicciones correctas entre el total de predicciones para una clase
         recall = (total_tp / (total_tp + total_fn)) / total #proporción de veces que una clase ha sido predicha correctamente, probabilidad de positivos verdaderos
@@ -123,78 +129,82 @@ def main(cfg: DictConfig) -> None:
         fall_out = (total_fp / (total_fp + total_tn)) / total #probabilidad de falsos positivos
         miss_rate = (total_fn / (total_fn + total_tp)) / total #probabilidad de falsos negativos
 
-        print("accuracy: ",accuracy)
-        print("precision: ",precision)
-        print("recall: ",recall)
-        print("specificity: ",specificity)
-        print("fall_out: ",fall_out)
-        print("miss_rate: ",miss_rate)
-
-        report = {'water': {'accuracy': accuracy[0],
-                            'precision': precision[0],
-                            'recall': recall[0],
-                            'specificity': specificity[0],
-                            'fall_out': fall_out[0],
-                            'miss_rate': miss_rate[0],},
-                'buildings': {'accuracy': accuracy[1],
-                            'precision': precision[1],
-                            'recall': recall[1],
-                            'specificity': specificity[1],
-                            'fall_out': fall_out[1],
-                            'miss_rate': miss_rate[1],},
-                'rocks': {'accuracy': accuracy[2],
-                            'precision': precision[2],
-                            'recall': recall[2],
-                            'specificity': specificity[2],
-                            'fall_out': fall_out[2],
-                            'miss_rate': miss_rate[2],},
-                'field': {'accuracy': accuracy[3],
-                        'precision': precision[3],
-                        'recall': recall[3],
-                        'specificity': specificity[3],
-                        'fall_out': fall_out[3],
-                        'miss_rate': miss_rate[3], },
-                'sand': {'accuracy': accuracy[4],
-                        'precision': precision[4],
-                        'recall': recall[4],
-                        'specificity': specificity[4],
-                        'fall_out': fall_out[4],
-                        'miss_rate': miss_rate[4], },
-                'cars': {'accuracy': accuracy[5],
-                        'precision': precision[5],
-                        'recall': recall[5],
-                        'specificity': specificity[5],
-                        'fall_out': fall_out[5],
-                        'miss_rate': miss_rate[5], },
-                'polar': {'accuracy': accuracy[6],
-                        'precision': precision[6],
-                        'recall': recall[6],
-                        'specificity': specificity[6],
-                        'fall_out': fall_out[6],
-                        'miss_rate': miss_rate[6], },
-                'ruins': {'accuracy': accuracy[7],
-                        'precision': precision[7],
-                        'recall': recall[7],
-                        'specificity': specificity[7],
-                        'fall_out': fall_out[7],
-                        'miss_rate': miss_rate[7], },
-                'statue': {'accuracy': accuracy[8],
-                        'precision': precision[8],
-                        'recall': recall[8],
-                        'specificity': specificity[8],
-                        'fall_out': fall_out[8],
-                        'miss_rate': miss_rate[8], },
-                'wall': {'accuracy': accuracy[9],
-                        'precision': precision[9],
-                        'recall': recall[9],
-                        'specificity': specificity[9],
-                        'fall_out': fall_out[9],
-                        'miss_rate': miss_rate[9], },
-
+        report = {'water': {'f1_score': round(f1_s[0],4),
+                            'accuracy': round(accuracy[0],4),
+                            'precision': round(precision[0],4),
+                            'recall': round(recall[0],4),
+                            'specificity': round(specificity[0],4),
+                            'fall_out': round(fall_out[0],4),
+                            'miss_rate': round(miss_rate[0],4),},
+                'buildings': {'f1_score': round(f1_s[1],4),
+                            'accuracy': round(accuracy[1],4),
+                            'precision': round(precision[1],4),
+                            'recall': round(recall[1],4),
+                            'specificity': round(specificity[1],4),
+                            'fall_out': round(fall_out[1],4),
+                            'miss_rate': round(miss_rate[1],4),},
+                'rocks': {'f1_score': round(f1_s[2],4),
+                            'accuracy': round(accuracy[2],4),
+                            'precision': round(precision[2],4),
+                            'recall': round(recall[2],4),
+                            'specificity': round(specificity[2],4),
+                            'fall_out': round(fall_out[2],4),
+                            'miss_rate': round(miss_rate[2],4),},
+                'field': {'f1_score': round(f1_s[3],4),
+                        'accuracy': round(accuracy[3],4),
+                        'precision': round(precision[3],4),
+                        'recall': round(recall[3],4),
+                        'specificity': round(specificity[3],4),
+                        'fall_out': round(fall_out[3],4),
+                        'miss_rate': round(miss_rate[3],4), },
+                'sand': {'f1_score': round(f1_s[4],4),
+                        'accuracy': round(accuracy[4],4),
+                        'precision': round(precision[4],4),
+                        'recall': round(recall[4],4),
+                        'specificity': round(specificity[4],4),
+                        'fall_out': round(fall_out[4],4),
+                        'miss_rate': round(miss_rate[4],4), },
+                'cars': {'f1_score': round(f1_s[5],4),
+                        'accuracy': round(accuracy[5],4),
+                        'precision': round(precision[5],4),
+                        'recall': round(recall[5],4),
+                        'specificity': round(specificity[5],4),
+                        'fall_out': round(fall_out[5],4),
+                        'miss_rate': round(miss_rate[5],4), },
+                'polar': {'f1_score': round(f1_s[6],4),
+                        'accuracy': round(accuracy[6],4),
+                        'precision': round(precision[6],4),
+                        'recall': round(recall[6],4),
+                        'specificity': round(specificity[6],4),
+                        'fall_out': round(fall_out[6],4),
+                        'miss_rate': round(miss_rate[6],4), },
+                'ruins': {'f1_score': round(f1_s[7],4),
+                        'accuracy': round(accuracy[7],4),
+                        'precision': round(precision[7],4),
+                        'recall': round(recall[7],4),
+                        'specificity': round(specificity[7],4),
+                        'fall_out': round(fall_out[7],4),
+                        'miss_rate': round(miss_rate[7],4), },
+                'statue': {'f1_score': round(f1_s[8],4),
+                        'accuracy': round(accuracy[8],4),
+                        'precision': round(precision[8],4),
+                        'recall': round(recall[8],4),
+                        'specificity': round(specificity[8],4),
+                        'fall_out': round(fall_out[8],4),
+                        'miss_rate': round(miss_rate[8],4), },
+                'wall': {'f1_score': round(f1_s[9],4),
+                        'accuracy': round(accuracy[9],4),
+                        'precision': round(precision[9],4),
+                        'recall': round(recall[9],4),
+                        'specificity': round(specificity[9],4),
+                        'fall_out': round(fall_out[9],4),
+                        'miss_rate': round(miss_rate[9],4), },
                 }
         print("Classification report")
-        print(report)
-
+        print("Class      f1_score accuracy precision recall specificity fall_out miss_rate")
+        for stud, val in report.items():
+            print("{:10} {:^8} {:^8} {:^9} {:^6} {:^11} {:^8} {:^9}".format(stud, val["f1_score"], val["accuracy"], val["precision"], val["recall"], val["specificity"],
+                                                              val["fall_out"], val["miss_rate"]))
 
 
 

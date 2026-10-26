@@ -186,6 +186,7 @@ class BaseClient(NumPyClient):
             "tst": tst_results,
         }
         self.test_id += 1
+
         return (
             tst_results.get("loss", 0.0),
             self.model_manager.test_dataset_size(),

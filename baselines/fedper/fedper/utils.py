@@ -137,7 +137,7 @@ def plot_metric_from_history(
         if metric_type == "centralized"
         else hist.metrics_distributed
     )
-    _, values = zip(*metric_dict["accuracy"])
+    _, values = zip(*metric_dict["f1_score"])
 
     # let's extract decentralized loss (main metric reported in FedProx paper)
     rounds_loss, values_loss = zip(*hist.losses_distributed)

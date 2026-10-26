@@ -420,6 +420,7 @@ class AggregateBodyStrategy(ServerInitializationStrategy):
             Optional `float` representing the aggregated evaluation result. Aggregation
             typically uses some variant of a weighted average.
         """
+
         aggregated_loss, aggregated_metrics = super().aggregate_evaluate(
             server_round=server_round, results=results, failures=failures
         )
@@ -427,12 +428,13 @@ class AggregateBodyStrategy(ServerInitializationStrategy):
 
         # Weigh accuracy of each client by number of examples used
         accuracies: List[float] = []
+
         for _, res in results:
-            accuracy: float = float(res.metrics["accuracy"])
+            accuracy: float = float(res.metrics["f1_s"])
             accuracies.append(accuracy)
-        print(f"Round {server_round} accuracies: {accuracies}")
+        print(f"Round {server_round} f1 score: {accuracies}")
 
         # Aggregate and print custom metric
-        averaged_accuracy = sum(accuracies) / len(accuracies)
-        print(f"Round {server_round} accuracy averaged: {averaged_accuracy}")
-        return aggregated_loss, {"accuracy": averaged_accuracy}
+        averaged_accuracy = sum(accuracies) / len(accuracies) if len(accuracies) > 0 else 0
+        print(f"Round {server_round} f1_score averaged: {averaged_accuracy}")
+        return aggregated_loss, {"f1_score": averaged_accuracy}

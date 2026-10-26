@@ -178,7 +178,7 @@ class Server:
             len(client_instructions),
             self._client_manager.num_available(),
         )
-
+        log(INFO,"TRACE 1")
         # Collect `evaluate` results from all clients participating in this round
         results, failures = evaluate_clients(
             client_instructions,
@@ -400,6 +400,7 @@ def evaluate_clients(
     group_id: int,
 ) -> EvaluateResultsAndFailures:
     """Evaluate parameters concurrently on all selected clients."""
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
         submitted_fs = {
             executor.submit(evaluate_client, client_proxy, ins, timeout, group_id)
@@ -409,7 +410,6 @@ def evaluate_clients(
             fs=submitted_fs,
             timeout=None,  # Handled in the respective communication stack
         )
-
     # Gather results
     results: list[tuple[ClientProxy, EvaluateRes]] = []
     failures: list[tuple[ClientProxy, EvaluateRes] | BaseException] = []

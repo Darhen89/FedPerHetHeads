@@ -2,34 +2,71 @@
 
 \vspace*{5mm}
 
-En esta sección vamos a proponer una solución al problema de clasificación multi-etiqueta en entornos federados. Veremos cómo trataremos los datos del dataset para adaptarlos a nuestro entorno federado, seleccionaremos la herramienta para el sistema federado, el modelo a usar y las modificciones pertinentes. Por último definiremos las métricas elegidas para evaluar la bondad del sistema.
+En esta sección vamos a proponer una solución al problema de clasificación multi-etiqueta en entornos federados. Veremos cómo trataremos los datos del dataset para adaptarlos a nuestro entorno federado, seleccionaremos la herramienta para el sistema federado, el modelo a usar y las modificaciones pertinentes. Por último definiremos las métricas elegidas para evaluar la bondad del sistema.
 
 \section{Datos de entrenamiento}
 
 Nuestro objetivo es tener un número de distintos conjuntos de datos con sus propias etiquetas no compartidas con los demás, buscamos simular distintas tareas a entrenar que sean específicas para cada cliente. Para ello no solo vamos a separar los diferentes ejemplos por cada cliente sino que también tenemos que hacer una discriminación por etiquetas.
 
-Como base vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o clases ~\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}. A partir de él crearemos 4 conjuntos de datos con 10 etiquetas diferentes cada uno ya que vamos a usar 4 clientes en nuestra federación, para hacer la separacion por etiquetas vamos a ordenar las 40 que más se repiten, creamos cuatro grupos de 10 etiquetas de manera que el número de ejemplos de cada grupo sea similiar. Una vez tenemos los 4 grupos seleccionamos del dataset total los ejemplos correspondientes a las etiquetas de cada grupo, por ejemplo si en nuestro grupo tenemos \"agua\" cogemos todos los elementos del conjunto de datos que estén etiquetados con \"agua\", luego eliminamos de esos ejemplos todas las etiquetas que no crrespondan a su grupo. Hacemos esto para los 4 subsets y así conseguimos separar las imágenes de manera que cada conjunto solo contenga etiquetas propias y que el número de ejemplos sea parecido.
+Como base vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o clases \footnote{\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}}. A partir de él crearemos 4 conjuntos de datos con 10 etiquetas diferentes cada uno ya que vamos a usar 4 clientes en nuestra federación, para hacer la separación por etiquetas vamos a ordenar las 40 que más se repiten, creamos cuatro grupos de 10 etiquetas de manera que el número de ejemplos de cada grupo sea similar. Una vez tenemos los 4 grupos seleccionamos del dataset total los ejemplos correspondientes a las etiquetas de cada grupo, por ejemplo si en nuestro grupo tenemos ``agua'' cogemos todos los elementos del conjunto de datos que estén etiquetados con ``agua'', luego eliminamos de esos ejemplos todas las etiquetas que no correspondan a su grupo. Hacemos esto para los 4 subsets y así conseguimos separar las imágenes de manera que cada conjunto solo contenga etiquetas propias y que el número de ejemplos sea parecido.
 
 Una vez hemos conseguido fabricar unos conjuntos de datos que nos permitan simular una situación real en la que tenemos conjuntos de datos distintos que quieren entrenar un mismo modelo lo siguiente es preparar el sistema que va a procesar esos datos.
 
 \section{Arquitectura de la solución}
 
-Vamos a montar un sistema que nos permita comparar el rendimiento de un clasificador multi-etiqueta en un entorno federado y uno centralizado usando los mismos parámetros para ver si existe mejora en la tarea al pertenecer a un grupo colaborativo de entrenamiento. Tendremos 4 clientes y cada uno realizará una tarea de clasificación distinta ya que cada conjunto de datos va a tener etiquetas distintas. Para que realicen esta tarea vamos a usar modelos personalizados que contarán con una parte comun que es la que se compartirá con el servidor y un conjunto de capas personalizadas que quedarán en los clientes. De esta manera parte del modelo tendrá una función general y compartida entre los demás nodos y cada uno de ellos entrenará la parte específica a su tarea de manera local. Los clientes compartirán la parte común del modelo y el servidor se encargará de realizar la agregación y de devolverle esa parte actualizada todos ellos.
+Vamos a montar un sistema que nos permita comparar el rendimiento de un clasificador multi-etiqueta en un entorno federado y uno centralizado usando los mismos parámetros para ver si existe mejora en la tarea al pertenecer a un grupo colaborativo de entrenamiento. Tendremos 4 clientes y cada uno realizará una tarea de clasificación distinta ya que cada conjunto de datos va a tener etiquetas distintas. Para que realicen esta tarea vamos a usar modelos personalizados que contarán con una parte común que es la que se compartirá con el servidor y un conjunto de capas personalizadas que quedarán en los clientes. De esta manera parte del modelo tendrá una función general y compartida entre los demás nodos y cada uno de ellos entrenará la parte específica a su tarea de manera local. Los clientes compartirán la parte común del modelo y el servidor se encargará de realizar la agregación y de devolverle esa parte actualizada todos ellos.
 
 \subsection{FedPer}
 
-Para evitar la implementación de todo el sistema desde cero vamos a usar de base el entorno de trabajo para aprendizaje federado Flower ~\cite{} que nos provee de herramientas de simulación para este tipo de sistemas. Más en concreto haremos uso del baseline FedPer, una implementación de ~\cite{} el cual usa estas capas federadas para una tarea de clasificación multi-clase. 
+El aprendizaje federado necesita una insfraestructura que permita mover modelos de un lado a otro entre el servidor y los clientes, ejecutar el entrenamiento con los datos locales y agregar los modelos actualizados. Para evitar la implementación de todo el sistema desde cero vamos a usar de base el entorno de trabajo para aprendizaje federado Flower \footnote{\url{https://flower.ai/}} que nos provee de esta infraestructura. Más en concreto haremos uso del baseline de Flower FedPer \footnote{\url{https://flower.ai/docs/baselines/fedper.html}}, una implementación de ~\cite{Manoj:FedPer} el cual propone una aplicación del método de \textit{Backbone Sharing} que vimos en ~\cite{Ye:HFL_Survey}. FedPer es un entorno simulado que crea el servidor y los clientes, en el servidor se instancia el modelo global con dos partes diferenciadas llamadas \textit{cuerpo} y \textit{cabeceras}, el \textit{cuerpo} corresponde a la parte del modelo que va a ser compartida y las \textit{cabeceras} son las capas que van a ser entrenadas en el cliente pero no van a devolverse. Se inicializa el \textit{cuerpo} y se envía a cada uno de los clientes los cuales los restauran en sus modelos locales. Cada modelo local se entrena con los sus datos y los \textit{cuerpos} actualizados se devuelven al servidor el cuál realiza la operación de agregación que en nuestro caso será FedAvg ~\cite{mcmahan2023communicationefficientlearningdeepnetworks} pero solo con la parte del modelo enviada por los clientes. Una vez actualizado el modelo global se devuelve a los clientes para la siguiente ronda de entrenamiento.
 
-\subsection{Resnet}
+FedPer y Flower también nos dan herramientas para la agregación de métricas de entrenamiento y evaluación.
+
+\subsection{Modelo}
+
+Para las capas compartidas con el servidor necesitamos un modelo que nos ayude con la tarea de procesamiento de imágenes. Para nuestra implementación vamos a usar la red pre-entrenada ResNet ~\cite{he2015deepresiduallearningimage}, por simplificar el entrenamiento y no partir desde cero. También es conocida su eficiencia para la tarea de clasificación de imágenes, reconocimiento de objetos y extracción de características haciéndola una muy buena candidata para la tarea común de procesamiento de imágenes gracias a su capacidad de realizar conexiones residuales entre sus capas haciendo que se pueda incrementar el tamaño de la red sin que afecte al gradiente. Esta parte de la red se encargará de de las funciones comunes a las cuatro tareas y las capas personalizadas de cada cliente se encargarán de la parte específica. Para las capas personalizadas vamos a añadir para cada servidor dos capas convolucionales y una capa linear para la salida con 10 nodos, uno para cada clase.
+
 
 \subsection{Modificaciones}
-%Backbone Resnet
 
-%Modificaciones para multi-etiqueta
+Como comentamos antes, la implementación de FedPer que estamos usando está implementada para clasificación multi-etiqueta. Debemos adaptar la arquitectura para poder implementar la clasificación multi-etiqueta. Para ello hemos realizado modificaciones en la parte de la preparación de los datos, los clientes, el modelo y el tratamiento de métricas.
 
-\section{Métricas}
+Para el tratamiento de datos hemos tenido que crear el conjunto de datos desde cero como explicamos en la sección 3.1, definimos una función que creará los 8 Dataloaders que usará cada cliente, 4 para entrenamiento y 4 para evaluación. Cada separación de datos tiene alrededor de 4400 ejemplos y unas 5000 etiquetas. Hemos codificado las etiquetas de los dataset en one-hot para facilitar el entrenamiento y la evaluación multi-etiqueta.
+
+Los clientes al inicializarse reciben los 8 Dataloaders y en función del identificador del cliente eligen uno de los conjuntos de datos que luego enviarán al modelo para que realice en entrenamiento y la evaluación.
+
+El modelo inicializa las capas personalizadas con valores distintos para cada cliente y carga los datos específicos de ese cliente. En el entrenamiento usamos como función de pérdida BCEWithLogits en lugar de CrossEntrophyLoss ya que está tiene buenos resultados a la hora del entrenamiento de clasificadores multi-etiqueta. BCEWithLogits permite introducir los pesos de cada etiqueta en un tensor para incorporar el desbalance de etiquetas al cálculo de la función de pérdida. Para la precisión del entrenamiento hemos usado \footnote{\url{https://scikit-learn.org/stable/modules/model_evaluation.html#label-ranking-average-precision}}.
+
+\section{Métricas de evaluación}
+
+A la hora de comprobar la bondad de nuestro modelo tenemos un problema añadido cuando la salida son más de una etiqueta. Por ejemplo, si el resultado esperado tiene dos clases activas y el modelo solo ha predicho una de ellas, si comprobamos el valor exacto de todas las etiquetas marcaríamos la precisión como 0, sin embargo hay una que sí 
+
+\subsection{F1 Score}
+
+\subsection{Matriz de confusión}
+
+\subsubsection{Accuracy}
+
+\subsubsection{Precision}
+
+\subsubsection{Recall}
+
+\subsubsection{Specificity}
+
+\subsubsection{Fall out}
+
+\subsubsection{Miss rate}
 
 
+COMMENTARIOS:
+
+Jose, podría añadir descripciones formales de:
+
+FedPer (https://arxiv.org/pdf/1912.00818)
+BCEWithLogits (https://docs.pytorch.org/docs/2.14/generated/torch.nn.BCEWithLogitsLoss.html)
+Label ranking average precision (https://scikit-learn.org/stable/modules/model_evaluation.html#label-ranking-average-precision)
+
+Pero no sé si aportan algo en realidad.
 
 
 

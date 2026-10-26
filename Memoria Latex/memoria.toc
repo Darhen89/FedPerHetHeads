@@ -11,11 +11,22 @@
 \contentsline {chapter}{\numberline {3}Federaci\IeC {\'o}n con capas personalizadas y salidas heterog\IeC {\'e}neas (FedPerH)}{11}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Datos de entrenamiento}{11}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Arquitectura de la soluci\IeC {\'o}n}{12}{section.3.2}%
-\contentsline {section}{\numberline {3.3}M\IeC {\'e}tricas}{12}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Estudio experimental}{13}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Configuraci\IeC {\'o}n de los experimentos}{13}{section.4.1}%
-\contentsline {section}{\numberline {4.2}An\IeC {\'a}lisis de resultados}{14}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{15}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Conclusiones}{15}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Trabajo futuro}{16}{section.5.2}%
-\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{17}{section.5.2}%
+\contentsline {subsection}{\numberline {3.2.1}FedPer}{12}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Modelo}{13}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Modificaciones}{13}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}M\IeC {\'e}tricas de evaluaci\IeC {\'o}n}{14}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}F1 Score}{14}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Matriz de confusi\IeC {\'o}n}{14}{subsection.3.3.2}%
+\contentsline {subsubsection}{Accuracy}{14}{subsection.3.3.2}%
+\contentsline {subsubsection}{Precision}{14}{subsection.3.3.2}%
+\contentsline {subsubsection}{Recall}{14}{subsection.3.3.2}%
+\contentsline {subsubsection}{Specificity}{14}{subsection.3.3.2}%
+\contentsline {subsubsection}{Fall out}{14}{subsection.3.3.2}%
+\contentsline {subsubsection}{Miss rate}{14}{subsection.3.3.2}%
+\contentsline {chapter}{\numberline {4}Estudio experimental}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Configuraci\IeC {\'o}n de los experimentos}{17}{section.4.1}%
+\contentsline {section}{\numberline {4.2}An\IeC {\'a}lisis de resultados}{18}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{19}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Conclusiones}{19}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Trabajo futuro}{20}{section.5.2}%
+\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{21}{section.5.2}%
