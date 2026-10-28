@@ -35,7 +35,9 @@ def main(cfg: DictConfig) -> None:
     model = ResNet()
     model.to(device)
 
-    criterion = torch.nn.BCEWithLogitsLoss().to(device)
+    pos_weight = torch.tensor((1, 4, 8, 10, 11, 15, 17, 19, 20, 21))
+
+    criterion = torch.nn.BCEWithLogitsLoss(pos_weight=pos_weight).to(device)
     optimizer = torch.optim.SGD(
         model.parameters(), lr=0.01, momentum=0.9
     )

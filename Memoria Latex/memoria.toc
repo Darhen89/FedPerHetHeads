@@ -15,18 +15,19 @@
 \contentsline {subsection}{\numberline {3.2.2}Modelo}{13}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}Modificaciones}{13}{subsection.3.2.3}%
 \contentsline {section}{\numberline {3.3}M\IeC {\'e}tricas de evaluaci\IeC {\'o}n}{14}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}F1 Score}{14}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Matriz de confusi\IeC {\'o}n}{14}{subsection.3.3.2}%
-\contentsline {subsubsection}{Accuracy}{14}{subsection.3.3.2}%
-\contentsline {subsubsection}{Precision}{14}{subsection.3.3.2}%
-\contentsline {subsubsection}{Recall}{14}{subsection.3.3.2}%
-\contentsline {subsubsection}{Specificity}{14}{subsection.3.3.2}%
-\contentsline {subsubsection}{Fall out}{14}{subsection.3.3.2}%
-\contentsline {subsubsection}{Miss rate}{14}{subsection.3.3.2}%
-\contentsline {chapter}{\numberline {4}Estudio experimental}{17}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Configuraci\IeC {\'o}n de los experimentos}{17}{section.4.1}%
-\contentsline {section}{\numberline {4.2}An\IeC {\'a}lisis de resultados}{18}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{19}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Conclusiones}{19}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Trabajo futuro}{20}{section.5.2}%
-\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{21}{section.5.2}%
+\contentsline {subsection}{\numberline {3.3.1}Label ranking average precision}{14}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Matriz de confusi\IeC {\'o}n}{15}{subsection.3.3.2}%
+\contentsline {subsubsection}{Accuracy}{16}{Item.4}%
+\contentsline {subsubsection}{Precision}{16}{Item.4}%
+\contentsline {subsubsection}{Recall}{17}{Item.4}%
+\contentsline {subsubsection}{Specificity}{17}{Item.4}%
+\contentsline {subsubsection}{Fall out}{17}{Item.4}%
+\contentsline {subsubsection}{Miss rate}{18}{Item.4}%
+\contentsline {subsection}{\numberline {3.3.3}F1 Score}{18}{subsection.3.3.3}%
+\contentsline {chapter}{\numberline {4}Estudio experimental}{19}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Configuraci\IeC {\'o}n de los experimentos}{19}{section.4.1}%
+\contentsline {section}{\numberline {4.2}An\IeC {\'a}lisis de resultados}{20}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{21}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Conclusiones}{21}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Trabajo futuro}{22}{section.5.2}%
+\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{23}{section.5.2}%

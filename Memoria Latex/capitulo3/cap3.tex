@@ -35,27 +35,148 @@ Para el tratamiento de datos hemos tenido que crear el conjunto de datos desde c
 
 Los clientes al inicializarse reciben los 8 Dataloaders y en función del identificador del cliente eligen uno de los conjuntos de datos que luego enviarán al modelo para que realice en entrenamiento y la evaluación.
 
-El modelo inicializa las capas personalizadas con valores distintos para cada cliente y carga los datos específicos de ese cliente. En el entrenamiento usamos como función de pérdida BCEWithLogits en lugar de CrossEntrophyLoss ya que está tiene buenos resultados a la hora del entrenamiento de clasificadores multi-etiqueta. BCEWithLogits permite introducir los pesos de cada etiqueta en un tensor para incorporar el desbalance de etiquetas al cálculo de la función de pérdida. Para la precisión del entrenamiento hemos usado \footnote{\url{https://scikit-learn.org/stable/modules/model_evaluation.html#label-ranking-average-precision}}.
+El modelo inicializa las capas personalizadas con valores distintos para cada cliente y carga los datos específicos de ese cliente. En el entrenamiento usamos como función de pérdida BCEWithLogits en lugar de CrossEntrophyLoss ya que está tiene buenos resultados a la hora del entrenamiento de clasificadores multi-etiqueta. BCEWithLogits permite introducir los pesos de cada etiqueta en un tensor para incorporar el desbalance de etiquetas al cálculo de la función de pérdida. Para la precisión del entrenamiento hemos usado \footnote{\url{https://scikit-learn.org/stable/modules/model_evaluation.html\#label-ranking-average-precision}}.
 
 \section{Métricas de evaluación}
 
-A la hora de comprobar la bondad de nuestro modelo tenemos un problema añadido cuando la salida son más de una etiqueta. Por ejemplo, si el resultado esperado tiene dos clases activas y el modelo solo ha predicho una de ellas, si comprobamos el valor exacto de todas las etiquetas marcaríamos la precisión como 0, sin embargo hay una que sí 
+A la hora de comprobar la bondad de nuestro modelo tenemos un problema añadido cuando la salida son más de una etiqueta. Por ejemplo, si el resultado esperado tiene dos clases activas y el modelo solo ha predicho una de ellas, si comprobamos el valor exacto de todas las etiquetas marcaríamos la precisión como 0, sin embargo hay una que sí ha sido correcta y la debemos evaluar de forma positiva. Podríamos comprobar etiqueta a etiqueta si tiene un valor correcto pero si la mayoría de valores en las etiquetas son 0, un modelo que prediga siempre 0 podría tener una precisión muy alta y no funcionaría correctamente. Por eso debemos buscar métricas que tengan en cuenta los aciertos y los fallos de manera global.
 
-\subsection{F1 Score}
+\subsection{Label ranking average precision}
+
+Necesitamos una métrica de precisión para el entrenamiento, para evitar la complicación de hacer los cálculos de la matriz de confusión vamos a usar la métrica implementada en scikit learn \textit{Label ranking average precision score} ordena las predicciones según el valor de probabilidad asignado por el modelo y responde a la pregunta para cada etiqueta verdadera, ¿qué fracción de las etiquetas predichas con valro más alto son correctas?
+
+The label ranking average precision score function implements label ranking average precision (LRAP). This metric is linked to the average precision score function, but is based on the notion of label ranking instead of precision and recall. Esta métrica será mayor si el modelo es capaz de dar una mayor probabilidad a las etiquetas verdaderas.
 
 \subsection{Matriz de confusión}
 
+Una matriz de confusión distribuye las predicciones en base a la salida esperada de la siguiente manera:
+
+\begin{enumerate}
+	\item Verdaderos positivos (TP): Clases predichas correctamente
+	\item Verdaderos negativos (TN): Ausencia de clase predicha correctamente
+	\item Falsos positivos (FP): Clase predicha incorrectamente
+	\item Falsos negativos (FN): Ausencia de clase predicha incorrectamente
+\end{enumerate}
+
+Distribuidas de la siguiente manera:
+
+\[\begin{bmatrix}
+	TN & FP\\
+	TP & FN
+\end{bmatrix}\]
+
+Imaginemos que tenemos tres imágenes con las siguientes etiquetas:
+
+\begin{center}
+	\begin{tabular}{ c c c c c c c c c c }
+		\hline
+		water & buildings & rocks & field & sand & cars & polar & ruins & statue & wall\\ [0.5ex] 
+		\hline\hline
+		1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+		0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\  
+		1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0    
+	\end{tabular}
+\end{center}
+
+Y el modelo realiza las siguiente predicciones:
+
+\begin{center}
+	\begin{tabular}{ c c c c c c c c c c }
+		\hline
+		water & buildings & rocks & field & sand & cars & polar & ruins & statue & wall\\ [0.5ex] 
+		\hline\hline
+		1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\ 
+		0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\  
+		0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0    
+	\end{tabular}
+\end{center}
+
+Las matrices de confusión para cada etiqueta serían
+
+Water:
+\[\begin{bmatrix}
+	1 & 1\\
+	1 & 1
+\end{bmatrix}\]
+
+Buildings:
+\[\begin{bmatrix}
+	2 & 0\\
+	1 & 0
+\end{bmatrix}\]
+
+Rocks:
+\[\begin{bmatrix}
+	1 & 0\\
+	0 & 2
+\end{bmatrix}\]
+
+Cars:
+\[\begin{bmatrix}
+	0 & 2\\
+	1 & 0
+\end{bmatrix}\]
+
+Antes de crear nuestra matriz de confusión debemos binarizar nuestras salidas del modelo. Una vez tenemos nuestra matriz de confusión para cada ejemplo del \textit{batch} de evaluación podremos calcular el resto de las métricas.
+
 \subsubsection{Accuracy}
+
+Accuracy is the proportion of examples that were correctly classified. More precisely, it is sum of the number of true positives and true negatives, divided by the number of examples in the dataset.
+
+For example, if we look at the cat class, we’ll see that among 4 training examples in the dataset, the prediction of the model for the class cat was correct in 2 of them. So accuracy for class cat is 2 / 4 = 0.5 = 50%.
+
+\[Accuracy = \frac{TP + TN}{FP + FN + TP + TN}\]
 
 \subsubsection{Precision}
 
+Precision is the proportion of correct predictions among all predictions of a certain class. In other words, it is the proportion of true positives among all positive predictions.
+
+For example, if we look at the cat class, the number of times the model predicted a cat is 2, and only one of them was a correct prediction. Therefore the precision would be 1 / 2 = 0.5 = 50%.
+
+\[Precision = \frac{TP}{FP + TP}\]
+
 \subsubsection{Recall}
+
+Recall is the proportion of examples of a certain class that have been predicted by the model as belonging to that class. In other words, it is the proportion of true positives among all true examples.
+
+For example, if we look at the dog class, we’ll see that the number of dog examples in the dataset is 1, and the model did classify that one correctly. Therefore the recall for the dog class would be 1 / 1 = 1 = 100%.
+
+La sensibilidad nos indica la capacidad de nuestro estimador para dar como casos positivos (Fig.→ círculo grande) los casos realmente enfermos (Fig.→ punto); proporción de enfermos correctamente identificados. Es decir, la sensibilidad caracteriza la capacidad de la prueba para detectar la enfermedad en sujetos enfermos.
+
+\[Recall = \frac{TP}{FN + TP}\]
 
 \subsubsection{Specificity}
 
+Tasa de verdaderos negativos
+
+La especificidad nos indica la capacidad de nuestro estimador para dar como casos negativos (Fig.→ rectángulo grande) los casos realmente sanos (Fig.→ aro); proporción de sanos correctamente identificados. Es decir, la especificidad caracteriza la capacidad de la prueba para detectar la ausencia de la enfermedad en sujetos sanos.
+
+\[Specificity = \frac{TN}{TN + FP}\]
+
+
 \subsubsection{Fall out}
 
+Tasa de falsos positivos
+
+probability of falsely rejecting the null hypothesis for a particular test. The false positive rate is calculated as the ratio between the number of negative events wrongly categorized as positive (false positives) and the total number of actual negative events (regardless of classification).
+
+The false positive rate (FPR) is the proportion of all negatives that still yield positive test outcomes, i.e., the conditional probability of a positive test result given an event that was not present.
+
+\[Fall out = \frac{FP}{FP + TN}\]
+
 \subsubsection{Miss rate}
+
+Tasa de falsos negativos
+
+Complementarily, the false negative rate (FNR) is the proportion of positives which yield negative test outcomes with the test, i.e., the conditional probability of a negative test result given that the condition being looked for is present.
+
+\[Fall out = \frac{FN}{FN + TP}\]
+
+\subsection{F1 Score}
+
+The F1 score for a certain class is the harmonic mean of its precision and recall, so it’s an overall measure of the quality of a classifier’s predictions. It is usually the metric of choice for most people because it captures both precision and recall.
+
+\[F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}\]
 
 
 COMMENTARIOS:
