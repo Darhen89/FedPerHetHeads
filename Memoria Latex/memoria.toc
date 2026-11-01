@@ -18,15 +18,15 @@
 \contentsline {section}{\numberline {4.2}M\IeC {\'e}tricas de evaluaci\IeC {\'o}n}{16}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Label ranking average precision}{17}{subsection.4.2.1}%
 \contentsline {subsection}{\numberline {4.2.2}Matriz de confusi\IeC {\'o}n}{17}{subsection.4.2.2}%
-\contentsline {subsubsection}{Accuracy}{18}{Item.4}%
-\contentsline {subsubsection}{Precision}{19}{Item.4}%
-\contentsline {subsubsection}{Recall}{19}{Item.4}%
-\contentsline {subsubsection}{Specificity}{19}{Item.4}%
-\contentsline {subsubsection}{Fall out}{20}{Item.4}%
-\contentsline {subsubsection}{Miss rate}{20}{Item.4}%
-\contentsline {subsection}{\numberline {4.2.3}F1 Score}{20}{subsection.4.2.3}%
+\contentsline {subsubsection}{Accuracy}{19}{table.4.3}%
+\contentsline {subsubsection}{Precision}{19}{table.4.3}%
+\contentsline {subsubsection}{Recall}{19}{table.4.3}%
+\contentsline {subsubsection}{Specificity}{20}{table.4.3}%
+\contentsline {subsubsection}{Fall out}{20}{table.4.3}%
+\contentsline {subsubsection}{Miss rate}{20}{table.4.3}%
+\contentsline {subsection}{\numberline {4.2.3}F1 Score}{21}{subsection.4.2.3}%
 \contentsline {section}{\numberline {4.3}Configuraci\IeC {\'o}n de los experimentos}{21}{section.4.3}%
-\contentsline {section}{\numberline {4.4}An\IeC {\'a}lisis de resultados}{21}{section.4.4}%
+\contentsline {section}{\numberline {4.4}An\IeC {\'a}lisis de resultados}{22}{section.4.4}%
 \contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{23}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Conclusiones}{23}{section.5.1}%
 \contentsline {section}{\numberline {5.2}Trabajo futuro}{24}{section.5.2}%

@@ -60,16 +60,18 @@ Una matriz de confusión distribuye las predicciones en base a la salida esperad
 
 Distribuidas de la siguiente manera:
 
-%CUIDADO que la distribución de una matriz de confusión, por norma general, es tener TP y TN en la diagonal principal, TP arriba izquierda y TN abajo derecha (luego los FP y FN puede cambiar depende de como se genere), pero importante que la diagonal principal de la matriz muestre los aciertos!
-
 \[\begin{bmatrix}
 	TN & FP\\
 	FN & TP
 \end{bmatrix}\]
 
-Imaginemos que tenemos tres imágenes con las siguientes etiquetas:
+\newpage
 
-\begin{center}
+Imaginemos que tenemos tres imágenes con las siguientes etiquetas\ref{table:examples}:
+
+\begin{table}[!h]
+	\centering
+	\label{table:examples}
 	\begin{tabular}{ c c c c c c c c c c }
 		\hline
 		water & buildings & rocks & field & sand & cars & polar & ruins & statue & wall\\ [0.5ex] 
@@ -78,11 +80,14 @@ Imaginemos que tenemos tres imágenes con las siguientes etiquetas:
 		0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\  
 		1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0    
 	\end{tabular}
-\end{center}
+	\caption{Ejemplos}
+\end{table}
 
-Y el modelo realiza las siguiente predicciones:
+Y el modelo realiza las siguiente predicciones\ref{table:predictions}:
 
-\begin{center}
+\begin{table}[!h]
+	\centering
+	\label{table:predictions}
 	\begin{tabular}{ c c c c c c c c c c }
 		\hline
 		water & buildings & rocks & field & sand & cars & polar & ruins & statue & wall\\ [0.5ex] 
@@ -91,7 +96,8 @@ Y el modelo realiza las siguiente predicciones:
 		0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\  
 		0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0    
 	\end{tabular}
-\end{center}
+	\caption{Predicciones}
+\end{table}
 
 Las matrices de confusión para cada etiqueta serían
 
@@ -180,31 +186,32 @@ En nuestro ejemplo se calcula F1 como \(0,25 / 1 = 0,25 = 25\%\)
 
 \section{Configuración de los experimentos}
 
-%Así, en esta subsección explica qué comparación pretendes hacer (tu modelo vs el caso sin federar, para ver si toma ventaja del entrenamiento conjnto o no), qué parámetros has utilizado (tanto parámetros del modelo que puedas tener, como optimizador, ufnción de loss, etc), como el número de rondas, tamaños de batch, numero de epocasl ocales entre rondas, número de clientes, etc. Todo lo que sea valores de parámetros o configuración de los experimentos.
+Vamos a montar un sistema que nos permita comparar el rendimiento de un clasificador multi-etiqueta en un entorno federado y uno centralizado usando los mismos parámetros para ver si existe mejora en la tarea al pertenecer a un grupo colaborativo de entrenamiento. Para el caso federado ejecutaremos una serie de rondas de servidor y recopilaremos las métricas para cada cliente. El caso sin federar, para cada conjunto de datos se ejecutará el mismo número de rondas, de esta manera habrán realizado ambos casos los mismos pasos de entrenamiento.
 
+Repasaremos la ejecución para definir los parámetros específicos a nuestra implementación.
 
-MODELO: ResNet34
-capas personalizadas: 2 conv 1 linear
-etiquetas: 10
-optimizer: SGD Descenso del gradiente estocástico
-Loss = BCEWithLogits
-rondas: 10
-epochs: 4
-batch: 64
-clientes: 4
+El programa inicializa los datos, el servidor y los cuatro clientes asignando un conjunto de dato de los cuatro a cada cliente. Tener cuatro clientes nos permite un número manejable de ciclos de entrenamiento para poder analizar los resultados. El Servidor inicializa la parte común del modelo usando la red ResNet34 y lo envía a cada uno de los clientes. Los clientes complementan el modelo con la ResNet34 del Servidor y la parte personalizada conformada por dos capas convolucionales y una capa linear de salida de dimensión 10. Cada cliente inicializa sus capas personalizadas.
 
+Una vez inicializados el Servidor y los Clientes comienza el entrenamiento. Primero cada cliente ejecuta cuatro épocas de entrenamiento usando su conjunto de datos de entrenamiento. Para la función de pérdida se usa \textit{BCEWithLogits} con los pesos adaptados a cada conjunto de datos, de esta forma las etiquetas que aparecen menos se les da más peso y las que aparecen más veces menos evitando así que el modelo solo aprenda a clasificar las etiquetas que más se repiten. Para la función de optimización se usa \textit{SGS} (Descenso del Gradiente Estocástico). En cada época se realiza un paso de entrenamiento con el conjunto de entrenamiento en lotes de 64 ejemplos cada vez. Cuando termina el entrenamiento el cliente separa la ResNet34 de las capas personalizadas y la devuelve actualizada al Servidor, éste recoge los modelos actualizados de cada cliente y usa FedAvg para realizar la agregación y obteniendo como resultado una nueva versión del modelo global que volverá a enviar a los clientes iniciando así otra nueva ronda de entrenamiento local. Este proceso se repite durante 100 rondas. Podemos ver un resumen de la configuración en \ref{table:configuration}
 
-
-%Aunque tu código lo haga así por la simulación, queda un poco raro. Di mejor que cada cliente tiene su conjunto de entrenamiento y de test. Y cuidado con lo de "enviaran al modelo" que da la sensacion que los datos se mueven de un lado a otro; si acaso, di "que se usan para entrenar y evaluar el modelo" o algo similar, pero no enviar.
-
-Vamos a montar un sistema que nos permita comparar el rendimiento de un clasificador multi-etiqueta en un entorno federado y uno centralizado usando los mismos parámetros para ver si existe mejora en la tarea al pertenecer a un grupo colaborativo de entrenamiento. Para el caso federado ejecutaremos una serie de rondas de servidor y recopilaremos las métricas para cada cliente. El caso sin federar se ejecutará el mismo número de rondas y lo ejecutaremos una vez por cada cliente, de esta manera habrán realizado ambos casos los mismos pasos de entrenamiento.
-
-Vamos a repasar la ejecución para definir los parámetros específicos a nuestra implementación.
-
-Como vimos en la sección de los
-
-El modelo inicializa las capas personalizadas con valores distintos para cada cliente y carga los datos específicos de ese cliente. En el entrenamiento usamos como función de pérdida \textit{BCEWithLogits} en lugar de CrossEntrophyLoss ya que esta tiene buenos resultados a la hora del entrenamiento de clasificadores multi-etiqueta. BCEWithLogits permite introducir los pesos de cada etiqueta en un tensor para incorporar el desbalance de etiquetas al cálculo de la función de pérdida. Para la precisión del entrenamiento hemos usado \footnote{\url{https://scikit-learn.org/stable/modules/model_evaluation.html\#label-ranking-average-precision}}.
-
+\begin{table}[!h]
+	\centering
+	\label{table:configuration}
+	\begin{tabular}{ |c| c| }
+		\hline
+		Rondas & 100 \\ \hline
+		Épocas & 4 \\ \hline
+		Clientes & 4 \\  \hline
+		Etiquetas & 10 \\ \hline
+		Lotes & 64 \\ \hline
+		Modelo compartido & ResNet34 \\ \hline
+		Capas personalizadas & 2 conv 1 linear \\ \hline
+		Función de pérdida & BCEWithLogits \\ \hline
+		Función de optimización & SGD \\
+		\hline 
+	\end{tabular}
+	\caption{Configuración del experimento}
+\end{table}
 
 \section{Análisis de resultados}
 
