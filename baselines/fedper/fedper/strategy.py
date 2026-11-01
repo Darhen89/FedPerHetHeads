@@ -430,6 +430,7 @@ class AggregateBodyStrategy(ServerInitializationStrategy):
         accuracies: List[float] = []
 
         for _, res in results:
+            print("RES: ",res)
             accuracy: float = float(res.metrics["f1_s"])
             accuracies.append(accuracy)
         print(f"Round {server_round} f1 score: {accuracies}")
@@ -437,4 +438,4 @@ class AggregateBodyStrategy(ServerInitializationStrategy):
         # Aggregate and print custom metric
         averaged_accuracy = sum(accuracies) / len(accuracies) if len(accuracies) > 0 else 0
         print(f"Round {server_round} f1_score averaged: {averaged_accuracy}")
-        return aggregated_loss, {"f1_score": averaged_accuracy}
+        return aggregated_loss, {"f1_score_avg": averaged_accuracy,"f1_score_by_client": accuracies}

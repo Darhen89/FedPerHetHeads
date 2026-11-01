@@ -262,7 +262,23 @@ class ResNetModelManager(ModelManager):
         if self.client_save_path is not None:
             self.model.head.load_state_dict(torch.load(self.client_save_path))
 
-        criterion = torch.nn.BCEWithLogitsLoss().to(self.device)
+        pos_weigh_set_1 = torch.tensor((1, 4, 8, 10, 11, 15, 17, 19, 20, 21))
+        pos_weigh_set_2 = torch.tensor((1, 5, 8, 9, 10, 14, 16, 16, 18, 20))
+        pos_weigh_set_3 = torch.tensor((1, 6, 6, 9, 10, 14, 15, 16, 18, 20))
+        pos_weigh_set_4 = torch.tensor((2, 3, 7, 9, 12, 12, 15, 17, 19, 19))
+
+        pos_weight = np.zeros(10)
+
+        if self.client_id == 0:
+            pos_weight = pos_weigh_set_1
+        elif self.client_id == 1:
+            pos_weight = pos_weigh_set_2
+        elif self.client_id == 2:
+            pos_weight = pos_weigh_set_3
+        elif self.client_id == 3:
+            pos_weight = pos_weigh_set_4
+
+        criterion = torch.nn.BCEWithLogitsLoss(pos_weight=pos_weight).to(self.device)
 
         f1_s = 0.0
         f1_s_by_class = np.zeros(10)
@@ -327,6 +343,7 @@ class ResNetModelManager(ModelManager):
         return {
             "loss": loss.item(),
             "f1_s": f1_s,
+            "client_id": self.client_id,
             #"f1_s_by_class": f1_s_by_class.tolist(),
             #"accuracy": accuracy.tolist(),
             #"precision": precision.tolist(),

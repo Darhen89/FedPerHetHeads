@@ -2,21 +2,215 @@
 
 \vspace*{5mm}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id tortor eget tellus sollicitudin molestie. Morbi vehicula aliquam turpis, eget efficitur dolor rhoncus non. Integer mi odio, elementum non euismod sed, elementum eu dolor. Maecenas commodo sapien sed ultricies posuere. Ut molestie, mauris et tempor fermentum, ex massa consequat elit, eu consequat justo nibh ut augue. Sed in justo dui. Sed non molestie nisi. Ut fermentum nec ante sed ultrices. Vestibulum placerat quam urna, nec sollicitudin nibh rhoncus non. Curabitur pulvinar facilisis posuere.
+En esta sección se recoge el caso específico que hemos creado para comprobar la viabilidad de nuestra solución. Explicaremos qué datos hemos escogido para las pruebas, cómo se han configurado, qué métricas de evaluación usamos, qué pruebas vamos a realizar y por último analizaremos los resultados obtenidos.
+
+\section{Datos de entrenamiento y evaluación}
+
+Como no se tienen datos federados reales (por cuestiones obvias de privacidad), se busca simular un entorno en el que cada cliente tiene un conjuntos de datos con sus propias etiquetas no compartidas con los demás, buscamos que cada uno tenga distintas tareas a entrenar. Para ello no solo vamos a separar los diferentes ejemplos por cada cliente sino que también tenemos que hacer una discriminación por etiquetas para que sean únicas entre cada uno de ellos.
+
+Como base vamos a usar el conjunto de imágenes multi-etiqueta Corel-5k, que tiene 5000 imágenes de 50 categorías y un diccionario de 260 palabras o etiquetas \footnote{\url{https://www.kaggle.com/datasets/parhamsalar/corel5k}}. A partir de él crearemos 4 conjuntos de datos con 10 etiquetas diferentes cada uno ya que vamos a usar 4 clientes en nuestra federación. Para hacer la separación por etiquetas vamos a ordenar las 40 que más se repiten, creamos cuatro grupos de 10 etiquetas de manera que el número de ejemplos de cada grupo sea similar. Las etiquetas se distribuyen en los conjuntos como aparece en \ref{table:label_distribution}
+
+Como comentamos antes, la implementación de FedPer que estamos usando está implementada para clasificación multi-etiqueta. Debemos adaptar la arquitectura para poder implementar la clasificación multi-clase. Para ello hemos realizado modificaciones en la parte de la preparación de los datos, los clientes, el modelo y el tratamiento de métricas.
+
+\begin{table}[!ht]
+	\centering
+	\label{table:label_distribution}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		\multicolumn{2}{|c|}{Conjunto 1} & \multicolumn{2}{c|}{Conjunto 2} & \multicolumn{2}{c|}{Conjunto 3} & \multicolumn{2}{c|}{Conjunto 4} \\ \hline
+		Etiqueta & Número & Etiqueta & Número & Etiqueta & Número & Etiqueta & Número \\ \hline
+		water & 2124 & sky & 1871 & tree & 1801 & people & 1414 \\ \hline
+		buildings & 870 & mountain & 652 & flowers & 565 & grass & 943 \\ \hline
+		rocks & 478 & stone & 444 & snow & 565 & clouds & 534 \\ \hline
+		field & 413 & street & 432 & plane & 423 & bear & 418 \\ \hline
+		sand & 387 & birds & 375 & beach & 372 & boats & 325 \\ \hline
+		cars & 285 & leaf & 284 & plants & 273 & jet & 313 \\ \hline
+		polar & 257 & valley & 255 & house & 267 & bridge & 261 \\ \hline
+		ruins & 257 & garden & 244 & hills & 244 & Close-up & 234 \\ \hline
+		statue & 223 & horses & 218 & tracks & 217 & sun & 212 \\ \hline
+		wall & 209 & cat & 203 & ocean & 201 & ice & 210 \\ \hline
+	\end{tabular}
+	\caption{Distribución de etiquetas}
+\end{table}
+
+Una vez tenemos los 4 grupos seleccionamos del dataset total los ejemplos correspondientes a las etiquetas de cada grupo, por ejemplo si en nuestro grupo tenemos ``agua'' cogemos todos los elementos del conjunto de datos que estén etiquetados con ``agua'', luego eliminamos de esos ejemplos todas las etiquetas que no correspondan a su grupo. Hacemos esto para los 4 subsets y así conseguimos separar las imágenes de manera que cada conjunto solo contenga etiquetas propias y que el número de ejemplos sea parecido, consiguiendo así simular el caso federado donde cada cliente solo posee información de sus etiquetas, que son distintas del resto de clientes.
+
+Con los cuatro conjuntos creados realizamos las particiones entre conjuntos de entrenamiento y conjuntos de evaluación en una proporción de 80\% para el entrenamiento y 20\% para la evaluación.
+
+Una vez hemos conseguido fabricar unos conjuntos de datos que nos permitan simular una situación real en la que tenemos conjuntos de datos distintos que quieren entrenar un mismo modelo lo siguiente es preparar el sistema que va a procesar esos datos.
+
+\section{Métricas de evaluación}
+
+A la hora de comprobar la bondad de nuestro modelo tenemos un problema añadido cuando la salida son más de una etiqueta. Por ejemplo, si el resultado esperado tiene dos clases activas y el modelo solo ha predicho una de ellas, si comprobamos el valor exacto de todas las etiquetas marcaríamos la precisión como 0, sin embargo hay una que sí ha sido correcta y también se podría evaluar de forma parcialmente positiva. Podríamos comprobar etiqueta a etiqueta si tiene un valor correcto pero si la mayoría de valores en las etiquetas son 0, un modelo que prediga siempre 0 podría tener una precisión muy alta y no funcionaría correctamente. Por eso debemos buscar métricas que tengan en cuenta los aciertos y los fallos de manera global.
+
+\subsection{Label ranking average precision}
+
+Necesitamos una métrica de precisión para el entrenamiento vamos a usar la métrica implementada en scikit learn \textit{Label ranking average precision score}. Esta métrica ordena las predicciones según el valor de probabilidad asignado por el modelo y responde a la pregunta para cada etiqueta verdadera, ¿qué fracción de las etiquetas predichas con valor más alto son correctas? Está relacionada con la precisión, que veremos más adelante, pero se basa en el concepto de textit{ranking} en vez en la \textit{precision} y el \textit{recall}. Esta métrica será mayor si el modelo es capaz de dar una mayor probabilidad a las etiquetas verdaderas.
+
+\subsection{Matriz de confusión}
+
+Una matriz de confusión distribuye las predicciones en base a la salida esperada de la siguiente manera:
+
+\begin{enumerate}
+	\item Verdaderos negativos (TN): Ausencia de clase predicha correctamente
+	\item Verdaderos positivos (TP): Clases predichas correctamente
+	\item Falsos positivos (FP): Clase predicha incorrectamente
+	\item Falsos negativos (FN): Ausencia de clase predicha incorrectamente
+\end{enumerate}
+
+Distribuidas de la siguiente manera:
+
+%CUIDADO que la distribución de una matriz de confusión, por norma general, es tener TP y TN en la diagonal principal, TP arriba izquierda y TN abajo derecha (luego los FP y FN puede cambiar depende de como se genere), pero importante que la diagonal principal de la matriz muestre los aciertos!
+
+\[\begin{bmatrix}
+	TN & FP\\
+	FN & TP
+\end{bmatrix}\]
+
+Imaginemos que tenemos tres imágenes con las siguientes etiquetas:
+
+\begin{center}
+	\begin{tabular}{ c c c c c c c c c c }
+		\hline
+		water & buildings & rocks & field & sand & cars & polar & ruins & statue & wall\\ [0.5ex] 
+		\hline\hline
+		1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+		0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\  
+		1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0    
+	\end{tabular}
+\end{center}
+
+Y el modelo realiza las siguiente predicciones:
+
+\begin{center}
+	\begin{tabular}{ c c c c c c c c c c }
+		\hline
+		water & buildings & rocks & field & sand & cars & polar & ruins & statue & wall\\ [0.5ex] 
+		\hline\hline
+		1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\ 
+		0 & 1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\  
+		0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0    
+	\end{tabular}
+\end{center}
+
+Las matrices de confusión para cada etiqueta serían
+
+Water:
+\[\begin{bmatrix}
+	1 & 0\\
+	1 & 1
+\end{bmatrix}\]
+
+Buildings:
+\[\begin{bmatrix}
+	2 & 0\\
+	0 & 1
+\end{bmatrix}\]
+
+Rocks:
+\[\begin{bmatrix}
+	1 & 0\\
+	2 & 0
+\end{bmatrix}\]
+
+Cars:
+\[\begin{bmatrix}
+	0 & 2\\
+	0 & 1
+\end{bmatrix}\]
+
+La salida de nuestro modelo, como comentamos anteriormente, son \textit{logits}, números entre menos infinito y más infinito, por lo que antes de poder crear la matriz de confusión debemos realizar la operación \textit{sigmoid} para convertirlos en probabilidades (valores entre 0 y 1) y luego asignar un 0 si el valor es menor de 0,5 y 1 si el valor es mayor a 0,5. Una vez tenemos nuestra matriz de confusión para cada ejemplo del \textit{batch} de evaluación podremos calcular el resto de las métricas.
+
+\subsubsection{Accuracy}
+
+La \textit{accuracy} o exactitud es la proporción de ejemplos correctamente clasificados. Se define por la suma de todos los valores positivos y negativos predichos correctamente dividido entre el número de ejemplos en el conjunto de datos.
+
+\[Accuracy = \frac{TP + TN}{FP + FN + TP + TN}\]
+
+Para la etiqueta \textit{water} vemos que hay tres ejemplos en el conjunto de datos, la predicción del modelo es correcta en dos de los tres, por lo que la exactitud en este caso sería \(2 / 3 = 0,66 = 66\%\)
+
+\subsubsection{Precision}
+
+La \textit{precision} o precisión es la proporción de predicciones correctas entre todas las predicciones. Se define por la proporción de verdaderos positivos entre todas las predicciones positivas.
+
+\[Precision = \frac{TP}{FP + TP}\]
+
+En el mismo ejemplo de la etiqueta \textit{water} los verdaderos positivos son 1 y el total de predicciones positivas es 2, la precisión para esta etiqueta sería \(1 / 2 = 0.5 = 50\%\)
+
+
+\subsubsection{Recall}
+
+\textit{Recall} o sensibilidad es la proporción de ejemplos que han sido predichos como pertenecientes a su etiqueta. Es la proporción de verdaderos positivos con respecto a todos los ejemplos verdaderos (verdaderos positivos y verdaderos negativos).
+
+\[Recall = \frac{TP}{FN + TP}\]
+
+Para \textit{water} vemos que el número de etiquetas en los ejemplos es 2, y solo una de ellas ha sido clasificada correctamente, por lo que la sensibilidad se calcula como \(1 / 2 = 0.5 = 50\%\)
+
+\subsubsection{Specificity}
+
+La \textit{specificity} o especificidad nos indica cuántos de los casos marcados como negativos son correctos. Se define como la proporción de negativos verdaderos entre todos los que deben ser negativos.
+
+\[Specificity = \frac{TN}{TN + FP}\]
+
+En nuestro caso hay un negativo verdadero y ningún falso positivo porque lo que todos los negativos han sido predichos correctamente, la función es \(1 / 1 = 1 = 100\%\)
+
+\subsubsection{Fall out}
+
+El \textit{fall out} es la tasa de falsos positivos. Se define como la proporción de falsos positivos entre todos los ejemplos que deben ser negativos.
+
+\[Fall out = \frac{FP}{FP + TN}\]
+
+Para \textit{water}, no existe ningún ejemplo de falsos positivos por lo que la fórmula queda \(0 / 1 = 0 = 0\%\)
+
+\subsubsection{Miss rate}
+
+El \textit{miss rate} es la tasa de falsos negativos. Se define como la proporción de falsos negativos entre los ejemplos que deberían haber sido positivos. Nos dice cuántos de los ejemplos positivos han fallado en la predicción.
+
+\[Fall out = \frac{FN}{FN + TP}\]
+
+En el ejemplo hay un falso negativo y un ejemplo marcado como negativo que debería ser positivos por lo que la fórmula queda \(1 / 2 = 0,5 = 50\%\)
+
+\subsection{F1 Score}
+
+El \textit{F1 Score} para una clase es la media armónica ebtre la precisión y la sensibilidad. Se usa como medida general de la calidad de las predicciones del clasificador. Se suele elegir como métrica representativo porque une las dos medidas que miden las predicciones correctas \textit{precision} y \textit{recall}.
+
+\[F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}\]
+
+En nuestro ejemplo se calcula F1 como \(0,25 / 1 = 0,25 = 25\%\)
 
 \section{Configuración de los experimentos}
 
-Donec eu dolor et quam porta vulputate vitae vulputate augue. Etiam fermentum, lectus vitae euismod feugiat, elit ligula luctus ante, eget commodo turpis leo vel quam. Aenean consectetur in turpis sit amet varius. Sed porta porttitor lectus, id tempus nunc suscipit vitae. Etiam blandit quam quis magna ornare pharetra. Aenean eget tortor nisi. Sed sit amet tempus eros. Phasellus pretium, nunc nec fringilla placerat, metus lectus maximus eros, nec condimentum neque ex nec orci. Vivamus facilisis at turpis sit amet maximus. Ut dolor justo, bibendum eget rhoncus eget, malesuada malesuada lacus. Suspendisse potenti.
+%Así, en esta subsección explica qué comparación pretendes hacer (tu modelo vs el caso sin federar, para ver si toma ventaja del entrenamiento conjnto o no), qué parámetros has utilizado (tanto parámetros del modelo que puedas tener, como optimizador, ufnción de loss, etc), como el número de rondas, tamaños de batch, numero de epocasl ocales entre rondas, número de clientes, etc. Todo lo que sea valores de parámetros o configuración de los experimentos.
 
-Donec augue nulla, semper ac tempor sit amet, vehicula sed est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel convallis justo, quis feugiat velit. Etiam fermentum, risus et venenatis rhoncus, ipsum ligula congue neque, sed consectetur arcu turpis vel metus. Integer ornare turpis et luctus ullamcorper. Ut placerat a ex et consequat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+
+MODELO: ResNet34
+capas personalizadas: 2 conv 1 linear
+etiquetas: 10
+optimizer: SGD Descenso del gradiente estocástico
+Loss = BCEWithLogits
+rondas: 10
+epochs: 4
+batch: 64
+clientes: 4
+
+
+
+%Aunque tu código lo haga así por la simulación, queda un poco raro. Di mejor que cada cliente tiene su conjunto de entrenamiento y de test. Y cuidado con lo de "enviaran al modelo" que da la sensacion que los datos se mueven de un lado a otro; si acaso, di "que se usan para entrenar y evaluar el modelo" o algo similar, pero no enviar.
+
+Vamos a montar un sistema que nos permita comparar el rendimiento de un clasificador multi-etiqueta en un entorno federado y uno centralizado usando los mismos parámetros para ver si existe mejora en la tarea al pertenecer a un grupo colaborativo de entrenamiento. Para el caso federado ejecutaremos una serie de rondas de servidor y recopilaremos las métricas para cada cliente. El caso sin federar se ejecutará el mismo número de rondas y lo ejecutaremos una vez por cada cliente, de esta manera habrán realizado ambos casos los mismos pasos de entrenamiento.
+
+Vamos a repasar la ejecución para definir los parámetros específicos a nuestra implementación.
+
+Como vimos en la sección de los
+
+El modelo inicializa las capas personalizadas con valores distintos para cada cliente y carga los datos específicos de ese cliente. En el entrenamiento usamos como función de pérdida \textit{BCEWithLogits} en lugar de CrossEntrophyLoss ya que esta tiene buenos resultados a la hora del entrenamiento de clasificadores multi-etiqueta. BCEWithLogits permite introducir los pesos de cada etiqueta en un tensor para incorporar el desbalance de etiquetas al cálculo de la función de pérdida. Para la precisión del entrenamiento hemos usado \footnote{\url{https://scikit-learn.org/stable/modules/model_evaluation.html\#label-ranking-average-precision}}.
+
 
 \section{Análisis de resultados}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id tortor eget tellus sollicitudin molestie. Morbi vehicula aliquam turpis, eget efficitur dolor rhoncus non. Integer mi odio, elementum non euismod sed, elementum eu dolor. Maecenas commodo sapien sed ultricies posuere. Ut molestie, mauris et tempor fermentum, ex massa consequat elit, eu consequat justo nibh ut augue. Sed in justo dui. Sed non molestie nisi. Ut fermentum nec ante sed ultrices. Vestibulum placerat quam urna, nec sollicitudin nibh rhoncus non. Curabitur pulvinar facilisis posuere.
+%Aquí irán por tanto tablas con los resultados de las métricas, y análisis de los mismos. Si quieres, antes de ponerte aquí a meter las tablas, una vez tengas los resultados me los envías como te decía ayer en el mismo .txt que los tenias, y te propongo alguna estructura sobre qué tablas ponre, o si tiene sentido meter alguna gráfica, etc.
 
-Donec eu dolor et quam porta vulputate vitae vulputate augue. Etiam fermentum, lectus vitae euismod feugiat, elit ligula luctus ante, eget commodo turpis leo vel quam. Aenean consectetur in turpis sit amet varius. Sed porta porttitor lectus, id tempus nunc suscipit vitae. Etiam blandit quam quis magna ornare pharetra. Aenean eget tortor nisi. Sed sit amet tempus eros. Phasellus pretium, nunc nec fringilla placerat, metus lectus maximus eros, nec condimentum neque ex nec orci. Vivamus facilisis at turpis sit amet maximus. Ut dolor justo, bibendum eget rhoncus eget, malesuada malesuada lacus. Suspendisse potenti.
 
-Donec augue nulla, semper ac tempor sit amet, vehicula sed est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel convallis justo, quis feugiat velit. Etiam fermentum, risus et venenatis rhoncus, ipsum ligula congue neque, sed consectetur arcu turpis vel metus. Integer ornare turpis et luctus ullamcorper. Ut placerat a ex et consequat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
 
 
 

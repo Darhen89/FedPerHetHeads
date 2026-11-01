@@ -25,45 +25,45 @@ Warning--empty journal in liu2021query2labelsimpletransformerway
 Warning--empty journal in 10378641
 Warning--empty journal in xie2024counterfactualreasoningmultilabelimage
 Warning--empty journal in 2024transformerbasedfederatedlearningmultilabel
-You've used 18 entries,
+You've used 21 entries,
             1791 wiz_defined-function locations,
-            531 strings with 7329 characters,
-and the built_in function-call counts, 3816 in all, are:
-= -- 239
-> -- 332
+            552 strings with 8399 characters,
+and the built_in function-call counts, 4733 in all, are:
+= -- 294
+> -- 428
 < -- 1
-+ -- 117
-- -- 99
-* -- 268
-:= -- 696
-add.period$ -- 53
-call.type$ -- 18
-change.case$ -- 17
++ -- 150
+- -- 129
+* -- 358
+:= -- 868
+add.period$ -- 62
+call.type$ -- 21
+change.case$ -- 20
 chr.to.int$ -- 0
-cite$ -- 32
-duplicate$ -- 156
-empty$ -- 295
-format.name$ -- 99
-if$ -- 783
+cite$ -- 35
+duplicate$ -- 182
+empty$ -- 355
+format.name$ -- 129
+if$ -- 966
 int.to.chr$ -- 0
-int.to.str$ -- 18
-missing$ -- 18
-newline$ -- 92
-num.names$ -- 18
-pop$ -- 86
+int.to.str$ -- 21
+missing$ -- 21
+newline$ -- 107
+num.names$ -- 21
+pop$ -- 89
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 69
+skip$ -- 80
 stack$ -- 0
-substring$ -- 69
-swap$ -- 15
+substring$ -- 111
+swap$ -- 18
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 14
-while$ -- 21
-width$ -- 20
-write$ -- 169
+while$ -- 26
+width$ -- 23
+write$ -- 202
 (There were 15 warnings)

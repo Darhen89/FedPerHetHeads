@@ -110,4 +110,28 @@ Barış Büyüktaş, Kenneth Weitzel, Sebastian Völkers, Felix Zailskas, and
   image classification.
 \newblock 2024.
 
+\bibitem{10.3389/fncom.2023.1153572}
+Alessia Celeghin, Alessio Borriero, Davide Orsenigo, Matteo Diano,
+  Carlos~Andrés Méndez~Guerrero, Alan Perotti, Giovanni Petri, and Marco
+  Tamietto.
+\newblock Convolutional neural networks for vision neuroscience: significance,
+  developments, and outstanding issues.
+\newblock {\em Frontiers in Computational Neuroscience}, Volume 17 - 2023,
+  2023.
+
+\bibitem{alphago}
+David Silver, Aja Huang, Christopher Maddison, Arthur Guez, Laurent Sifre,
+  George Driessche, Julian Schrittwieser, Ioannis Antonoglou, Veda
+  Panneershelvam, Marc Lanctot, Sander Dieleman, Dominik Grewe, John Nham, Nal
+  Kalchbrenner, Ilya Sutskever, Timothy Lillicrap, Madeleine Leach, Koray
+  Kavukcuoglu, Thore Graepel, and Demis Hassabis.
+\newblock Mastering the game of go with deep neural networks and tree search.
+\newblock {\em Nature}, 529:484--489, 01 2016.
+
+\bibitem{alphafold}
+Kazuharu Furutani and Satomi Kita.
+\newblock Alphafold: a revolutionary ai-based protein structure prediction
+  system and its applications in drug discovery research.
+\newblock {\em Folia Pharmacologica Japonica}, 160:302--304, 07 2025.
+
 \end{thebibliography}

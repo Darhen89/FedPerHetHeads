@@ -7,27 +7,27 @@
 \contentsline {subsection}{\numberline {2.1.1}Aprendizaje federado heterog\IeC {\'e}neo}{7}{subsection.2.1.1}%
 \contentsline {section}{\numberline {2.2}Clasificaci\IeC {\'o}n multi-etiqueta}{8}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1}Descripci\IeC {\'o}n formal del MLC}{9}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Eligiendo modelo para clasificaci\IeC {\'o}n multi-etiqueta}{10}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.2}Eligiendo modelo para clasificaci\IeC {\'o}n multi-etiqueta}{9}{subsection.2.2.2}%
 \contentsline {chapter}{\numberline {3}Federaci\IeC {\'o}n con capas personalizadas y salidas heterog\IeC {\'e}neas (FedPerH)}{11}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Datos de entrenamiento}{11}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Arquitectura de la soluci\IeC {\'o}n}{12}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}FedPer}{12}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Modelo}{13}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Modificaciones}{13}{subsection.3.2.3}%
-\contentsline {section}{\numberline {3.3}M\IeC {\'e}tricas de evaluaci\IeC {\'o}n}{14}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Label ranking average precision}{14}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Matriz de confusi\IeC {\'o}n}{15}{subsection.3.3.2}%
-\contentsline {subsubsection}{Accuracy}{16}{Item.4}%
-\contentsline {subsubsection}{Precision}{16}{Item.4}%
-\contentsline {subsubsection}{Recall}{17}{Item.4}%
-\contentsline {subsubsection}{Specificity}{17}{Item.4}%
-\contentsline {subsubsection}{Fall out}{17}{Item.4}%
-\contentsline {subsubsection}{Miss rate}{18}{Item.4}%
-\contentsline {subsection}{\numberline {3.3.3}F1 Score}{18}{subsection.3.3.3}%
-\contentsline {chapter}{\numberline {4}Estudio experimental}{19}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Configuraci\IeC {\'o}n de los experimentos}{19}{section.4.1}%
-\contentsline {section}{\numberline {4.2}An\IeC {\'a}lisis de resultados}{20}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{21}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Conclusiones}{21}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Trabajo futuro}{22}{section.5.2}%
-\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{23}{section.5.2}%
+\contentsline {section}{\numberline {3.1}Arquitectura de la soluci\IeC {\'o}n}{11}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}FedPer}{12}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Modelo}{12}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Modificaciones}{13}{subsection.3.1.3}%
+\contentsline {chapter}{\numberline {4}Estudio experimental}{15}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Datos de entrenamiento y evaluaci\IeC {\'o}n}{15}{section.4.1}%
+\contentsline {section}{\numberline {4.2}M\IeC {\'e}tricas de evaluaci\IeC {\'o}n}{16}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Label ranking average precision}{17}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Matriz de confusi\IeC {\'o}n}{17}{subsection.4.2.2}%
+\contentsline {subsubsection}{Accuracy}{18}{Item.4}%
+\contentsline {subsubsection}{Precision}{19}{Item.4}%
+\contentsline {subsubsection}{Recall}{19}{Item.4}%
+\contentsline {subsubsection}{Specificity}{19}{Item.4}%
+\contentsline {subsubsection}{Fall out}{20}{Item.4}%
+\contentsline {subsubsection}{Miss rate}{20}{Item.4}%
+\contentsline {subsection}{\numberline {4.2.3}F1 Score}{20}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Configuraci\IeC {\'o}n de los experimentos}{21}{section.4.3}%
+\contentsline {section}{\numberline {4.4}An\IeC {\'a}lisis de resultados}{21}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{23}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Conclusiones}{23}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Trabajo futuro}{24}{section.5.2}%
+\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{25}{section.5.2}%
