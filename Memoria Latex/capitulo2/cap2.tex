@@ -2,7 +2,6 @@
 
 \vspace*{5mm}
 
-%Introducción%
 En esta sección explicaremos los elementos necesarios para la resolución del problema propuesto. Haremos una explicación en profundidad de los sistemas de aprendizaje federados y de la clasificación multi-etiqueta.
 
 \section{Aprendizaje Federado}
@@ -16,7 +15,7 @@ Hay varias aproximaciones como la arquitectura \textit{peer to peer} donde todos
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\linewidth]{capitulo2/entrenamientofederadocentralizado}
+	\includegraphics[width=0.9\linewidth]{capitulo2/entrenamientofederadocentralizado}
 	\caption{Entrenamiento federado cliente-servidor}
 	\label{fig:entrenamientofederadocentralizado}
 \end{figure}
@@ -40,7 +39,7 @@ Una de las tareas más extendidas en el ámbito del aprendizaje automático es l
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\linewidth]{capitulo2/binarymulticlassclassification}
+	\includegraphics[width=0.9\linewidth]{capitulo2/binarymulticlassclassification}
 	\caption{Clasificación binaria y multi-clase}
 	\label{fig:binarymulticlass}
 \end{figure}
@@ -50,7 +49,7 @@ En el mundo real existen muchos escenarios donde se requiere una clasificación 
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\linewidth]{capitulo2/multilabelclassification}
+	\includegraphics[width=0.5\linewidth]{capitulo2/multilabelclassification}
 	\caption{Clasificación multi-etiqueta}
 	\label{fig:multilabelclassification}
 \end{figure}
@@ -66,8 +65,8 @@ podemos ver un ejemplo de un conjunto de datos multi-etiqueta. Como podemos obse
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\linewidth]{capitulo2/multilabeltable}
-	\caption{Ejemplo de conjunto de datos multi-etiqueta. Figura obtenida de ~\cite{Moyano:MULTI}}.
+	\includegraphics[width=0.5\linewidth]{capitulo2/multilabeltable}
+	\caption{Ejemplo de conjunto de datos multi-etiqueta. Figura obtenida de~\cite{Moyano:MULTI}}
 	\label{fig:multilabeltable}
 \end{figure}
 
@@ -79,10 +78,4 @@ Para la implementación de un clasificador multi-etiqueta debemos elegir qué ar
 
 En cuanto a la resolución del problema conjunto de crear un clasificador multi-etiqueta dentro de un entorno federado, como ya hemos visto anterioremente hay estudios que se centran en evitar el problema haciendo un tratamiento previo de los datos para evitar el desbalanceo, otros estudian diferentes arquitecturas de la red como en ~\cite{2024transformerbasedfederatedlearningmultilabel}. Sin embargo estos estudios comparten la misma red entre los clientes o se aplican sobre datos tabulados. Nuestra propuesta requiere que la distribución de los datos contenga diferente número de etiquetas y que el sistema acepte una arquitectura con diferentes redes. Tras una búsqueda bibliográfica, no hemos encontrado ningún estudio que una todos estos conceptos en una solución.
 
-
-
-
-
-
-%%
 \cleardoublepage

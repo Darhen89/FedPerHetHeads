@@ -7,27 +7,27 @@
 \contentsline {subsection}{\numberline {2.1.1}Aprendizaje federado heterog\IeC {\'e}neo}{7}{subsection.2.1.1}%
 \contentsline {section}{\numberline {2.2}Clasificaci\IeC {\'o}n multi-etiqueta}{8}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1}Descripci\IeC {\'o}n formal del MLC}{9}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Eligiendo modelo para clasificaci\IeC {\'o}n multi-etiqueta}{9}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.2}Eligiendo modelo para clasificaci\IeC {\'o}n multi-etiqueta}{10}{subsection.2.2.2}%
 \contentsline {chapter}{\numberline {3}Federaci\IeC {\'o}n con capas personalizadas y salidas heterog\IeC {\'e}neas (FedPerH)}{11}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Arquitectura de la soluci\IeC {\'o}n}{11}{section.3.1}%
 \contentsline {subsection}{\numberline {3.1.1}FedPer}{12}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}Modelo}{12}{subsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.1.3}Modificaciones}{13}{subsection.3.1.3}%
-\contentsline {chapter}{\numberline {4}Estudio experimental}{15}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Datos de entrenamiento y evaluaci\IeC {\'o}n}{15}{section.4.1}%
-\contentsline {section}{\numberline {4.2}M\IeC {\'e}tricas de evaluaci\IeC {\'o}n}{16}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Label ranking average precision}{17}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Matriz de confusi\IeC {\'o}n}{17}{subsection.4.2.2}%
-\contentsline {subsubsection}{Accuracy}{19}{table.4.3}%
-\contentsline {subsubsection}{Precision}{19}{table.4.3}%
-\contentsline {subsubsection}{Recall}{19}{table.4.3}%
-\contentsline {subsubsection}{Specificity}{20}{table.4.3}%
-\contentsline {subsubsection}{Fall out}{20}{table.4.3}%
-\contentsline {subsubsection}{Miss rate}{20}{table.4.3}%
-\contentsline {subsection}{\numberline {4.2.3}F1 Score}{21}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Configuraci\IeC {\'o}n de los experimentos}{21}{section.4.3}%
-\contentsline {section}{\numberline {4.4}An\IeC {\'a}lisis de resultados}{22}{section.4.4}%
-\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{23}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Conclusiones}{23}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Trabajo futuro}{24}{section.5.2}%
-\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{25}{section.5.2}%
+\contentsline {subsection}{\numberline {3.1.2}Modelo}{13}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Modificaciones}{14}{subsection.3.1.3}%
+\contentsline {chapter}{\numberline {4}Estudio experimental}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Datos de entrenamiento y evaluaci\IeC {\'o}n}{17}{section.4.1}%
+\contentsline {section}{\numberline {4.2}M\IeC {\'e}tricas de evaluaci\IeC {\'o}n}{18}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Label ranking average precision}{19}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Matriz de confusi\IeC {\'o}n}{19}{subsection.4.2.2}%
+\contentsline {subsubsection}{Accuracy}{21}{table.4.3}%
+\contentsline {subsubsection}{Precision}{21}{table.4.3}%
+\contentsline {subsubsection}{Recall}{21}{table.4.3}%
+\contentsline {subsubsection}{Specificity}{22}{table.4.3}%
+\contentsline {subsubsection}{Fall out}{22}{table.4.3}%
+\contentsline {subsubsection}{Miss rate}{22}{table.4.3}%
+\contentsline {subsection}{\numberline {4.2.3}F1 Score}{23}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Configuraci\IeC {\'o}n de los experimentos}{23}{section.4.3}%
+\contentsline {section}{\numberline {4.4}An\IeC {\'a}lisis de resultados}{24}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Conclusiones y trabajo futuro}{25}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Conclusiones}{25}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Trabajo futuro}{26}{section.5.2}%
+\contentsline {chapter}{Bibliograf\IeC {\'\i }a}{27}{section.5.2}%

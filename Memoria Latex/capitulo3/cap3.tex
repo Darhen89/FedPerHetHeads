@@ -13,13 +13,21 @@ El servidor crea el modelo compartido y lo envía a cada uno de los clientes, es
 En otros sistemas federados es común que el modelo se comparta al completo con el servidor ya que el entrenamiento de las capas de salida es relevante para todos los clientes. En nuestro caso esto no se cumple ya que la activación de la salida es única para cada cliente y la posición de la etiqueta ``agua'' en un cliente correspondería a un objeto distinto en otro. Por ello el modelo que compartimos con el servidor está truncado y no serviría para usarse ya que no tiene una capa de salida que se ajuste a los datos de los clientes.
 
 
-%AÑADIR FIGURA EXPLICANDO LAS CAPAS PERSONALIZADAS
 
 \subsection{FedPer}
 
-El aprendizaje federado necesita una insfraestructura que permita mover modelos de un lado a otro entre el servidor y los clientes, ejecutar el entrenamiento con los datos locales y agregar los modelos actualizados. Para evitar la implementación de todo el sistema desde cero vamos a usar de base el entorno de trabajo para aprendizaje federado Flower \footnote{\url{https://flower.ai/}} que nos provee de esta infraestructura. Más en concreto haremos uso del baseline de Flower FedPer \footnote{\url{https://flower.ai/docs/baselines/fedper.html}}, una implementación de ~\cite{Manoj:FedPer} el cual propone una aplicación del método de \textit{Backbone Sharing} que vimos en ~\cite{Ye:HFL_Survey}. FedPer es un entorno simulado que crea el servidor y los clientes, en el servidor se instancia el modelo global con dos partes diferenciadas llamadas \textit{cuerpo} y \textit{cabeceras}: el \textit{cuerpo} corresponde a la parte del modelo que va a ser compartida y las \textit{cabeceras} son las capas que van a ser entrenadas en el cliente pero no van a devolverse. El servidor inicializa el \textit{cuerpo} y se envía a cada uno de los clientes los cuales actualizan sus modelos locales con él. Cada modelo local se entrena con sus datos y los \textit{cuerpos} actualizados se devuelven al servidor el cuál realiza la operación de agregación, que en nuestro caso será FedAvg ~\cite{mcmahan2023communicationefficientlearningdeepnetworks}, pero solo con la parte del modelo enviada por los clientes. Una vez actualizado el modelo global se devuelve a los clientes para la siguiente ronda de entrenamiento.
+El aprendizaje federado necesita una insfraestructura que permita mover modelos de un lado a otro entre el servidor y los clientes, ejecutar el entrenamiento con los datos locales y agregar los modelos actualizados. Para evitar la implementación de todo el sistema desde cero vamos a usar de base el entorno de trabajo para aprendizaje federado Flower \footnote{\url{https://flower.ai/}} que nos provee de esta infraestructura. Más en concreto haremos uso del baseline de Flower FedPer \footnote{\url{https://flower.ai/docs/baselines/fedper.html}}, una implementación de ~\cite{Manoj:FedPer} el cual propone una aplicación del método de \textit{Backbone Sharing} que vimos en ~\cite{Ye:HFL_Survey}. FedPer es un entorno simulado que crea el servidor y los clientes, en el servidor se instancia el modelo global con dos partes diferenciadas llamadas \textit{cuerpo} y \textit{cabeceras}: el \textit{cuerpo} corresponde a la parte del modelo que va a ser compartida y las \textit{cabeceras} son las capas que van a ser entrenadas en el cliente pero no van a devolverse. El servidor inicializa el \textit{cuerpo} y se envía a cada uno de los clientes los cuales actualizan sus modelos locales con él. Cada modelo local se entrena con sus datos y los \textit{cuerpos} actualizados se devuelven al servidor el cuál realiza la operación de agregación, que en nuestro caso será FedAvg ~\cite{mcmahan2023communicationefficientlearningdeepnetworks}, pero solo con la parte del modelo enviada por los clientes. Una vez actualizado el modelo global se devuelve a los clientes para la siguiente ronda de entrenamiento\ref{fig:personalized_layers}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo3/capas personalizadas}
+	\caption{Capas personalizadas}
+	\label{fig:personalized_layers}
+\end{figure}
 
 FedPer y Flower también nos dan herramientas para la agregación de métricas de entrenamiento y evaluación.
+
+\newpage
 
 \subsection{Modelo}
 
