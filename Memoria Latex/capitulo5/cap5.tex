@@ -2,23 +2,275 @@
 
 \vspace*{5mm}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id tortor eget tellus sollicitudin molestie. Morbi vehicula aliquam turpis, eget efficitur dolor rhoncus non. Integer mi odio, elementum non euismod sed, elementum eu dolor. Maecenas commodo sapien sed ultricies posuere. Ut molestie, mauris et tempor fermentum, ex massa consequat elit, eu consequat justo nibh ut augue. Sed in justo dui. Sed non molestie nisi. Ut fermentum nec ante sed ultrices. Vestibulum placerat quam urna, nec sollicitudin nibh rhoncus non. Curabitur pulvinar facilisis posuere.
+%Te digo un poco como te recomendaría estructurar la sección 5, y luego a lo largo de la mañana reviso el documento con las anteriores.
 
+%Primero, pondría las gráficas de evolución del F1 con respecto a las rondas de entrenamiento que tienes en el excel más o menos. Pondría primero 4, las de cada cliente en federado vs centralizado; y luego otra más, con el agregado de federado vs el agregado de centralizado (aunque no tienes el valor agregado de centralizado, puedes hacer la media entre las 4 columnas y ya lo tienes)
+
+%Luego, pondría las 8 tablas que tienes en "Resultados por cliente". Es cierto que directamente de estas 8 tablas crudas, tal cual, no puedes sacar excesiva información, pero puedes comentar algunas cosas por encima, como que hay etiquetas que se predicen mejor que otras al estar desbalanceads (por ejemplo, el f1 en leaf y mountain en el cliente2, por poner un ejemplo), y cosillas así. Y si está más o menos claro, puedes comentar las diferencias entre federado y sin federar; por ejemplo, el cliente 1, water la predice mucho mejor en federado, pero luego el cliente2 decae un poco.
+
+%Luego, y dado que es complicado analizar esas tablas tal cual, te recomendaría agregar las métricas de cada cliente en una sola (una media, vaya), de forma que puedas tener una tabla con tantas columnas como métricas (como las anteriores), y luego en cada fila sea cada cliente (federado o en solitario). Te mando una captura de una tabla de como te recomendaría ponerlo (las métricas son totalmente inventadas en esa tabla). Además de los 4 clientes, te diría de incluir una fila que de paso calcule el promedio de entre esos 4 clientes, para tener ya también un vistazo global.
+%Además, si te fijas en el ejemplo, resalta en negrita, para cada métrica y cliente, si funciona mejor el federado o el centralizado. Por ejemplo, en la tabla de ejemplo que te envío, para F1, como C1 y C2 van mejor en federado que en centralizado, están esos valores en negrita; luego como C3 y C4 van mejor en centralizado, esos valores van en negrita, y en promedio va mejor el federado, pues va en negrita el resultado de promedio federado. Así, de un vistazo, puedes ver rápidamente quien va mejor.
+%De esta tabla pues comenta un poco los resultados que veas, si en federado los clientes en general suelen ir mejor o peor que en centralizado; si en alguna métrica el federado no es capaz de superar a centralizado; las mejoras que pueda tener el federado en promedio, etc.
+%A priori, con esto pueden quedar resultados y un análisis interesante
+
+%F1 Client 1
+
+En esta sección presentaremos y analizaremos los resultados obtenidos de los experimentos, comentaremos las conclusiones a las que llegamos a través de ese análisis y propondremos el trabajo futuro en esta línea.
+
+\section{Análisis de resultados}
+
+Hemos obtenido la serie de funciones F1 para cada una de las 100 rondas y para cada cliente en el entorno federado y los mismos resultados para las ejecuciones sin federar. Al comparar la evolución para cada conjunto de datos obtenemos las cuatro gráficas siguientes.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo5/client_1_fed_vs_cen}
+	\caption{F1 Federado contra no federado para el conjunto de datos 1}
+	\label{fig:client_1_fed_vs_cen}
+\end{figure}
+
+%F1 Client 2
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo5/client_2_fed_vs_cen}
+	\caption{F1 Federado contra no federado para el conjunto de datos 2}
+	\label{fig:client_2_fed_vs_cen}
+\end{figure}
+
+%F1 Client 3
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo5/client_3_fed_vs_cen}
+	\caption{F1 Federado contra no federado para el conjunto de datos 3}
+	\label{fig:client_3_fed_vs_cen}
+\end{figure}
+
+%F1 Client 4
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo5/client_4_fed_vs_cen}
+	\caption{F1 Federado contra no federado para el conjunto de datos 4}
+	\label{fig:client_4_fed_vs_cen}
+\end{figure}
+
+Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un valor más bajo en la primera ronda, probablemente provocado por 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{capitulo5/fed_avg_vs_cen_avg}
+	\caption{F1 medio Federado contra no federado}
+	\label{fig:fed_avg_vs_cen_avg}
+\end{figure}
+
+%Tabla cojunto de datos 1 cen
+\begin{table}[!ht]
+	\centering
+	\label{table:cen_metrics_client1}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		water & 0,6538 & 0,0118 & 0,0111 & 0,0115 & 0,0120 & 0,0052 & 0,0057 \\ \hline
+		buildings & 0,4158 & 0,0135 & 0,0072 & 0,0073 & 0,0149 & 0,0023 & 0,0100 \\ \hline
+		rocks & 0,2929 & 0,0149 & 0,0058 & 0,0047 & 0,0161 & 0,0011 & 0,0125 \\ \hline
+		field & 0,4957 & 0,0157 & 0,0087 & 0,0092 & 0,0163 & 0,0009 & 0,0080 \\ \hline
+		sand & 0,4397 & 0,0157 & 0,0077 & 0,0081 & 0,0164 & 0,0009 & 0,0091 \\ \hline
+		cars & 0,4434 & 0,0162 & 0,0088 & 0,0076 & 0,0168 & 0,0005 & 0,0097 \\ \hline
+		polar & 0,5466 & 0,0165 & 0,0108 & 0,0092 & 0,0169 & 0,0003 & 0,0080 \\ \hline
+		ruins & 0,2820 & 0,0163 & 0,0068 & 0,0046 & 0,0169 & 0,0004 & 0,0126 \\ \hline
+		statue & 0,3017 & 0,0161 & 0,0051 & 0,0064 & 0,0165 & 0,0007 & 0,0109 \\ \hline
+		wall & 0,3314 & 0,0163 & 0,0065 & 0,0067 & 0,0167 & 0,0005 & 0,0106 \\ \hline
+	\end{tabular}
+	\caption{Métricas para el cliente 1 federado en la ronda 100}
+\end{table}
+
+%Tabla cojunto de datos 1 fed
+\begin{table}[!ht]
+	\centering
+	\label{table:fed_metrics_client1}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		water & \textbf{0,8877} & \textbf{0,0644} & \textbf{0,0642} & \textbf{0,0629} & 0,0656 & 0,0058 & 0,0085 \\ \hline
+		buildings & \textbf{0,8235} & \textbf{0,0668} & \textbf{0,0585} & \textbf{0,0599} & \textbf{0,0684} & 0,0030 & 0,0115 \\ \hline
+		rocks & \textbf{0,8407} & \textbf{0,0692} & \textbf{0,0612} & \textbf{0,0599} & \textbf{0,0703} & 0,0012 & \textbf{0,0115} \\ \hline
+		field & \textbf{0,8547} & \textbf{0,0694} & \textbf{0,0645} & \textbf{0,0582} & \textbf{0,0707} & 0,0007 & 0,0132 \\ \hline
+		sand & \textbf{0,6821} & \textbf{0,0676} & \textbf{0,0436} & \textbf{0,0600} & \textbf{0,0682} & \textbf{0,0032} & 0,0114 \\ \hline
+		cars & \textbf{0,8774} & \textbf{0,0705} & \textbf{0,0584} & \textbf{0,0714} & \textbf{0,0704} & 0,0010 & \textbf{0,0000} \\ \hline
+		polar & \textbf{0,9110} & \textbf{0,0709} & \textbf{0,0625} & \textbf{0,0714} & \textbf{0,0708} & 0,0006 & \textbf{0,0000} \\ \hline
+		ruins & \textbf{0,8419} & \textbf{0,0704} & \textbf{0,0589} & \textbf{0,0604} & \textbf{0,0708} & 0,0006 & \textbf{0,0110} \\ \hline
+		statue & \textbf{0,8259} & \textbf{0,0703} & \textbf{0,0617} & \textbf{0,0590} & \textbf{0,0709} & \textbf{0,0005} & 0,0124 \\ \hline
+		wall & \textbf{0,6469} & \textbf{0,0690} & \textbf{0,0476} & \textbf{0,0536} & \textbf{0,0699} & 0,0015 & 0,0179 \\ \hline
+	\end{tabular}
+	\caption{Métricas para el cliente 1 centralizado en la ronda 100}
+\end{table}
+
+%Tabla cojunto de datos 2 cen
+\begin{table}[!ht]
+	\centering
+	\label{table:cen_metrics_client2}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		sky & 0,7379 & 0,0144 & 0,0143 & 0,0132 & 0,0154 & 0,0031 & 0,0054 \\ \hline
+		mountain & 0,4738 & 0,0156 & 0,0089 & 0,0090 & 0,0168 & 0,0017 & 0,0095 \\ \hline
+		stone & 0,4665 & 0,0165 & 0,0083 & 0,0093 & 0,0172 & 0,0013 & 0,0092 \\ \hline
+		street & 0,4559 & 0,0165 & 0,0084 & 0,0093 & 0,0173 & 0,0012 & 0,0093 \\ \hline
+		birds & 0,5744 & 0,0172 & 0,0111 & 0,0106 & 0,0178 & 0,0007 & 0,0079 \\ \hline
+		leaf & 0,5478 & 0,0174 & 0,0095 & 0,0122 & 0,0177 & 0,0008 & 0,0063 \\ \hline
+		valley & 0,3982 & 0,0173 & 0,0079 & 0,0083 & 0,0178 & 0,0007 & 0,0102 \\ \hline
+		garden & 0,5011 & 0,0175 & 0,0092 & 0,0111 & 0,0179 & 0,0006 & 0,0075 \\ \hline
+		horses & 0,7503 & 0,0181 & 0,0136 & 0,0148 & 0,0182 & 0,0003 & 0,0037 \\ \hline
+		cat & 0,4998 & 0,0178 & 0,0110 & 0,0090 & 0,0182 & 0,0003 & 0,0095 \\ \hline
+	\end{tabular}
+	\caption{Métricas para el cliente 2 centralizado en la ronda 100}
+\end{table}
+
+%Tabla cojunto de datos 2 fed
+\begin{table}[!ht]
+	\centering
+	\label{table:fed_metrics_client2}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		sky & 0,6515 & \textbf{0,0550} & \textbf{0,0511} & \textbf{0,0497} & \textbf{0,0588} & 0,0181 & 0,0272 \\ \hline
+		mountain & 0,2845 & \textbf{0,0580} & \textbf{0,0210} & \textbf{0,0239} & \textbf{0,0646} & 0,0124 & 0,0530 \\ \hline
+		stone & 0,3589 & \textbf{0,0651} & \textbf{0,0256} & \textbf{0,0337} & \textbf{0,0688} & 0,0081 & 0,0432 \\ \hline
+		street & 0,4375 & \textbf{0,0680} & \textbf{0,0297} & \textbf{0,0411} & \textbf{0,0706} & 0,0063 & 0,0358 \\ \hline
+		birds & \textbf{0,5940} & \textbf{0,0706} & \textbf{0,0410} & \textbf{0,0585} & \textbf{0,0718} & 0,0051 & 0,0185 \\ \hline
+		leaf & \textbf{0,7541} & \textbf{0,0740} & \textbf{0,0548} & \textbf{0,0635} & \textbf{0,0748} & 0,0021 & 0,0134 \\ \hline
+		valley & 0,3675 & \textbf{0,0718} & \textbf{0,0261} & \textbf{0,0395} & \textbf{0,0733} & 0,0036 & 0,0374 \\ \hline
+		garden & 0,3195 & \textbf{0,0693} & \textbf{0,0212} & \textbf{0,0287} & \textbf{0,0720} & 0,0049 & 0,0483 \\ \hline
+		horses & 0,4651 & \textbf{0,0721} & \textbf{0,0351} & \textbf{0,0426} & \textbf{0,0739} & 0,0030 & 0,0344 \\ \hline
+		cat & 0,4271 & \textbf{0,0726} & \textbf{0,0321} & \textbf{0,0394} & \textbf{0,0742} & 0,0027 & 0,0375 \\ \hline
+	\end{tabular}
+	\caption{Métricas para el cliente 2 federado en la ronda 100}
+\end{table}
+
+%Tabla cojunto de datos 3 cen
+\begin{table}[!ht]
+	\centering
+	\label{table:cen_metrics_client3}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		tree & 0,6683 & 0,0136 & 0,0124 & 0,0130 & 0,0140 & 0,0048 & 0,0059 \\ \hline
+		flowers & 0,4915 & 0,0164 & 0,0094 & 0,0095 & 0,0174 & 0,0014 & 0,0093 \\ \hline
+		snow & 0,5866 & 0,0168 & 0,0111 & 0,0111 & 0,0177 & 0,0012 & 0,0078 \\ \hline
+		plane & 0,6191 & 0,0175 & 0,0126 & 0,0112 & 0,0182 & 0,0006 & 0,0076 \\ \hline
+		beach & 0,4563 & 0,0171 & 0,0082 & 0,0096 & 0,0177 & 0,0011 & 0,0092 \\ \hline
+		plants & 0,5041 & 0,0178 & 0,0104 & 0,0093 & 0,0183 & 0,0005 & 0,0095 \\ \hline
+		house & 0,2695 & 0,0173 & 0,0059 & 0,0053 & 0,0181 & 0,0008 & 0,0135 \\ \hline
+		hills & 0,2995 & 0,0173 & 0,0054 & 0,0065 & 0,0179 & 0,0009 & 0,0123 \\ \hline
+		tracks & 0,5856 & 0,0181 & 0,0110 & 0,0127 & 0,0184 & 0,0005 & 0,0061 \\ \hline
+		ocean & 0,4987 & 0,0180 & 0,0091 & 0,0106 & 0,0183 & 0,0006 & 0,0083 \\ \hline
+	\end{tabular}
+	\caption{Métricas para el cliente 3 centralizado en la ronda 100}
+\end{table}
+
+%Tabla cojunto de datos 3 fed
+\begin{table}[!ht]
+	\centering
+	\label{table:fed_metrics_client3}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		tree & \textbf{0,7518} & \textbf{0,0613} & \textbf{0,0607} & \textbf{0,0558} & \textbf{0,0655} & 0,0114 & 0,0212 \\ \hline
+		flowers & \textbf{0,6500} & \textbf{0,0692} & \textbf{0,0457} & \textbf{0,0573} & \textbf{0,0710} & 0,0060 & 0,0196 \\ \hline
+		snow & \textbf{0,6538} & \textbf{0,0700} & \textbf{0,0475} & \textbf{0,0535} & \textbf{0,0723} & 0,0046 & 0,0234 \\ \hline
+		plane & 0,4960 & \textbf{0,0694} & \textbf{0,0369} & \textbf{0,0460} & \textbf{0,0718} & 0,0051 & 0,0310 \\ \hline
+		beach & \textbf{0,7048} & \textbf{0,0728} & \textbf{0,0493} & \textbf{0,0639} & \textbf{0,0736} & 0,0033 & 0,0130 \\ \hline
+		plants & \textbf{0,5417} & \textbf{0,0699} & \textbf{0,0326} & \textbf{0,0613} & \textbf{0,0706} & 0,0064 & 0,0156 \\ \hline
+		house & \textbf{0,5571} & \textbf{0,0718} & \textbf{0,0324} & \textbf{0,0641} & \textbf{0,0722} & 0,0047 & 0,0128 \\ \hline
+		hills & 0,5131 & \textbf{0,0721} & \textbf{0,0354} & \textbf{0,0475} & \textbf{0,0736} & 0,0033 & 0,0295 \\ \hline
+		tracks & \textbf{0,7122} & \textbf{0,0746} & \textbf{0,0554} & \textbf{0,0589} & \textbf{0,0756} & 0,0014 & 0,0180 \\ \hline
+		ocean & \textbf{0,6552} & \textbf{0,0734} & \textbf{0,0379} & \textbf{0,0686} & \textbf{0,0736} & 0,0033 & 0,0083 \\ \hline
+	\end{tabular}
+	\caption{Métricas para el cliente 3 federado en la ronda 100}
+\end{table}
+
+%Tabla cojunto de datos 4 cen
+\begin{table}[!ht]
+	\centering
+	\label{table:cen_metrics_client4}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		people & 0,6540 & 0,0144 & 0,0122 & 0,0122 & 0,0154 & 0,0031 & 0,0063 \\ \hline
+		grass & 0,5633 & 0,0150 & 0,0101 & 0,0109 & 0,0160 & 0,0025 & 0,0076 \\ \hline
+		clouds & 0,4352 & 0,0160 & 0,0084 & 0,0086 & 0,0171 & 0,0014 & 0,0099 \\ \hline
+		bear & 0,5771 & 0,0170 & 0,0107 & 0,0111 & 0,0176 & 0,0009 & 0,0074 \\ \hline
+		boats & 0,3330 & 0,0166 & 0,0062 & 0,0064 & 0,0175 & 0,0010 & 0,0121 \\ \hline
+		jet & 0,6469 & 0,0176 & 0,0125 & 0,0125 & 0,0181 & 0,0005 & 0,0060 \\ \hline
+		bridge & 0,3099 & 0,0170 & 0,0063 & 0,0065 & 0,0177 & 0,0008 & 0,0120 \\ \hline
+		close-up & 0,2488 & 0,0173 & 0,0069 & 0,0043 & 0,0181 & 0,0004 & 0,0142 \\ \hline
+		sun & 0,5369 & 0,0178 & 0,0112 & 0,0102 & 0,0182 & 0,0003 & 0,0083 \\ \hline
+		ice & 0,2684 & 0,0171 & 0,0049 & 0,0061 & 0,0177 & 0,0008 & 0,0124 \\ \hline
+	\end{tabular}
+	\caption{Métricas para el cliente 4 centralizado en la ronda 100}
+\end{table}
+
+%Tabla cojunto de datos 4 fed
+\begin{table}[!ht]
+	\centering
+	\label{table:fed_metrics_client4}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		people & 0,5651 & \textbf{0,0527} & \textbf{0,0386} & \textbf{0,0509} & \textbf{0,0535} & 0,0234 & 0,0260 \\ \hline
+		grass & 0,4838 & \textbf{0,0619} & \textbf{0,0403} & \textbf{0,0353} & \textbf{0,0687} & 0,0083 & 0,0416 \\ \hline
+		clouds & \textbf{0,4629} & \textbf{0,0667} & \textbf{0,0366} & \textbf{0,0363} & \textbf{0,0711} & 0,0058 & 0,0406 \\ \hline
+		bear & 0,4964 & \textbf{0,0678} & \textbf{0,0330} & \textbf{0,0478} & \textbf{0,0699} & 0,0070 & 0,0291 \\ \hline
+		boats & \textbf{0,5314} & \textbf{0,0697} & \textbf{0,0364} & \textbf{0,0474} & \textbf{0,0719} & 0,0051 & 0,0295 \\ \hline
+		jet & 0,4708 & \textbf{0,0705} & \textbf{0,0412} & \textbf{0,0312} & \textbf{0,0743} & 0,0026 & 0,0457 \\ \hline
+		bridge & \textbf{0,3431} & \textbf{0,0686} & \textbf{0,0229} & \textbf{0,0343} & \textbf{0,0711} & 0,0058 & 0,0426 \\ \hline
+		close-up & \textbf{0,4792} & \textbf{0,0728} & \textbf{0,0358} & \textbf{0,0366} & \textbf{0,0747} & 0,0022 & 0,0403 \\ \hline
+		sun & 0,4285 & \textbf{0,0734} & \textbf{0,0350} & \textbf{0,0452} & \textbf{0,0746} & 0,0023 & 0,0317 \\ \hline
+		ice & \textbf{0,4944} & \textbf{0,0729} & \textbf{0,0351} & \textbf{0,0513} & \textbf{0,0739} & 0,0030 & 0,0256 \\ \hline
+	\end{tabular}
+	\caption{Métricas para el cliente 4 federado en la ronda 100}
+\end{table}
+
+%Tabla Cen avg metrics round 100
+\begin{table}[!ht]
+	\centering
+	\label{table:cen_avg_metrics}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		Client 1 & 0,4203 & 0,0153 & 0,00785 & 0,00753 & 0,01595 & 0,00128 & 0,00971 \\ \hline
+		Client 2 & 0,54057 & 0,01683 & 0,01022 & 0,01068 & 0,01743 & 0,00107 & 0,00785 \\ \hline
+		Client 3 & 0,49792 & 0,01699 & 0,00955 & 0,00988 & 0,0176 & 0,00124 & 0,00895 \\ \hline
+		Client 4 & 0,45735 & 0,01658 & 0,00894 & 0,00888 & 0,01734 & 0,00117 & 0,00962 \\ \hline
+		Promedio & 0,47903 & 0,01642 & 0,00914 & 0,00924 & 0,01708 & 0,00119 & 0,00903 \\ \hline
+	\end{tabular}
+	\caption{Métricas promedio en la ronda 100 para el caso centralizado}
+\end{table}
+
+%Tabla Fed avg metrics round 100
+\begin{table}[!ht]
+	\centering
+	\label{table:fed_avg_metrics}
+	\begin{tabular}{|l|l|l|l|l|l|l|l|}
+		\hline
+		Client & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
+		Client 1 & \textbf{0,8192} & \textbf{0,0689} & \textbf{0,0581} & \textbf{0,0617} & \textbf{0,0696} & 0,0018 & 0,0097 \\ \hline
+		Client 2 & 0,4660 & \textbf{0,0677} & \textbf{0,0338} & \textbf{0,0421} & \textbf{0,0703} & 0,0066 & 0,0349 \\ \hline
+		Client 3 & \textbf{0,6236} & \textbf{0,0705} & \textbf{0,0434} & \textbf{0,0577} & \textbf{0,0720} & 0,0050 & 0,0192 \\ \hline
+		Client 4 & \textbf{0,4756} & \textbf{0,0677} & \textbf{0,0355} & \textbf{0,0416} & \textbf{0,0704} & 0,0066 & 0,0353 \\ \hline
+		Promedio & \textbf{0,5961} & \textbf{0,0687} & \textbf{0,0427} & \textbf{0,0508} & \textbf{0,0706} & 0,0050 & 0,0248 \\ \hline
+	\end{tabular}
+	\caption{Métricas promedio en la ronda 100 para el caso federado}
+\end{table}
+
+\newpage
 
 \section{Conclusiones}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id tortor eget tellus sollicitudin molestie. Morbi vehicula aliquam turpis, eget efficitur dolor rhoncus non. Integer mi odio, elementum non euismod sed, elementum eu dolor. Maecenas commodo sapien sed ultricies posuere. Ut molestie, mauris et tempor fermentum, ex massa consequat elit, eu consequat justo nibh ut augue. Sed in justo dui. Sed non molestie nisi. Ut fermentum nec ante sed ultrices. Vestibulum placerat quam urna, nec sollicitudin nibh rhoncus non. Curabitur pulvinar facilisis posuere.
-
-Donec eu dolor et quam porta vulputate vitae vulputate augue. Etiam fermentum, lectus vitae euismod feugiat, elit ligula luctus ante, eget commodo turpis leo vel quam. Aenean consectetur in turpis sit amet varius. Sed porta porttitor lectus, id tempus nunc suscipit vitae. Etiam blandit quam quis magna ornare pharetra. Aenean eget tortor nisi. Sed sit amet tempus eros. Phasellus pretium, nunc nec fringilla placerat, metus lectus maximus eros, nec condimentum neque ex nec orci. Vivamus facilisis at turpis sit amet maximus. Ut dolor justo, bibendum eget rhoncus eget, malesuada malesuada lacus. Suspendisse potenti.
-
-Donec augue nulla, semper ac tempor sit amet, vehicula sed est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel convallis justo, quis feugiat velit. Etiam fermentum, risus et venenatis rhoncus, ipsum ligula congue neque, sed consectetur arcu turpis vel metus. Integer ornare turpis et luctus ullamcorper. Ut placerat a ex et consequat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
 
 
 \section{Trabajo futuro}
 
-Pero incluso, y esto lo dejaría para la parte de trabajo futuro, podrías decir que una línea de ampliación de la experimetnacfión sería probar con que un nuevo cliente que no haya participado en el proceso de aprendizaje, reciba el modelo del servidor directamente en lugar de empezar desde 0
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id tortor eget tellus sollicitudin molestie. Morbi vehicula aliquam turpis, eget efficitur dolor rhoncus non. Integer mi odio, elementum non euismod sed, elementum eu dolor. Maecenas commodo sapien sed ultricies posuere. Ut molestie, mauris et tempor fermentum, ex massa consequat elit, eu consequat justo nibh ut augue. Sed in justo dui. Sed non molestie nisi. Ut fermentum nec ante sed ultrices. Vestibulum placerat quam urna, nec sollicitudin nibh rhoncus non. Curabitur pulvinar facilisis posuere.
-
-Donec eu dolor et quam porta vulputate vitae vulputate augue. Etiam fermentum, lectus vitae euismod feugiat, elit ligula luctus ante, eget commodo turpis leo vel quam. Aenean consectetur in turpis sit amet varius. Sed porta porttitor lectus, id tempus nunc suscipit vitae. Etiam blandit quam quis magna ornare pharetra. Aenean eget tortor nisi. Sed sit amet tempus eros. Phasellus pretium, nunc nec fringilla placerat, metus lectus maximus eros, nec condimentum neque ex nec orci. Vivamus facilisis at turpis sit amet maximus. Ut dolor justo, bibendum eget rhoncus eget, malesuada malesuada lacus. Suspendisse potenti.
 

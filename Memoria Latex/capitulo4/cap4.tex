@@ -131,7 +131,7 @@ La salida de nuestro modelo, como comentamos anteriormente, son \textit{logits},
 
 La \textit{accuracy} o exactitud es la proporción de ejemplos correctamente clasificados. Se define por la suma de todos los valores positivos y negativos predichos correctamente dividido entre el número de ejemplos en el conjunto de datos.
 
-\[Accuracy = \frac{TP + TN}{FP + FN + TP + TN}\]
+\[\uparrow Accuracy = \frac{TP + TN}{FP + FN + TP + TN}\]
 
 Para la etiqueta \textit{water} vemos que hay tres ejemplos en el conjunto de datos, la predicción del modelo es correcta en dos de los tres, por lo que la exactitud en este caso sería \(2 / 3 = 0,66 = 66\%\)
 
@@ -139,7 +139,7 @@ Para la etiqueta \textit{water} vemos que hay tres ejemplos en el conjunto de da
 
 La \textit{precision} o precisión es la proporción de predicciones correctas entre todas las predicciones. Se define por la proporción de verdaderos positivos entre todas las predicciones positivas.
 
-\[Precision = \frac{TP}{FP + TP}\]
+\[\uparrow Precision = \frac{TP}{FP + TP}\]
 
 En el mismo ejemplo de la etiqueta \textit{water} los verdaderos positivos son 1 y el total de predicciones positivas es 2, la precisión para esta etiqueta sería \(1 / 2 = 0.5 = 50\%\)
 
@@ -148,7 +148,7 @@ En el mismo ejemplo de la etiqueta \textit{water} los verdaderos positivos son 1
 
 \textit{Recall} o sensibilidad es la proporción de ejemplos que han sido predichos como pertenecientes a su etiqueta. Es la proporción de verdaderos positivos con respecto a todos los ejemplos verdaderos (verdaderos positivos y verdaderos negativos).
 
-\[Recall = \frac{TP}{FN + TP}\]
+\[\uparrow Recall = \frac{TP}{FN + TP}\]
 
 Para \textit{water} vemos que el número de etiquetas en los ejemplos es 2, y solo una de ellas ha sido clasificada correctamente, por lo que la sensibilidad se calcula como \(1 / 2 = 0.5 = 50\%\)
 
@@ -156,7 +156,7 @@ Para \textit{water} vemos que el número de etiquetas en los ejemplos es 2, y so
 
 La \textit{specificity} o especificidad nos indica cuántos de los casos marcados como negativos son correctos. Se define como la proporción de negativos verdaderos entre todos los que deben ser negativos.
 
-\[Specificity = \frac{TN}{TN + FP}\]
+\[\uparrow Specificity = \frac{TN}{TN + FP}\]
 
 En nuestro caso hay un negativo verdadero y ningún falso positivo porque lo que todos los negativos han sido predichos correctamente, la función es \(1 / 1 = 1 = 100\%\)
 
@@ -164,7 +164,7 @@ En nuestro caso hay un negativo verdadero y ningún falso positivo porque lo que
 
 El \textit{fall out} es la tasa de falsos positivos. Se define como la proporción de falsos positivos entre todos los ejemplos que deben ser negativos.
 
-\[Fall out = \frac{FP}{FP + TN}\]
+\[\downarrow Fall out = \frac{FP}{FP + TN}\]
 
 Para \textit{water}, no existe ningún ejemplo de falsos positivos por lo que la fórmula queda \(0 / 1 = 0 = 0\%\)
 
@@ -172,7 +172,7 @@ Para \textit{water}, no existe ningún ejemplo de falsos positivos por lo que la
 
 El \textit{miss rate} es la tasa de falsos negativos. Se define como la proporción de falsos negativos entre los ejemplos que deberían haber sido positivos. Nos dice cuántos de los ejemplos positivos han fallado en la predicción.
 
-\[Fall out = \frac{FN}{FN + TP}\]
+\[\downarrow Miss rate = \frac{FN}{FN + TP}\]
 
 En el ejemplo hay un falso negativo y un ejemplo marcado como negativo que debería ser positivos por lo que la fórmula queda \(1 / 2 = 0,5 = 50\%\)
 
@@ -180,7 +180,7 @@ En el ejemplo hay un falso negativo y un ejemplo marcado como negativo que deber
 
 El \textit{F1 Score} para una clase es la media armónica ebtre la precisión y la sensibilidad. Se usa como medida general de la calidad de las predicciones del clasificador. Se suele elegir como métrica representativo porque une las dos medidas que miden las predicciones correctas \textit{precision} y \textit{recall}.
 
-\[F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}\]
+\[\uparrow F_1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}\]
 
 En nuestro ejemplo se calcula F1 como \(0,25 / 1 = 0,25 = 25\%\)
 
@@ -213,10 +213,18 @@ Una vez inicializados el Servidor y los Clientes comienza el entrenamiento. Prim
 	\caption{Configuración del experimento}
 \end{table}
 
-\section{Análisis de resultados}
 
-%Aquí irán por tanto tablas con los resultados de las métricas, y análisis de los mismos. Si quieres, antes de ponerte aquí a meter las tablas, una vez tengas los resultados me los envías como te decía ayer en el mismo .txt que los tenias, y te propongo alguna estructura sobre qué tablas ponre, o si tiene sentido meter alguna gráfica, etc.
 
+%Te digo un poco como te recomendaría estructurar la sección 5, y luego a lo largo de la mañana reviso el documento con las anteriores.
+
+%Primero, pondría las gráficas de evolución del F1 con respecto a las rondas de entrenamiento que tienes en el excel más o menos. Pondría primero 4, las de cada cliente en federado vs centralizado; y luego otra más, con el agregado de federado vs el agregado de centralizado (aunque no tienes el valor agregado de centralizado, puedes hacer la media entre las 4 columnas y ya lo tienes)
+
+%Luego, pondría las 8 tablas que tienes en "Resultados por cliente". Es cierto que directamente de estas 8 tablas crudas, tal cual, no puedes sacar excesiva información, pero puedes comentar algunas cosas por encima, como que hay etiquetas que se predicen mejor que otras al estar desbalanceads (por ejemplo, el f1 en leaf y mountain en el cliente2, por poner un ejemplo), y cosillas así. Y si está más o menos claro, puedes comentar las diferencias entre federado y sin federar; por ejemplo, el cliente 1, water la predice mucho mejor en federado, pero luego el cliente2 decae un poco.
+
+%Luego, y dado que es complicado analizar esas tablas tal cual, te recomendaría agregar las métricas de cada cliente en una sola (una media, vaya), de forma que puedas tener una tabla con tantas columnas como métricas (como las anteriores), y luego en cada fila sea cada cliente (federado o en solitario). Te mando una captura de una tabla de como te recomendaría ponerlo (las métricas son totalmente inventadas en esa tabla). Además de los 4 clientes, te diría de incluir una fila que de paso calcule el promedio de entre esos 4 clientes, para tener ya también un vistazo global.
+%Además, si te fijas en el ejemplo, resalta en negrita, para cada métrica y cliente, si funciona mejor el federado o el centralizado. Por ejemplo, en la tabla de ejemplo que te envío, para F1, como C1 y C2 van mejor en federado que en centralizado, están esos valores en negrita; luego como C3 y C4 van mejor en centralizado, esos valores van en negrita, y en promedio va mejor el federado, pues va en negrita el resultado de promedio federado. Así, de un vistazo, puedes ver rápidamente quien va mejor.
+%De esta tabla pues comenta un poco los resultados que veas, si en federado los clientes en general suelen ir mejor o peor que en centralizado; si en alguna métrica el federado no es capaz de superar a centralizado; las mejoras que pueda tener el federado en promedio, etc.
+%A priori, con esto pueden quedar resultados y un análisis interesante
 
 
 
