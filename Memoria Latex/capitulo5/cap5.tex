@@ -2,17 +2,6 @@
 
 \vspace*{5mm}
 
-%Te digo un poco como te recomendaría estructurar la sección 5, y luego a lo largo de la mañana reviso el documento con las anteriores.
-
-%Primero, pondría las gráficas de evolución del F1 con respecto a las rondas de entrenamiento que tienes en el excel más o menos. Pondría primero 4, las de cada cliente en federado vs centralizado; y luego otra más, con el agregado de federado vs el agregado de centralizado (aunque no tienes el valor agregado de centralizado, puedes hacer la media entre las 4 columnas y ya lo tienes)
-
-%Luego, pondría las 8 tablas que tienes en "Resultados por cliente". Es cierto que directamente de estas 8 tablas crudas, tal cual, no puedes sacar excesiva información, pero puedes comentar algunas cosas por encima, como que hay etiquetas que se predicen mejor que otras al estar desbalanceads (por ejemplo, el f1 en leaf y mountain en el cliente2, por poner un ejemplo), y cosillas así. Y si está más o menos claro, puedes comentar las diferencias entre federado y sin federar; por ejemplo, el cliente 1, water la predice mucho mejor en federado, pero luego el cliente2 decae un poco.
-
-%Luego, y dado que es complicado analizar esas tablas tal cual, te recomendaría agregar las métricas de cada cliente en una sola (una media, vaya), de forma que puedas tener una tabla con tantas columnas como métricas (como las anteriores), y luego en cada fila sea cada cliente (federado o en solitario). Te mando una captura de una tabla de como te recomendaría ponerlo (las métricas son totalmente inventadas en esa tabla). Además de los 4 clientes, te diría de incluir una fila que de paso calcule el promedio de entre esos 4 clientes, para tener ya también un vistazo global.
-%Además, si te fijas en el ejemplo, resalta en negrita, para cada métrica y cliente, si funciona mejor el federado o el centralizado. Por ejemplo, en la tabla de ejemplo que te envío, para F1, como C1 y C2 van mejor en federado que en centralizado, están esos valores en negrita; luego como C3 y C4 van mejor en centralizado, esos valores van en negrita, y en promedio va mejor el federado, pues va en negrita el resultado de promedio federado. Así, de un vistazo, puedes ver rápidamente quien va mejor.
-%De esta tabla pues comenta un poco los resultados que veas, si en federado los clientes en general suelen ir mejor o peor que en centralizado; si en alguna métrica el federado no es capaz de superar a centralizado; las mejoras que pueda tener el federado en promedio, etc.
-%A priori, con esto pueden quedar resultados y un análisis interesante
-
 %F1 Client 1
 
 En esta sección presentaremos y analizaremos los resultados obtenidos de los experimentos, comentaremos las conclusiones a las que llegamos a través de ese análisis y propondremos el trabajo futuro en esta línea.
@@ -21,7 +10,7 @@ En esta sección presentaremos y analizaremos los resultados obtenidos de los ex
 
 Hemos obtenido la serie de funciones F1 para cada una de las 100 rondas y para cada cliente en el entorno federado y los mismos resultados para las ejecuciones sin federar. Al comparar la evolución para cada conjunto de datos obtenemos las cuatro gráficas siguientes.
 
-\begin{figure}[h!]
+\begin{figure}[!htp]
 	\centering
 	\includegraphics[width=0.7\linewidth]{capitulo5/client_1_fed_vs_cen}
 	\caption{F1 Federado contra no federado para el conjunto de datos 1}
@@ -30,7 +19,7 @@ Hemos obtenido la serie de funciones F1 para cada una de las 100 rondas y para c
 
 %F1 Client 2
 
-\begin{figure}[h!]
+\begin{figure}[!htp]
 	\centering
 	\includegraphics[width=0.7\linewidth]{capitulo5/client_2_fed_vs_cen}
 	\caption{F1 Federado contra no federado para el conjunto de datos 2}
@@ -39,7 +28,7 @@ Hemos obtenido la serie de funciones F1 para cada una de las 100 rondas y para c
 
 %F1 Client 3
 
-\begin{figure}[h!]
+\begin{figure}[!htp]
 	\centering
 	\includegraphics[width=0.7\linewidth]{capitulo5/client_3_fed_vs_cen}
 	\caption{F1 Federado contra no federado para el conjunto de datos 3}
@@ -48,24 +37,28 @@ Hemos obtenido la serie de funciones F1 para cada una de las 100 rondas y para c
 
 %F1 Client 4
 
-\begin{figure}[h!]
+\begin{figure}[!htp]
 	\centering
 	\includegraphics[width=0.7\linewidth]{capitulo5/client_4_fed_vs_cen}
 	\caption{F1 Federado contra no federado para el conjunto de datos 4}
 	\label{fig:client_4_fed_vs_cen}
 \end{figure}
 
-Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un valor más bajo en la primera ronda, probablemente provocado por 
+Podemos observar que en los cuatro ejemplos para el caso federado el valor de F1 comienza teniendo un valor más bajo en la primera ronda, en cliente dentro del entorno federado presenta una degradación del entrenamiento del modelo después de la agregación que es cuando realizamos la evaluación de cada cliente. alrededor de la ronda 40 vemos que el caso no federado alcanza un punto de equilibrio pero que el caso federado sigue mejorando superando en rendimiento medio en los cuatro conjuntos de datos. La variación del F1 en el caso federado de una ronda a otra es más pronunciada debido al efecto de la agregación, pero de media podemos ver que la tendencia mejora con respecto al caso no federado.
 
-\begin{figure}[h!]
+\begin{figure}[!htp]
 	\centering
 	\includegraphics[width=0.7\linewidth]{capitulo5/fed_avg_vs_cen_avg}
 	\caption{F1 medio Federado contra no federado}
 	\label{fig:fed_avg_vs_cen_avg}
 \end{figure}
 
+Si estudiamos la forma de las funciones F1 medias para los cuatro conjuntos de datos vemos de manera más clara la tendencia antes comentada y de forma más suavizada.
+
+A continuación añadimos las tablas con las métricas derivadas de la matriz de confusión para cada etiqueta en la ronda 100. Mostramos tanto para el caso federado como para el no federado para cada conjunto de datos el valor de F1, accuracy, precision, recall, specificity, fall out y miss rate. Hemos marcado en negrita los valores que mejoran en el caso federado con respecto a su contraparte en el caso sin federar.
+
 %Tabla cojunto de datos 1 cen
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:cen_metrics_client1}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -86,7 +79,7 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 \end{table}
 
 %Tabla cojunto de datos 1 fed
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:fed_metrics_client1}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -106,8 +99,10 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 	\caption{Métricas para el cliente 1 centralizado en la ronda 100}
 \end{table}
 
+En el primer conjunto de datos observamos una mejoría sustancial en todas las métricas de acierto para el caso federado, sin embargo también observamos una mayor tasa de falsos positivos y falsos negativos. En general el rendimiento es bastante mejor para todas las etiquetas que en caso sin federar.
+
 %Tabla cojunto de datos 2 cen
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:cen_metrics_client2}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -128,7 +123,7 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 \end{table}
 
 %Tabla cojunto de datos 2 fed
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:fed_metrics_client2}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -148,8 +143,10 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 	\caption{Métricas para el cliente 2 federado en la ronda 100}
 \end{table}
 
+En el segundo conjunto de datos, sin embargo, el valor de F1 es peor para la mayoría de las etiquetas. Vemos que birds y leaf se predicen mejor que el resto al estar desbalanceadas. Los valores ed accuracy, precision, recall y specificity mejoran con respecto al caso no federado mientras que los valores de fall out y miss rate vuelven a ser peores. Para este conjunto de datos los resultados en general no han mejorado en la ronda 100, aunque como hemos visto en las gráficas anteriores para rondas previas sí que mejoraba, de nuevo siendo esto efecto de la agregación en el servidor.
+
 %Tabla cojunto de datos 3 cen
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:cen_metrics_client3}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -170,7 +167,7 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 \end{table}
 
 %Tabla cojunto de datos 3 fed
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:fed_metrics_client3}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -190,8 +187,10 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 	\caption{Métricas para el cliente 3 federado en la ronda 100}
 \end{table}
 
+Para el tercer conjunto de datos volvemos a observar una mejoría general para casi todas las etiquetas. Seguimos viendo más aciertos pero también más falsos positivos y negativos que en el caso sin federar.
+
 %Tabla cojunto de datos 4 cen
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:cen_metrics_client4}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -212,7 +211,7 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 \end{table}
 
 %Tabla cojunto de datos 4 fed
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:fed_metrics_client4}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -232,8 +231,10 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 	\caption{Métricas para el cliente 4 federado en la ronda 100}
 \end{table}
 
+En el cuarto conjunto de datos se mantiene la tendencia aunque en menor medida, los datos de F1 son mejores para la mitad de las etiquetas.
+
 %Tabla Cen avg metrics round 100
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:cen_avg_metrics}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -249,7 +250,7 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 \end{table}
 
 %Tabla Fed avg metrics round 100
-\begin{table}[!ht]
+\begin{table}[!htp]
 	\centering
 	\label{table:fed_avg_metrics}
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
@@ -264,13 +265,21 @@ Podemos observar que en los cuatro ejemplos el valor de F1 comienza teniendo un 
 	\caption{Métricas promedio en la ronda 100 para el caso federado}
 \end{table}
 
+Si realizamos la media de todas las etiquetas por cliente podemos tener una visión global de lo comentado anteriormente, para tres de los cuatro conjuntos de datos las predicciones mejoran mientras que también aumentan los falsos positivos y los falsos negativos. El rendimiento general en la ronda 100 es mejor en el caso federado que en el no federado.
+
 \newpage
 
 \section{Conclusiones}
 
+Nuestra hipótesis inicial era que para la tarea de clasificación de imágenes multi-etiqueta donde varios clientes deben entrenar con un conjunto de datos con etiquetas diferentes, el pertenecer a un entorno federado podría mejorar el rendimiento ya que los distintos clientes necesitan de un aprendizaje común (reconocimiento de bordes, texturas, sombras, etcétera...) que se delega a la parte compartida del modelo mientras la tarea de clasificación en sí permanece en las capas personalizadas de cada cliente. Aplicar un algoritmo como FedPer nos debería permitir atacar el problema del desbalance de etiquetas en los clientes de manera satisfactoria. Al analizar los resultados del experimento observamos no solo que es viable que un cliente con etiquetas propias no compartidas pueda entrenarse en un entorno federado donde otros clientes están clasificando otras etiquetas sino que además vemos que el rendimiento del entrenamiento mejora con respecto a trabajar aislado en un servidor centralizado.
 
 
 \section{Trabajo futuro}
 
+Estos resultados abren la puerta a continuar la investigación de la cooperación de diferentes clasificadores multi-etiqueta pudiendo aplicarse a distintos campos donde es un requisito la privacidad de los datos como puede ser el procesamiento de imágenes médicas, video-vigilancia u otros ámbitos donde se pueda aplicar la clasificación de imágenes de manera que los costes del entrenamiento puedan ser distribuidos entre los distintos actores.
 
+Una de las tareas pendientes en este experimento es mejorar el rendimiento poniendo el foco en la agregación del servidor, donde vemos un punto de mejora en el rendimiento de nuestros modelos y en la minimización de los falsos positivos y falsos negativos. En todos los ejemplos hemos tenido peores valores de fall out y de miss rate, entender el motivo y evitarlo podría ser un modo de incrementar la bondad del sistema.
 
+Otro experimento posible es introducir un número de etiquetas distintas para cada cliente. Al delegar la parte de la salida del modelo a las capas personalizadas debería seguir siendo viable y la mejora también debería estar presente, esto nos daría más flexibilidad a la hora de introducir nuevos clientes con diferentes necesidades o formatos de clasificación.
+
+Por último proponemos la introducción de un cliente sin entrenar en un sistema federado ya entrenado. De esta manera el cliente podría hacer uso de la parte del modelo compartido con el servidor que estaría pre-entrenada y debería de mejorar el entrenamiento de manera más rápida que si entrenase solo ya que solo tendría que ajustar las capas personalizadas en lugar del modelo completo.
