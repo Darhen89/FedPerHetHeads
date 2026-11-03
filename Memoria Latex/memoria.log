@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.9.16)  3 NOV 2026 19:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.9.16)  3 NOV 2026 19:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1063,7 +1063,7 @@ LaTeX Font Info:    Font shape `T1/ClearSans-TLF/regular/it' will be
 
 
 ]
-<capitulo2/entrenamientofederadocentralizado.png, id=253, 1181.41376pt x 650.43
+<capitulo2/entrenamientofederadocentralizado.png, id=257, 1181.41376pt x 650.43
 pt>
 File: capitulo2/entrenamientofederadocentralizado.png Graphic file (type png)
 <use capitulo2/entrenamientofederadocentralizado.png>
@@ -1087,14 +1087,14 @@ LaTeX Font Info:    Font shape `T1/ClearSans-TLF/bold/n' will be
 LaTeX Info: Redefining \. on input line 34.
 LaTeX Info: Redefining \% on input line 34.
  [7]
-<capitulo2/binarymulticlassclassification.png, id=276, 1203.49625pt x 427.5975p
+<capitulo2/binarymulticlassclassification.png, id=280, 1203.49625pt x 427.5975p
 t>
 File: capitulo2/binarymulticlassclassification.png Graphic file (type png)
 <use capitulo2/binarymulticlassclassification.png>
 Package pdftex.def Info: capitulo2/binarymulticlassclassification.png  used on 
 input line 42.
 (pdftex.def)             Requested size: 363.62366pt x 129.19368pt.
-<capitulo2/multilabelclassification.png, id=278, 644.4075pt x 465.74pt>
+<capitulo2/multilabelclassification.png, id=282, 644.4075pt x 465.74pt>
 File: capitulo2/multilabelclassification.png Graphic file (type png)
 <use capitulo2/multilabelclassification.png>
 Package pdftex.def Info: capitulo2/multilabelclassification.png  used on input 
@@ -1112,7 +1112,7 @@ LaTeX Info: Redefining \% on input line 57.
                                                   \__shipout_drop_firstpage_...
 l.57 \newpage
               <./capitulo2/binarymulticlassclassification.png>]
-<capitulo2/multilabeltable.png, id=285, 430.60875pt x 252.945pt>
+<capitulo2/multilabeltable.png, id=289, 430.60875pt x 252.945pt>
 File: capitulo2/multilabeltable.png Graphic file (type png)
 <use capitulo2/multilabeltable.png>
 Package pdftex.def Info: capitulo2/multilabeltable.png  used on input line 68.
@@ -1173,7 +1173,7 @@ LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
  (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-<capitulo3/capas personalizadas.png, id=337, 622.325pt x 504.88625pt>
+<capitulo3/capas personalizadas.png, id=341, 622.325pt x 504.88625pt>
 File: capitulo3/capas personalizadas.png Graphic file (type png)
 <use capitulo3/capas personalizadas.png>
 Package pdftex.def Info: capitulo3/capas personalizadas.png  used on input line
@@ -1186,19 +1186,18 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 LaTeX Info: Redefining \. on input line 30.
 LaTeX Info: Redefining \% on input line 30.
 [12]
-Underfull \vbox (badness 2495) has occurred while \output is active []
-
-LaTeX Info: Redefining \. on input line 37.
-LaTeX Info: Redefining \% on input line 37.
+LaTeX Info: Redefining \. on input line 36.
+LaTeX Info: Redefining \% on input line 36.
  [13pdfTeX warning (ext4): destination with the same identifier (name{figure.3.
 1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.37 
-      <./capitulo3/capas personalizadas.png>]
-LaTeX Info: Redefining \. on input line 49.
-LaTeX Info: Redefining \% on input line 49.
- [14])
+l.36 L
+      as capas personalizadas de cada cliente se encargarán de la parte esp...
+ <./capitulo3/capas personalizadas.png>])
+LaTeX Info: Redefining \. on input line 134.
+LaTeX Info: Redefining \% on input line 134.
+ [14]
 LaTeX Info: Redefining \. on input line 134.
 LaTeX Info: Redefining \% on input line 134.
  [15]
@@ -1226,62 +1225,62 @@ LaTeX Info: Redefining \% on input line 45.
                                                   \__shipout_drop_firstpage_...
 l.45 
      ]
-LaTeX Info: Redefining \. on input line 68.
-LaTeX Info: Redefining \% on input line 68.
+LaTeX Info: Redefining \. on input line 70.
+LaTeX Info: Redefining \% on input line 70.
  [19]
-LaTeX Info: Redefining \. on input line 133.
-LaTeX Info: Redefining \% on input line 133.
+LaTeX Info: Redefining \. on input line 135.
+LaTeX Info: Redefining \% on input line 135.
  [20pdfTeX warning (ext4): destination with the same identifier (name{table.4.2
 }) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.133 
+l.135 
       pdfTeX warning (ext4): destination with the same identifier (name{table.4
 .3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.133 
+l.135 
       ]
-LaTeX Info: Redefining \. on input line 158.
-LaTeX Info: Redefining \% on input line 158.
+LaTeX Info: Redefining \. on input line 160.
+LaTeX Info: Redefining \% on input line 160.
  [21]
-LaTeX Info: Redefining \. on input line 182.
-LaTeX Info: Redefining \% on input line 182.
+LaTeX Info: Redefining \. on input line 184.
+LaTeX Info: Redefining \% on input line 184.
  [22]
-LaTeX Info: Redefining \. on input line 196.
-LaTeX Info: Redefining \% on input line 196.
+LaTeX Info: Redefining \. on input line 198.
+LaTeX Info: Redefining \% on input line 198.
  [23]
-LaTeX Info: Redefining \. on input line 216.
-LaTeX Info: Redefining \% on input line 216.
+LaTeX Info: Redefining \. on input line 218.
+LaTeX Info: Redefining \% on input line 218.
  [24pdfTeX warning (ext4): destination with the same identifier (name{table.4.4
 }) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.216 \cleardoublepage
+l.218 \cleardoublepage
                       ])
 \openout2 = `capitulo5/cap5.aux'.
 
  (./capitulo5/cap5.tex
 Cap\'{\i }tulo 5.
-<capitulo5/client_1_fed_vs_cen.png, id=415, 602.25pt x 372.39125pt>
+<capitulo5/client_1_fed_vs_cen.png, id=419, 602.25pt x 372.39125pt>
 File: capitulo5/client_1_fed_vs_cen.png Graphic file (type png)
 <use capitulo5/client_1_fed_vs_cen.png>
 Package pdftex.def Info: capitulo5/client_1_fed_vs_cen.png  used on input line 
 15.
 (pdftex.def)             Requested size: 282.81909pt x 174.88185pt.
-<capitulo5/client_2_fed_vs_cen.png, id=416, 602.25pt x 372.39125pt>
+<capitulo5/client_2_fed_vs_cen.png, id=420, 602.25pt x 372.39125pt>
 File: capitulo5/client_2_fed_vs_cen.png Graphic file (type png)
 <use capitulo5/client_2_fed_vs_cen.png>
 Package pdftex.def Info: capitulo5/client_2_fed_vs_cen.png  used on input line 
 24.
 (pdftex.def)             Requested size: 282.81909pt x 174.88185pt.
-<capitulo5/client_3_fed_vs_cen.png, id=417, 602.25pt x 372.39125pt>
+<capitulo5/client_3_fed_vs_cen.png, id=421, 602.25pt x 372.39125pt>
 File: capitulo5/client_3_fed_vs_cen.png Graphic file (type png)
 <use capitulo5/client_3_fed_vs_cen.png>
 Package pdftex.def Info: capitulo5/client_3_fed_vs_cen.png  used on input line 
 33.
 (pdftex.def)             Requested size: 282.81909pt x 174.88185pt.
-<capitulo5/client_4_fed_vs_cen.png, id=418, 602.25pt x 372.39125pt>
+<capitulo5/client_4_fed_vs_cen.png, id=422, 602.25pt x 372.39125pt>
 File: capitulo5/client_4_fed_vs_cen.png Graphic file (type png)
 <use capitulo5/client_4_fed_vs_cen.png>
 Package pdftex.def Info: capitulo5/client_4_fed_vs_cen.png  used on input line 
@@ -1313,7 +1312,7 @@ l.48
 l.48 
       <./capitulo5/client_2_fed_vs_cen.png> <./capitulo5/client_3_fed_vs_cen.pn
 g>]
-<capitulo5/fed_avg_vs_cen_avg.png, id=430, 602.25pt x 372.39125pt>
+<capitulo5/fed_avg_vs_cen_avg.png, id=434, 602.25pt x 372.39125pt>
 File: capitulo5/fed_avg_vs_cen_avg.png Graphic file (type png)
 <use capitulo5/fed_avg_vs_cen_avg.png>
 Package pdftex.def Info: capitulo5/fed_avg_vs_cen_avg.png  used on input line 5
@@ -1469,16 +1468,16 @@ LaTeX Info: Redefining \% on input line 27.
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `memoria.out' has not changed.
-(rerunfilecheck)             Checksum: 0D0F69C1449174F86FDB3160759F249A;4574.
+(rerunfilecheck)             Checksum: AD17176612FD2A51300B56F6A29D6260;4553.
  ) 
 Here is how much of TeX's memory you used:
  27399 strings out of 480185
- 494566 string characters out of 5894213
+ 494536 string characters out of 5894213
  963103 words of memory out of 5000000
  44645 multiletter control sequences out of 15000+600000
  565754 words of font info for 89 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
- 100i,11n,94p,2033b,713s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 100i,12n,94p,2033b,713s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/manuel/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.60
 0pk>{/usr/share/texlive/texmf-dist/fonts/enc/dvips/clearsans/clr_zxbkm4.enc}</u
 sr/share/texlive/texmf-dist/fonts/type1/intel/clearsans/ClearSans-Bold.pfb></us
@@ -1491,10 +1490,10 @@ texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-d
 ist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/font
 s/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type
 1/public/amsfonts/cm/cmsy8.pfb>
-Output written on memoria.pdf (44 pages, 1591721 bytes).
+Output written on memoria.pdf (44 pages, 1592064 bytes).
 PDF statistics:
- 578 PDF objects out of 1000 (max. 8388607)
- 462 compressed objects within 5 object streams
+ 582 PDF objects out of 1000 (max. 8388607)
+ 466 compressed objects within 5 object streams
  124 named destinations out of 1000 (max. 500000)
  276 words of extra memory for PDF output out of 10000 (max. 10000000)
 
