@@ -11,6 +11,10 @@ The style file: unsrt.bst
 Database file #1: bibliography/bibliography.bib
 Warning--entry type for "Moyano:MULTI" isn't style-file defined
 --line 212 of file bibliography/bibliography.bib
+Repeated entry---line 262 of file bibliography/bibliography.bib
+ : @article{Luzon2024_IEEEJAS
+ :                           ,
+I'm skipping whatever remains of this entry
 Warning--empty journal in mcmahan2023communicationefficientlearningdeepnetworks
 Warning--empty journal in Zhao_ML
 Warning--empty journal in criado2021noniiddatacontinuallearning
@@ -25,45 +29,45 @@ Warning--empty journal in liu2021query2labelsimpletransformerway
 Warning--empty journal in 10378641
 Warning--empty journal in xie2024counterfactualreasoningmultilabelimage
 Warning--empty journal in 2024transformerbasedfederatedlearningmultilabel
-You've used 21 entries,
+You've used 24 entries,
             1791 wiz_defined-function locations,
-            552 strings with 8399 characters,
-and the built_in function-call counts, 4733 in all, are:
-= -- 294
-> -- 428
+            565 strings with 9143 characters,
+and the built_in function-call counts, 5343 in all, are:
+= -- 325
+> -- 494
 < -- 1
-+ -- 150
-- -- 129
-* -- 358
-:= -- 868
-add.period$ -- 62
-call.type$ -- 21
-change.case$ -- 20
++ -- 173
+- -- 149
+* -- 404
+:= -- 978
+add.period$ -- 69
+call.type$ -- 24
+change.case$ -- 23
 chr.to.int$ -- 0
-cite$ -- 35
-duplicate$ -- 182
-empty$ -- 355
-format.name$ -- 129
-if$ -- 966
+cite$ -- 38
+duplicate$ -- 200
+empty$ -- 406
+format.name$ -- 149
+if$ -- 1092
 int.to.chr$ -- 0
-int.to.str$ -- 21
-missing$ -- 21
-newline$ -- 107
-num.names$ -- 21
-pop$ -- 89
+int.to.str$ -- 24
+missing$ -- 22
+newline$ -- 120
+num.names$ -- 24
+pop$ -- 104
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 80
+skip$ -- 92
 stack$ -- 0
 substring$ -- 111
-swap$ -- 18
+swap$ -- 21
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 14
-while$ -- 26
-width$ -- 23
-write$ -- 202
-(There were 15 warnings)
+while$ -- 29
+width$ -- 26
+write$ -- 229
+(There was 1 error message)

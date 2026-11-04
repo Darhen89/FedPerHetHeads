@@ -32,7 +32,7 @@ def main(cfg: DictConfig) -> None:
     execute_training(cfg, set_4_train_loader, set_4_test_loader, pos_weigh_set_4, 3)
 
 
-def execute_training(cfg, testloader: DataLoader, trainloader: DataLoader, pos_weight: np.array, client_id: int):
+def execute_training(cfg, trainloader: DataLoader, testloader: DataLoader, pos_weight: np.array, client_id: int):
     device = cfg.server_device
 
     model = ResNet()
@@ -42,7 +42,7 @@ def execute_training(cfg, testloader: DataLoader, trainloader: DataLoader, pos_w
     optimizer = torch.optim.SGD(
         model.parameters(), lr=0.01, momentum=0.9
     )
-    total_f1_score = 0.0
+
     round_count = 0
     for _ in range(cfg.num_rounds):
         round_count = round_count + 1
@@ -133,18 +133,16 @@ def execute_training(cfg, testloader: DataLoader, trainloader: DataLoader, pos_w
             f1_s = f1_s / total
             f1_s_by_class = f1_s_by_class / total
             accuracy = ((total_tp + total_tn) / (
-                        total_tp + total_tn + total_fp + total_fn)) / total  # proporcion de ejemplos correctamente clasificados
+                        total_tp + total_tn + total_fp + total_fn))  # proporcion de ejemplos correctamente clasificados
             precision = (total_tp / (
-                        total_tp + total_fp)) / total  # proporción de predicciones correctas entre el total de predicciones para una clase
+                        total_tp + total_fp))  # proporción de predicciones correctas entre el total de predicciones para una clase
             recall = (total_tp / (
-                        total_tp + total_fn)) / total  # proporción de veces que una clase ha sido predicha correctamente, probabilidad de positivos verdaderos
-            specificity = (total_tn / (total_tn + total_fp)) / total  # probabilidad de negativos verdaderos
-            fall_out = (total_fp / (total_fp + total_tn)) / total  # probabilidad de falsos positivos
-            miss_rate = (total_fn / (total_fn + total_tp)) / total  # probabilidad de falsos negativos
+                        total_tp + total_fn))  # proporción de veces que una clase ha sido predicha correctamente, probabilidad de positivos verdaderos
+            specificity = (total_tn / (total_tn + total_fp))  # probabilidad de negativos verdaderos
+            fall_out = (total_fp / (total_fp + total_tn))  # probabilidad de falsos positivos
+            miss_rate = (total_fn / (total_fn + total_tp))  # probabilidad de falsos negativos
 
             report = create_report(client_id, f1_s_by_class, accuracy, precision, recall, specificity, fall_out, miss_rate)
-
-            total_f1_score += f1_s
 
             print("test f1: ", f1_s)
             if round_count == 100:

@@ -10,6 +10,14 @@ Qiang Yang, Yang Liu, Yong Cheng, Yan Kang, Tianjian Chen, and Han Yu.
 \newblock {\em Federated Learning}.
 \newblock Morgan \& Claypool publishers, 2019.
 
+\bibitem{Luzon2024_IEEEJAS}
+M.~Victoria Luzón, Nuria Rodríguez-Barroso, Alberto Argente-Garrido, Daniel
+  Jiménez-López, Jose~M. Moyano, Javier~Del Ser, Weiping Ding, and Francisco
+  Herrera.
+\newblock A tutorial on federated learning from theory to practice:
+  Foundations, software frameworks, exemplary use cases, and selected trends.
+\newblock {\em IEEE/CAA Journal of Automatica Sinica}, 11(4), 2024.
+
 \bibitem{mcmahan2023communicationefficientlearningdeepnetworks}
 H.~Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, and
   Blaise~Agüera y~Arcas.
@@ -133,5 +141,16 @@ Kazuharu Furutani and Satomi Kita.
 \newblock Alphafold: a revolutionary ai-based protein structure prediction
   system and its applications in drug discovery research.
 \newblock {\em Folia Pharmacologica Japonica}, 160:302--304, 07 2025.
+
+\bibitem{scaffold}
+Sai~Praneeth Karimireddy, Satyen Kale, Mehryar Mohri, Sashank~J. Reddi,
+  Sebastian~U. Stich, and Ananda~Theertha Suresh.
+\newblock Scaffold: Stochastic controlled averaging for federated learning,
+  2021.
+
+\bibitem{fedprox}
+Tian Li, Anit~Kumar Sahu, Manzil Zaheer, Maziar Sanjabi, Ameet Talwalkar, and
+  Virginia Smith.
+\newblock Federated optimization in heterogeneous networks, 2020.
 
 \end{thebibliography}

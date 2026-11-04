@@ -323,11 +323,13 @@ class ResNetModelManager(ModelManager):
 
         total = len(self.testloader)
 
+        print("TEST LOADER SIZE: ", total)
+
         f1_s = f1_s / total
         f1_s_by_class = f1_s_by_class / total
         accuracy = ((total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)) / total  # proporcion de ejemplos correctamente clasificados
-        precision = (total_tp / (total_tp + total_fp)) / total  # proporción de predicciones correctas entre el total de predicciones para una clase
-        recall = (total_tp / (total_tp + total_fn)) / total  # proporción de veces que una clase ha sido predicha correctamente, probabilidad de positivos verdaderos
+        precision = (total_tp / (total_tp + total_fp))  # proporción de predicciones correctas entre el total de predicciones para una clase
+        recall = (total_tp / (total_tp + total_fn))  # proporción de veces que una clase ha sido predicha correctamente, probabilidad de positivos verdaderos
         specificity = (total_tn / (total_tn + total_fp)) / total  # probabilidad de negativos verdaderos
         fall_out = (total_fp / (total_fp + total_tn)) / total  # probabilidad de falsos positivos
         miss_rate = (total_fn / (total_fn + total_tp)) / total  # probabilidad de falsos negativos
