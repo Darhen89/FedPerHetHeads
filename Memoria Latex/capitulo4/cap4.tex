@@ -14,6 +14,7 @@ Como comentamos antes, la implementación de FedPer que estamos usando está imp
 
 \begin{table}[!ht]
 	\centering
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		\multicolumn{2}{|c|}{Conjunto 1} & \multicolumn{2}{c|}{Conjunto 2} & \multicolumn{2}{c|}{Conjunto 3} & \multicolumn{2}{c|}{Conjunto 4} \\ \hline
@@ -29,6 +30,7 @@ Como comentamos antes, la implementación de FedPer que estamos usando está imp
 		statue & 223 & horses & 218 & tracks & 217 & sun & 212 \\ \hline
 		wall & 209 & cat & 203 & ocean & 201 & ice & 210 \\ \hline
 	\end{tabular}
+	}
 	\caption{Distribución de etiquetas}
 	\label{table:label_distribution}
 \end{table}
@@ -222,7 +224,7 @@ Una vez inicializados el Servidor y los Clientes comienza el entrenamiento. Prim
 
 \section{Análisis de resultados}
 
-En primer lugar, vamos a analizar y comparar la evolución (en concreto, de la métrica F1) del modelo a lo largo de las distintas épocas de entrenamiento, tanto para el modelo federado, como para los modelos centralizados (donde cada cliente entrena únicamente con sus datos, sin colaborar con el resto). Al comparar la evolución para cada conjunto de datos obtenemos las Figuras \ref{fig:client_1_fed_vs_cen} \ref{fig:client_2_fed_vs_cen} \ref{fig:client_3_fed_vs_cen} \ref{fig:client_4_fed_vs_cen}.
+En primer lugar, vamos a analizar y comparar la evolución (en concreto, de la métrica F1) del modelo a lo largo de las distintas épocas de entrenamiento, tanto para el modelo federado, como para los modelos centralizados (donde cada cliente entrena únicamente con sus datos, sin colaborar con el resto). Al comparar la evolución para cada conjunto de datos obtenemos los resultados que se muestran en las Figuras \ref{fig:client_1_fed_vs_cen} - \ref{fig:client_4_fed_vs_cen}.
 
 \begin{figure}[!htp]
 	\centering
@@ -260,7 +262,7 @@ En primer lugar, vamos a analizar y comparar la evolución (en concreto, de la m
 
 \newpage
 
-Podemos observar que en los cuatro ejemplos la evolución de la métrica F1 para el caso no federado tiene menor variación de una ronda a la siguiente mientras que en el caso federado vemos que se crean unos picos posiblemente debido al efecto de la agregación del servidor sobre el rendimiento del cliente.
+Podemos observar que en los cuatro ejemplos la evolución de la métrica F1 para el caso no federado tiene menor variación de una ronda a la siguiente mientras que en el caso federado vemos que se crean unos picos debido al efecto de la agregación del servidor sobre el rendimiento del cliente. Al tener varias épocas locales, cada cliente va mejorando sobre sus datos, pero al realizar la agregación, el modelo devuelto es, por lo general, mejor que el último devuelto por el servidor (y de ahí la tendencia creciente del F1 en general), pero menos adecuado a los datos locales, lo que conlleva esos bajones del valor de F1.
 
 \begin{figure}[!htp]
 	\centering
@@ -269,29 +271,29 @@ Podemos observar que en los cuatro ejemplos la evolución de la métrica F1 para
 	\label{fig:fed_avg_vs_cen_avg}
 \end{figure}
 
-Si estudiamos la forma de las funciones F1 medias para los cuatro conjuntos de datos como vemos en la Figura \ref{fig:fed_avg_vs_cen_avg}  vemos de manera más clara la tendencia antes comentada y de forma más suavizada. Se observa claramente que el rendimiento del caso federado es menor al caso no federado, sin embargo se observa que el valor de F1 es ascendente acercándose al caso no federado.
+Si estudiamos la forma de las funciones F1 medias para los cuatro conjuntos de datos como vemos en la Figura \ref{fig:fed_avg_vs_cen_avg}, vemos de manera más clara la tendencia antes comentada y de forma más suavizada. Se observa claramente que el rendimiento del caso federado es menor al caso no federado, sin embargo se observa que el valor de F1 es ascendente acercándose al caso no federado.
 
 \newpage
 
-A continuación, en las Tablas \ref{table:cen_metrics_client1} \ref{table:fed_metrics_client2} \ref{table:cen_metrics_client3} \ref{table:cen_metrics_client4} se muestran las métricas derivadas de la matriz de confusión para cada etiqueta en la ronda 100. Mostramos tanto para el caso federado como para el no federado para cada conjunto de datos y para cada etiqueta el valor de F1, accuracy, precision, recall, specificity, fall out y miss rate. Hemos marcado en negrita los valores que mejoran en el caso federado con respecto a su contraparte en el caso sin federar.
+A continuación, en las Tablas \ref{table:cen_metrics_client1} - \ref{table:cen_metrics_client4} se muestran las métricas derivadas de la matriz de confusión para cada etiqueta en la ronda 100. Mostramos tanto para el caso federado como para el no federado para cada conjunto de datos y para cada etiqueta el valor de F1, accuracy, precision, recall, specificity, fall out y miss rate. Hemos marcado en negrita los valores que mejoran en el caso federado con respecto a su contraparte en el caso sin federar.
 
 %Tabla cojunto de datos 1 cen
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
 		water & 0,9289 & 0,9353 & 0,9181 & 0,9407 & 0,9308 & 0,0692 & 0,0593 \\ \hline
 		buildings & 0,8546 & 0,9487 & 0,8555 & 0,8757 & 0,9656 & 0,0344 & 0,1243 \\ \hline
-		rocks & \textbf{0,8033} & 0,9688 & \textbf{0,8171} & \textbf{0,8375} & \textbf{0,9816} & \textbf{0,0184} & \textbf{0,1625} \\ \hline
+		rocks & 0,8033 & 0,9688 & 0,8171 & 0,8375 & 0,9816 & 0,0184 & 0,1625 \\ \hline
 		field & 0,9256 & 0,9855 & 0,9278 & 0,9375 & 0,9912 & 0,0088 & 0,0625 \\ \hline
 		sand & 0,8686 & 0,981 & 0,9079 & 0,8734 & 0,9914 & 0,0086 & 0,1266 \\ \hline
-		cars & \textbf{0,8492} & 0,9911 & 0,925 & \textbf{0,881} & 0,9965 & 0,0035 & \textbf{0,119} \\ \hline
-		polar & \textbf{0,8589} & 0,9922 & 0,9 & \textbf{0,9574} & 0,9941 & 0,0059 & \textbf{0,0426} \\ \hline
-		ruins & 0,8564 & \textbf{0,9866} & 0,907 & \textbf{0,8298} & 0,9953 & 0,0047 & \textbf{0,1702} \\ \hline
-		statue & \textbf{0,7254} & 0,9922 & 0,878 & 0,9474 & 0,9942 & 0,0058 & 0,0526 \\ \hline
+		cars & 0,8492 & 0,9911 & 0,925 & 0,881 & 0,9965 & 0,0035 & 0,119 \\ \hline
+		polar & 0,8589 & 0,9922 & 0,9 & 0,9574 & 0,9941 & 0,0059 & 0,0426 \\ \hline
+		ruins & 0,8564 & 0,9866 & 0,907 & 0,8298 & 0,9953 & 0,0047 & 0,1702 \\ \hline
+		statue & 0,7254 & 0,9922 & 0,878 & 0,9474 & 0,9942 & 0,0058 & 0,0526 \\ \hline
 		wall & 0,7349 & 0,9922 & 0,8837 & 0,95 & 0,9942 & 0,0058 & 0,05 \\ \hline
 	\end{tabular}
 	}
@@ -303,19 +305,19 @@ A continuación, en las Tablas \ref{table:cen_metrics_client1} \ref{table:fed_me
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
 		water & 0,8877 & 0,9016 & 0,8988 & 0,8806 & 0,9184 & 0,0812 & 0,119 \\ \hline
 		buildings & 0,8235 & 0,9352 & 0,819 & 0,8386 & 0,9576 & 0,042 & 0,161 \\ \hline
-		rocks & 0,8407 & 0,9688 & 0,8568 & 0,8386 & 0,9842 & 0,0168 & 0,161 \\ \hline
+		rocks & \textbf{0,8407} & 0,9688 & \textbf{0,8568} & \textbf{0,8386} & \textbf{0,9842} & \textbf{0,0168} & \textbf{0,161} \\ \hline
 		field & 0,8547 & 0,9716 & 0,903 & 0,8148 & 0,9898 & 0,0098 & 0,1848 \\ \hline
 		sand & 0,6821 & 0,9464 & 0,6104 & 0,84 & 0,9548 & 0,0448 & 0,1596 \\ \hline
-		cars & 0,8774 & 0,987 & 0,8176 & 0,9996 & 0,9856 & 0,014 & 0 \\ \hline
-		polar & 0,9110 & 0,9926 & 0,875 & 0,9996 & 0,9912 & 0,0084 & 0 \\ \hline
-		ruins & 0,8419 & 0,9856 & 0,8246 & 0,8456 & 0,9912 & 0,0084 & 0,154 \\ \hline
-		statue & 0,8259 & 0,9842 & 0,8638 & 0,826 & 0,9926 & 0,007 & 0,1736 \\ \hline
+		cars & \textbf{0,8774} & 0,987 & 0,8176 & \textbf{0,9996} & 0,9856 & 0,014 & \textbf{0} \\ \hline
+		polar & \textbf{0,9110} & 0,9926 & 0,875 & \textbf{0,9996} & 0,9912 & 0,0084 & \textbf{0} \\ \hline
+		ruins & 0,8419 & \textbf{0,9856} & 0,8246 & \textbf{0,8456} & 0,9912 & 0,0084 & \textbf{0,154} \\ \hline
+		statue & \textbf{0,8259} & 0,9842 & 0,8638 & 0,826 & 0,9926 & 0,007 & 0,1736 \\ \hline
 		wall & 0,6469 & 0,966 & 0,6664 & 0,7504 & 0,9786 & 0,021 & 0,2506 \\ \hline
 	\end{tabular}
 	}
@@ -325,13 +327,13 @@ A continuación, en las Tablas \ref{table:cen_metrics_client1} \ref{table:fed_me
 
 En el las Tablas \ref{table:cen_metrics_client1} y \ref{table:fed_metrics_client1} observamos una mejoría en algunas métricas para las etiquetas \textit{rocks}, \textit{cars}, \textit{polar} y \textit{statue}, sin embargo en general los valores del resto de etiquetas empeoran. El modelo federado ha logrado superar en algunos casos al no federado pero en conjunto el rendimiento empeora.
 
-Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2}, \ref{table:cen_metrics_client3}, \ref{table:cen_metrics_client4}, \ref{table:fed_metrics_client2}, \ref{table:fed_metrics_client3}, \ref{table:fed_metrics_client4}), las métricas para todas las etiquetas son peores.
+Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2} - \ref{table:fed_metrics_client4}), las métricas para todas las etiquetas son peores.
 
 %Tabla cojunto de datos 2 cen
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
@@ -355,7 +357,7 @@ Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2}, \re
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
@@ -379,7 +381,7 @@ Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2}, \re
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
@@ -403,7 +405,7 @@ Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2}, \re
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
@@ -427,7 +429,7 @@ Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2}, \re
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
@@ -451,7 +453,7 @@ Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2}, \re
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Class & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
@@ -477,7 +479,7 @@ Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2}, \re
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Client & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
@@ -496,7 +498,7 @@ Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2}, \re
 \begin{table}[!htp]
 	\centering
 	
-	\resizebox{.9\textwidth}{!}{
+	\resizebox{1\textwidth}{!}{
 	\begin{tabular}{|l|l|l|l|l|l|l|l|}
 		\hline
 		Client & f1\_score & accuracy & precision & recall & specificity & fall\_out & miss\_rate \\ \hline
@@ -511,6 +513,6 @@ Para el resto de conjuntos de datos (Tablas \ref{table:cen_metrics_client2}, \re
 	\label{table:fed_avg_metrics}
 \end{table}
 
-Al realizar la media de todas las métricas para cada cliente formamos las Tablas \ref{table:cen_avg_metrics} y \ref{table:fed_avg_metrics} que nos dan una visión del rendimiento de cada caso. Observamos unos mejores resultados para el cliente 1, sin embargo empeora para el resto re clientes en la ronda 100.
+Al realizar la media de todas las métricas para cada cliente formamos las Tablas \ref{table:cen_avg_metrics} y \ref{table:fed_avg_metrics} que nos dan una visión del rendimiento de cada caso. Observamos unos mejores resultados para el cliente 1, sin embargo empeora para el resto de clientes en la ronda 100. El cliente 1 tiene unos 400 ejemplos más que los demás, esto afecta al peso en la agregación ya que estamos usando el algoritmo FedAvg por lo que el entrenamiento realizado por este cliente afecta más al modelo global.
 
 \cleardoublepage

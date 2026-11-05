@@ -323,19 +323,16 @@ class ResNetModelManager(ModelManager):
 
         total = len(self.testloader)
 
-        print("TEST LOADER SIZE: ", total)
-
         f1_s = f1_s / total
         f1_s_by_class = f1_s_by_class / total
-        accuracy = ((total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn)) / total  # proporcion de ejemplos correctamente clasificados
+        accuracy = ((total_tp + total_tn) / (total_tp + total_tn + total_fp + total_fn))  # proporcion de ejemplos correctamente clasificados
         precision = (total_tp / (total_tp + total_fp))  # proporción de predicciones correctas entre el total de predicciones para una clase
         recall = (total_tp / (total_tp + total_fn))  # proporción de veces que una clase ha sido predicha correctamente, probabilidad de positivos verdaderos
-        specificity = (total_tn / (total_tn + total_fp)) / total  # probabilidad de negativos verdaderos
-        fall_out = (total_fp / (total_fp + total_tn)) / total  # probabilidad de falsos positivos
-        miss_rate = (total_fn / (total_fn + total_tp)) / total  # probabilidad de falsos negativos
+        specificity = (total_tn / (total_tn + total_fp))  # probabilidad de negativos verdaderos
+        fall_out = (total_fp / (total_fp + total_tn))  # probabilidad de falsos positivos
+        miss_rate = (total_fn / (total_fn + total_tp))  # probabilidad de falsos negativos
 
         report = self.create_report(self.client_id,f1_s_by_class, accuracy, precision, recall, specificity, fall_out, miss_rate)
-
         print("Classification report")
         print("Class      f1_score accuracy precision recall specificity fall_out miss_rate")
         for stud, val in report.items():
